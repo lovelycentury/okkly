@@ -1,8 +1,6 @@
 packages:
   - packages/*
   - apps/*
-  # `resume` is split into `be`/`fe`, so its packages live one level deeper.
-  - apps/resume/*
   - tools/*
 
 # Next's sass-loader `require('sass-embedded')` from inside the isolated

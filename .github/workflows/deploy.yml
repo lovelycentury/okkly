@@ -7,24 +7,11 @@ permissions:
   contents: read
   packages: write
 
+# The apps (profile / iam / resume) live in their own repos and deploy
+# themselves. This workflow only ships the Storybook static site.
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - { name: profile, dockerfile: ops/Dockerfile.profile }
-          - { name: storybook, dockerfile: ops/Dockerfile.storybook }
-          - { name: iam, dockerfile: ops/Dockerfile.iam }
-          - {
-              name: resume-fe,
-              dockerfile: ops/Dockerfile.resume-fe,
-              build_args: "VITE_API_BASE_URL=https://resume-api.okryshto.dev",
-            }
-          # be and ingest share apps/resume/be/Dockerfile, different stages:
-          # `runtime` is the slim server, `build` keeps sources + tsx for ingest.
-          - { name: resume-be, dockerfile: apps/resume/be/Dockerfile, target: runtime }
-          - { name: resume-ingest, dockerfile: apps/resume/be/Dockerfile, target: build }
     steps:
       - uses: actions/checkout@v4
       - uses: docker/login-action@v3
@@ -35,11 +22,9 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: .
-          file: ${{ matrix.dockerfile }}
-          target: ${{ matrix.target || '' }}
-          build-args: ${{ matrix.build_args || '' }}
+          file: ops/Dockerfile.storybook
           push: true
-          tags: ghcr.io/lovelycentury/okkly/${{ matrix.name }}:latest
+          tags: ghcr.io/lovelycentury/okkly/storybook:latest
 
   deploy:
     needs: build
@@ -53,7 +38,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           source: "ops/docker-compose.yml,ops/Caddyfile"
           target: ${{ secrets.DEPLOY_PATH }}
-          strip_components: 1 # убирает префикс ops/
+          strip_components: 1 # drop the ops/ prefix
       - uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -63,7 +48,6 @@ jobs:
             cd ${{ secrets.DEPLOY_PATH }}
             docker compose pull
             docker compose up -d --remove-orphans
-            # The Caddyfile is a bind mount, so its content is invisible to
-            # compose's change detection — the container keeps the old config
-            # until it is recreated explicitly.
+            # Caddyfile is a bind mount — invisible to compose's change
+            # detection, so force a recreate to pick up config edits.
             docker compose up -d --force-recreate caddy
