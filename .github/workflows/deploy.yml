@@ -36,7 +36,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: "ops/docker-compose.yml,ops/Caddyfile"
+          source: "ops/docker-compose.yml"
           target: ${{ secrets.DEPLOY_PATH }}
           strip_components: 1 # drop the ops/ prefix
       - uses: appleboy/ssh-action@v1.2.0
@@ -47,7 +47,6 @@ jobs:
           script: |
             cd ${{ secrets.DEPLOY_PATH }}
             docker compose pull
+            # --remove-orphans also reaps the retired `caddy` service the first
+            # time this runs after the inner proxy was dropped.
             docker compose up -d --remove-orphans
-            # Caddyfile is a bind mount — invisible to compose's change
-            # detection, so force a recreate to pick up config edits.
-            docker compose up -d --force-recreate caddy

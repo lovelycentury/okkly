@@ -1,54 +1,42 @@
 # Production stack for the monorepo: the Storybook static site only
-# (storybook.okryshto.dev). The apps (profile / iam / resume) moved to their
+# (storybook.okkly.lol). The apps (profile / iam / resume) moved to their
 # own repos and deploy themselves.
 #
-# Ports 80/443 are NOT published — Caddy in ~/vps-infra owns them. This Caddy
-# sits on the internal network and receives traffic from it
-# (see vps-infra/Caddyfile → reverse_proxy okryshto-caddy:80).
+# No ports are published and there is no proxy in here any more. Caddy in
+# ~/vps-infra owns 80/443, terminates TLS and proxies straight to this
+# container over the shared network:
+#
+#   vps-infra/Caddyfile → reverse_proxy storybook:80
+#
+# The :80 on the other end is the image's own caddy:alpine serving the static
+# build — see Dockerfile.storybook and spa.Caddyfile.
 #
 #   docker compose up -d --pull always --remove-orphans
 #   docker compose logs -f
 
-name: okryshto
+name: okkly
 
 networks:
-  edge:
   vps-infra:
     external: true
     name: vps-infra_default
 
-volumes:
-  caddy_data:
-  caddy_config:
-
-x-logging: &logging
-  logging:
-    driver: json-file
-    options:
-      max-size: "10m"
-      max-file: "3"
-
 services:
-  caddy:
-    image: caddy:2-alpine
-    container_name: okryshto-caddy
-    restart: unless-stopped
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    networks: [edge, vps-infra]
-    depends_on: [storybook]
-    <<: *logging
-
   storybook:
     image: ghcr.io/lovelycentury/okkly/storybook:latest
+    # The name ~/vps-infra/Caddyfile proxies to. Has to stay unique across
+    # every stack attached to vps-infra_default.
+    container_name: storybook
     restart: unless-stopped
-    networks: [edge]
+    networks: [vps-infra]
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost/healthz"]
       interval: 30s
       timeout: 3s
       retries: 3
       start_period: 5s
-    <<: *logging
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

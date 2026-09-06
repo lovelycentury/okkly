@@ -2,7 +2,10 @@
 
 This monorepo deploys one thing: the Storybook static site.
 
-- https://storybook.okryshto.dev — static build of `@okkly/react`
+- https://storybook.okkly.lol — static build of `@okkly/react`
+
+This is the only host on the okkly.lol domain; the other repos stay on
+`*.okryshto.dev`. The old `storybook.okryshto.dev` answers 301 to the new URL.
 
 The apps moved to their own repos and deploy themselves:
 `lovelycentury/profile`, `lovelycentury/iam`, `lovelycentury/resume`.
@@ -15,25 +18,23 @@ The apps moved to their own repos and deploy themselves:
                  │   caddy    │
                  └─────┬──────┘
                        │  HTTP, network vps-infra_default
-                 ┌─────┴──────┐
-                 │ okryshto-  │   this compose, no host ports
-                 │   caddy    │
-                 └─────┬──────┘
-                       │
                  ┌─────┴─────┐
-                 │ storybook │  static files inside caddy:alpine, :80
-                 └───────────┘
+                 │ storybook │   this compose, no host ports.
+                 └───────────┘   static files inside caddy:alpine, :80
 ```
+
+One hop. There used to be a second proxy (`okryshto-caddy`) between the two;
+it was removed along with `ops/Caddyfile`, and the security headers it added
+moved into `~/vps-infra/Caddyfile`'s `(common)` snippet.
 
 | File                   | Role                                                    |
 | ---------------------- | ------------------------------------------------------- |
-| `Caddyfile`            | inner proxy: `storybook.okryshto.dev` → `storybook:80`  |
-| `docker-compose.yml`   | stack: `caddy` + `storybook`                            |
+| `docker-compose.yml`   | stack: `storybook` alone                                |
 | `Dockerfile.storybook` | Vite Storybook → static files inside `caddy:alpine`     |
 | `spa.Caddyfile`        | Caddy inside the storybook image: SPA fallback, caching |
 
 Edge TLS is Caddy from `~/vps-infra`. This stack joins the same Docker network
-`vps-infra_default` and listens only inside it (`okryshto-caddy:80`).
+`vps-infra_default` and listens only inside it, as `storybook:80`.
 
 ## First-time VPS setup
 
@@ -48,12 +49,14 @@ sudo usermod -aG docker "$USER"   # then log in again
 
 An A record with the **orange cloud** (Proxied):
 
-- `storybook.okryshto.dev` → VPS IP
+- `storybook.okkly.lol` → VPS IP
 
-SSL/TLS → Overview → **Full** (same as the other `*.okryshto.dev` hosts).
+SSL/TLS → Overview → **Full**, same as the `*.okryshto.dev` hosts, if okkly.lol
+is on Cloudflare too. A plain A record elsewhere works as well — Caddy gets its
+own certificate over HTTP-01 either way.
 
-`~/vps-infra/Caddyfile` must route `storybook.okryshto.dev` →
-`reverse_proxy okryshto-caddy:80`. After editing:
+`~/vps-infra/Caddyfile` must route `storybook.okkly.lol` →
+`reverse_proxy storybook:80`. After editing:
 
 ```bash
 cd ~/vps-infra && docker compose restart caddy
