@@ -1,214 +1,42 @@
-# Production stack: profile / storybook / iam / resume .okryshto.dev
+# Production stack for the monorepo: the Storybook static site only
+# (storybook.okkly.lol). The apps (profile / iam / resume) moved to their
+# own repos and deploy themselves.
 #
-# Ports 80/443 are NOT published — Caddy in ~/vps-infra owns them.
-# This Caddy sits on the internal network and receives traffic from it
-# (see vps-infra/Caddyfile → reverse_proxy okryshto-caddy:80).
+# No ports are published and there is no proxy in here any more. Caddy in
+# ~/vps-infra owns 80/443, terminates TLS and proxies straight to this
+# container over the shared network:
 #
-#   docker compose up -d --pull never --remove-orphans
+#   vps-infra/Caddyfile → reverse_proxy storybook:80
+#
+# The :80 on the other end is the image's own caddy:alpine serving the static
+# build — see Dockerfile.storybook and spa.Caddyfile.
+#
+#   docker compose up -d --pull always --remove-orphans
 #   docker compose logs -f
-#
-# resume needs GOOGLE_GENERATIVE_AI_API_KEY (chat + embeddings). Put it, and any
-# optional provider keys, in an `.env` file next to this compose on the VPS:
-#   GOOGLE_GENERATIVE_AI_API_KEY=...
-#   # optional: GROQ_API_KEY=... OPENROUTER_API_KEY=... OLLAMA_API_KEY=... DEFAULT_MODEL_ID=...
-#
-# The vector index starts empty. After the first `up`, drop the (gitignored)
-# knowledge files on the VPS and embed them:
-#   mkdir -p resume-knowledge
-#   scp apps/resume/be/knowledge/{cv,personal}.md  vps:/srv/okryshto/resume-knowledge/
-#   docker compose --profile ingest run --rm resume-ingest
 
-name: okryshto
+name: okkly
 
 networks:
-  edge:
-  resume: # private: resume-be ↔ resume-libsql, not reachable from the edge net
   vps-infra:
     external: true
     name: vps-infra_default
 
-volumes:
-  caddy_data:
-  caddy_config:
-  resume_libsql_data: # vector index (served by the resume-libsql container)
-  resume_storage_data: # conversation state (embedded sqlite file in resume-be)
-
-x-logging: &logging
-  logging:
-    driver: json-file
-    options:
-      max-size: "10m"
-      max-file: "3"
-
 services:
-  caddy:
-    image: caddy:2-alpine
-    container_name: okryshto-caddy
-    restart: unless-stopped
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    networks: [edge, vps-infra]
-    depends_on: [profile, storybook, iam, resume-fe, resume-be]
-    <<: *logging
-
-  profile:
-    image: ghcr.io/lovelycentury/okkly/profile:latest
-    restart: unless-stopped
-    environment:
-      NODE_ENV: production
-      PORT: "5200"
-      HOSTNAME: 0.0.0.0
-    networks: [edge]
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "node",
-          "-e",
-          "fetch('http://127.0.0.1:5200/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
-        ]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 20s
-    <<: *logging
-
   storybook:
     image: ghcr.io/lovelycentury/okkly/storybook:latest
+    # The name ~/vps-infra/Caddyfile proxies to. Has to stay unique across
+    # every stack attached to vps-infra_default.
+    container_name: storybook
     restart: unless-stopped
-    networks: [edge]
+    networks: [vps-infra]
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost/healthz"]
       interval: 30s
       timeout: 3s
       retries: 3
       start_period: 5s
-    <<: *logging
-
-  iam:
-    image: ghcr.io/lovelycentury/okkly/iam:latest
-    restart: unless-stopped
-    environment:
-      KC_HTTP_ENABLED: "true"
-      KC_PROXY_HEADERS: xforwarded
-      # Full URL, not a bare host: it pins the scheme of every issued URL
-      # (issuer, authorization_endpoint, the admin console's own iframes) to
-      # https, whatever the proxy chain forwards.
-      KC_HOSTNAME: https://iam.okryshto.dev
-      KC_HEALTH_ENABLED: "true"
-      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:-}
-      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:-}
-    networks: [edge]
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "bash -c 'exec 3<>/dev/tcp/127.0.0.1/9000; printf \"GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n\" >&3; grep -q UP <&3'",
-        ]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-      start_period: 90s
-    <<: *logging
-
-  # resume.okryshto.dev — Vite SPA (static). Built with VITE_API_BASE_URL
-  # pointing at resume-api.okryshto.dev (see deploy.yml / Dockerfile.resume-fe).
-  resume-fe:
-    image: ghcr.io/lovelycentury/okkly/resume-fe:latest
-    restart: unless-stopped
-    networks: [edge]
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost/healthz"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
-      start_period: 5s
-    <<: *logging
-
-  # RAG backend. Public on its own host, resume-api.okryshto.dev.
-  resume-be:
-    image: ghcr.io/lovelycentury/okkly/resume-be:latest
-    restart: unless-stopped
-    environment:
-      NODE_ENV: production
-      PORT: "5300"
-      # Vector index → the libSQL service; conversation state → a file on a
-      # volume (the libSQL server's hrana protocol chokes on @mastra/libsql's
-      # parallel schema init — see apps/resume/docker-compose.yml).
-      VECTOR_DB_URL: http://resume-libsql:8080
-      STORAGE_DB_URL: file:/app/data/resume-storage.db
-      # Behind two Caddy hops — trust X-Forwarded-For so the rate limiter keys
-      # on the real client IP.
-      TRUST_PROXY: "true"
-      CORS_ORIGINS: https://resume.okryshto.dev
-      GOOGLE_GENERATIVE_AI_API_KEY: ${GOOGLE_GENERATIVE_AI_API_KEY:-}
-      GROQ_API_KEY: ${GROQ_API_KEY:-}
-      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
-      OLLAMA_API_KEY: ${OLLAMA_API_KEY:-}
-      DEFAULT_MODEL_ID: ${DEFAULT_MODEL_ID:-minimax-m3}
-    volumes:
-      - resume_storage_data:/app/data
-    networks: [edge, resume]
-    depends_on:
-      resume-libsql:
-        condition: service_healthy
-    healthcheck:
-      # /models needs neither the vector store nor a real API key, so this goes
-      # green as soon as the HTTP server is up.
-      test:
-        [
-          "CMD",
-          "node",
-          "-e",
-          "fetch('http://127.0.0.1:5300/models').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
-        ]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
-    <<: *logging
-
-  # libSQL in server mode — holds only the vector index. No published ports:
-  # only resume-be and the one-shot ingest job reach it, over the `resume` net.
-  resume-libsql:
-    image: ghcr.io/tursodatabase/libsql-server:v0.24.32
-    restart: unless-stopped
-    environment:
-      SQLD_NODE: primary
-    volumes:
-      - resume_libsql_data:/var/lib/sqld
-    networks: [resume]
-    healthcheck:
-      # The image has no wget/curl/nc — bash /dev/tcp, same trick as iam.
-      test:
-        [
-          "CMD-SHELL",
-          "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080; printf \"GET /health HTTP/1.1\\r\\nHost: x\\r\\nConnection: close\\r\\n\\r\\n\" >&3; grep -q \"200 OK\" <&3'",
-        ]
-      interval: 10s
-      timeout: 3s
-      retries: 5
-      start_period: 10s
-    <<: *logging
-
-  # One-shot: embeds ./resume-knowledge/*.md into the vector index.
-  # The knowledge files are private (gitignored), so they are NOT in the image —
-  # bind-mount them from the VPS:
-  #   docker compose --profile ingest run --rm resume-ingest
-  resume-ingest:
-    profiles: ["ingest"]
-    image: ghcr.io/lovelycentury/okkly/resume-ingest:latest
-    working_dir: /repo/apps/resume/be
-    command: ["pnpm", "run", "ingest"]
-    environment:
-      VECTOR_DB_URL: http://resume-libsql:8080
-      GOOGLE_GENERATIVE_AI_API_KEY: ${GOOGLE_GENERATIVE_AI_API_KEY:-}
-    volumes:
-      - ./resume-knowledge:/repo/apps/resume/be/knowledge:ro
-    networks: [resume]
-    depends_on:
-      resume-libsql:
-        condition: service_healthy
-    <<: *logging
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

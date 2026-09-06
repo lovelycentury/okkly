@@ -150,11 +150,10 @@ pnpm changeset --empty
 
 ### A change only in a private package
 
-`@okkly/profile`, `@okkly/iam`, `@okkly/resume-fe`, `@okkly/resume-be`, and
-`@okkly/playground` are `private: true`; `@okkly/oxlint-config` is in the
-config's `ignore` list. None of them are versioned or published, so app- and
-config-only changes need no changeset. Adding one for such a package makes
-`pnpm changeset:check` fail (unknown / non-publishable package).
+`@okkly/playground` is `private: true` and `@okkly/oxlint-config` is in the
+config's `ignore` list. Neither is versioned or published, so changes scoped to
+them need no changeset. Adding one for such a package makes `pnpm changeset:check`
+fail (unknown / non-publishable package).
 
 ### Graduating a package to 1.0.0
 

@@ -162,6 +162,6 @@ if (errors.length > 0) {
   console.error("✗ commit message rejected:\n");
   console.error(`  ${subject || "(empty subject)"}\n`);
   for (const error of errors) console.error(`  • ${error}`);
-  console.error("\n  Run `pnpm commit` for a guided prompt. See CONTRIBUTING.md.\n");
+  console.error("\n  Run `pnpm commit` for a guided prompt.\n");
   process.exit(1);
 }
