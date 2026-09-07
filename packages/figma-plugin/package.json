@@ -1,5 +1,5 @@
 {
-  "name": "vizitka-figma-generator",
+  "name": "@okkly/figma-plugin",
   "version": "1.0.0",
   "private": true,
   "description": "Figma plugin that generates a premium dark-first design system and a personal business-card (vizitka) website design.",

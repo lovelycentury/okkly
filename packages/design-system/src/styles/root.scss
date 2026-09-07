@@ -1,3 +1,6 @@
+// Declares the layer order first — see mixins/layers.scss for why every
+// layer-opening stylesheet has to.
+@use "./layers.scss";
 @use "./mixins/normalize.scss";
 
 @layer okkly.utility {

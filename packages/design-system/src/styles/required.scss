@@ -1,5 +1,9 @@
 // `.okkly-required-marker` / `.okkly-optional-marker` populate a "*" / "(optional)"
 // suffix via ::after. Toggle per-scope with `.okkly-use-optional` / `.okkly-use-required`.
+// Declares the layer order first — see mixins/layers.scss for why every
+// layer-opening stylesheet has to.
+@use "./layers.scss";
+
 @layer okkly.utility {
   :root {
     // https://lea.verou.me/blog/2020/10/the-var-space-hack-to-toggle-multiple-values-with-one-custom-property/

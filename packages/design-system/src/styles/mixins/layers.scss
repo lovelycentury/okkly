@@ -1,3 +1,14 @@
+// Every stylesheet that opens an okkly layer must first declare the full layer
+// order. A bundler code-splits component CSS into separate files that load in
+// arbitrary order, and a layer is registered where it is *first* seen: if a
+// chunk opens `@layer okkly.component { … }` before any ordering statement, that
+// layer lands at position 0 and a later `@layer okkly.reset, …, okkly.component,
+// …;` can no longer move it — the reset then outranks every component rule.
+// (Symptom: normalize's `svg { display: block }` beating Checkbox's
+// `svg { display: none }`, so check and minus glyphs both show at once.)
+// Re-declaring an order already in effect is a no-op, so this is safe to repeat.
+@use "../layers.scss";
+
 @mixin component() {
   @layer okkly.component {
     @content;

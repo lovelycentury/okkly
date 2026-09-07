@@ -1,4 +1,4 @@
-# Vizitka — Premium Design System & Site Generator (Figma Plugin)
+# Okkly — Premium Design System & Site Generator (Figma Plugin)
 
 A production-ready **Figma plugin, written in TypeScript**, that generates — in one click and **idempotently** — two things:
 
@@ -47,7 +47,7 @@ Then, in the **Figma desktop app**:
 
 1. `Plugins → Development → Import plugin from manifest…`
 2. Choose `manifest.json` in this folder.
-3. Run **Plugins → Development → Vizitka — Premium DS & Site Generator**.
+3. Run **Plugins → Development → Okkly — Premium DS & Site Generator**.
 4. Click **Generate**.
 
 The plugin builds everything locally — **no network access** is requested or required.
