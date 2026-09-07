@@ -1,6 +1,10 @@
 // Density mixins emit the `okkly.density` layer (see layers.scss), which wins
 // over `okkly.component`. Always used OUTSIDE `layers.component()` in a
 // component style block — nesting them inside is a bug (see okkly-styling skill).
+//
+// The order statement comes along for the same reason it does in mixins/layers.scss:
+// whichever code-split chunk loads first has to be the one that fixes the order.
+@use "../layers.scss";
 
 @mixin compact {
   @layer okkly.density {

@@ -9,7 +9,7 @@ interface UIMessage {
   type: "generate" | "close";
 }
 
-figma.showUI(__html__, { width: 360, height: 460, themeColors: true, title: "Vizitka Generator" });
+figma.showUI(__html__, { width: 360, height: 460, themeColors: true, title: "Okkly Generator" });
 
 figma.ui.onmessage = async (msg: UIMessage) => {
   if (msg.type === "close") {
@@ -23,7 +23,7 @@ figma.ui.onmessage = async (msg: UIMessage) => {
       await generate((step) => figma.ui.postMessage({ type: "progress", step }));
       const secs = ((Date.now() - started) / 1000).toFixed(1);
       figma.ui.postMessage({ type: "done", secs });
-      figma.notify(`Vizitka generated in ${secs}s ✓`);
+      figma.notify(`Okkly generated in ${secs}s ✓`);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       figma.ui.postMessage({ type: "error", message });

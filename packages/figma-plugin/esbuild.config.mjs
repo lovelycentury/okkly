@@ -17,8 +17,8 @@ const options = {
 if (watch) {
   const ctx = await esbuild.context(options);
   await ctx.watch();
-  console.log("[vizitka] watching for changes…");
+  console.log("[okkly] watching for changes…");
 } else {
   await esbuild.build(options);
-  console.log("[vizitka] build complete → dist/code.js");
+  console.log("[okkly] build complete → dist/code.js");
 }

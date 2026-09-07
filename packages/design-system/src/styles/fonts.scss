@@ -8,6 +8,10 @@
 //   font-display: swap;
 // }
 
+// Declares the layer order first — see mixins/layers.scss for why every
+// layer-opening stylesheet has to.
+@use "./layers.scss";
+
 @layer okkly.utility {
   .okkly-text {
     font-weight: var(--okkly-font-weight-regular);

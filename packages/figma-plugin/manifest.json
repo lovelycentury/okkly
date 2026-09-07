@@ -1,6 +1,6 @@
 {
-  "name": "Vizitka — Premium DS & Site Generator",
-  "id": "vizitka-premium-generator",
+  "name": "Okkly — Premium DS & Site Generator",
+  "id": "okkly-premium-generator",
   "api": "1.0.0",
   "main": "dist/code.js",
   "ui": "ui.html",
