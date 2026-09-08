@@ -40,8 +40,11 @@ jobs:
         with:
           version: pnpm run version-packages
           publish: pnpm run release
-          commit: "chore: version packages"
-          title: "chore: version packages"
+          # Gitmoji + Conventional Commits, same as every hand-written commit —
+          # ":bookmark:" is the release/version-tag emoji. `tools/check-commit-msg.mjs`
+          # validates this exact shape, so the bot needs no exemption from it.
+          commit: ":bookmark: chore: version packages"
+          title: ":bookmark: chore: version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

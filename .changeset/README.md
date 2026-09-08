@@ -15,7 +15,7 @@ This folder is managed by [changesets](https://github.com/changesets/changesets)
 
 2. Merge the PR into `main`.
 
-3. A bot opens a **"chore: version packages"** PR that bumps versions in
+3. A bot opens a **":bookmark: chore: version packages"** PR that bumps versions in
    `package.json` and moves the changesets into each `CHANGELOG.md`.
 
 4. Merging that PR publishes the packages to npm (workflow

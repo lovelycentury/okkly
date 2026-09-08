@@ -12,8 +12,10 @@
  * - after it comes a Conventional Commits header: a type, an optional
  *   `(scope)`, an optional `!` for a breaking change, then `: ` and a summary.
  *
- * Skipped: merge commits, reverts, `fixup!` / `squash!` / `amend!` autosquash
- * commits, and the `chore: version packages` commit from the changesets bot.
+ * Skipped: merge commits, reverts, and `fixup!` / `squash!` / `amend!`
+ * autosquash commits. The changesets bot needs no exemption — its commit and
+ * PR title are spelled ":bookmark: chore: version packages" in
+ * `.github/workflows/release.yml`, which passes the rules below.
  *
  * simple-git-hooks invokes this as `node tools/check-commit-msg.mjs $1`, where
  * `$1` is the path to the commit message file; when no path is passed it falls
@@ -127,10 +129,7 @@ const raw = readFileSync(resolveMessagePath(), "utf8");
 const subject =
   raw.split(/\r?\n/).find((line) => line.trim() !== "" && !line.startsWith("#")) ?? "";
 
-if (
-  subject === "chore: version packages" ||
-  SKIP_PREFIXES.some((prefix) => subject.startsWith(prefix))
-) {
+if (SKIP_PREFIXES.some((prefix) => subject.startsWith(prefix))) {
   process.exit(0);
 }
 
