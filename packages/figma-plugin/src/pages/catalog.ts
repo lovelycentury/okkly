@@ -22,6 +22,7 @@ import {
 } from "../core/nodes";
 import { ThemeContext, colorVar } from "../core/theme";
 import { icon, iconFilled } from "../core/icons";
+import { logoEmblem } from "../core/emblem";
 import { barChart, ganttChart, lineChart, multiLine, pieChart, sparkline } from "../core/charts";
 import { applyEffect } from "../components/primitives";
 import { board, cosmicAtmosphere, starStreak } from "./scaffold";
@@ -4167,18 +4168,9 @@ async function dateTimeBoard(t: ThemeContext): Promise<FrameNode> {
 
 // ── ProjectCard (case-study poster) ───────────────────────────
 
-function logoChip(_t: ThemeContext): EllipseNode {
-  const c = ellipse(32);
-  c.fills = [
-    linearGradient(
-      [
-        { hex: "#5EE6C1", position: 0 },
-        { hex: "#818CF8", position: 1 },
-      ],
-      "diagonal",
-    ),
-  ];
-  return c;
+/** The brand mark in the card's top-left corner — the emblem itself, 32px. */
+function logoChip(_t: ThemeContext): FrameNode {
+  return logoEmblem("mint", 32);
 }
 
 function drawDevice(t: ThemeContext): FrameNode {

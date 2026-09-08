@@ -1,14 +1,20 @@
 # Storybook brand assets
 
-Default mark = **Header lockup** from Figma
-[Static Logo Lockups](https://www.figma.com/design/3YsJJl5QukJZPkjoOOZahx/-okkly-okkly?node-id=422-168)
-(node `422:179` — compact nav / Storybook chrome).
+The sidebar mark is the **horizontal lockup** — the emblem in its `multi` tone
+(mint→dante) beside the `okkly` wordmark. Geometry matches the `Logo`
+component's `filled` variant, so the chrome and the component never drift.
 
-| File         | Use                                                    |
-| ------------ | ------------------------------------------------------ |
-| `logo.svg`   | Default (`theme.ts` → `brandImage: "/brand/logo.svg"`) |
-| `logo.png`   | Raster export of the same lockup (optional)            |
-| `emblem.svg` | Yin-yang orb only (from Figma export)                  |
+| File         | Use                                                     |
+| ------------ | ------------------------------------------------------- |
+| `logo.svg`   | Default (`theme.ts` → `brandImage: "/brand/logo.svg"`)  |
+| `logo.png`   | Raster export of the same lockup, 2x (optional)         |
+| `emblem.svg` | Emblem only, no wordmark                                |
 
-Replace `logo.svg` (or point `brandImage` at `logo.png`) to swap the sidebar logo.
-Tips: transparent background, ~140–160px wide, readable on `#0a0a0b`.
+Colors are inlined rather than tokenised: Storybook's manager loads these files
+standalone, outside the app's stylesheet, so `var(--okkly-*)` would not resolve.
+
+Replace `logo.svg` (or point `brandImage` at `logo.png`) to swap the sidebar
+logo. Keep the background transparent and the artwork readable on `#0a0a0b`.
+
+The browser-tab favicons live in `../favicon/` and are served at the root by
+`staticDirs`; `manager-head.html` links them.

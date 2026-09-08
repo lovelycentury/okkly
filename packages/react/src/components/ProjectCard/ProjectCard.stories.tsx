@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Avatar } from "../Avatar/Avatar";
+import { Logo } from "../Logo/Logo";
 import { ProjectCard } from "./ProjectCard";
 import oleksiiInParis from "../Photo/assets/oleksii-paris.jpg";
 
@@ -31,7 +31,11 @@ const meta: Meta<typeof ProjectCard> = {
   },
   render: (args) => (
     <div style={{ width: "476px", ...surface }}>
-      <ProjectCard {...args} image={oleksiiInParis} logo={<Avatar initials="OK" size="sm" />} />
+      <ProjectCard
+        {...args}
+        image={oleksiiInParis}
+        logo={<Logo showLabel={false} size={32} variant="outlined" />}
+      />
     </div>
   ),
 };
@@ -74,7 +78,7 @@ export const APortfolioGrid: Story = {
       <ProjectCard
         href="#okkly"
         image={oleksiiInParis}
-        logo={<Avatar initials="OK" size="sm" />}
+        logo={<Logo showLabel={false} size={32} />}
         title="Okryshto"
         description="A design system in three frameworks, one token pipeline."
         tags={["Design system", "Tokens"]}
@@ -82,14 +86,14 @@ export const APortfolioGrid: Story = {
       <ProjectCard
         href="#orbit"
         device
-        logo={<Avatar initials="OR" size="sm" color="indigo" />}
+        logo={<Logo showLabel={false} size={32} tone="indigo" />}
         title="Orbit"
         description="A messenger built on Fastify and Vue, shipped in six weeks."
         tags={["Product", "Vue"]}
       />
       <ProjectCard
         href="#vizitka"
-        logo={<Avatar initials="VZ" size="sm" color="dante" />}
+        logo={<Logo showLabel={false} size={32} tone="dante" />}
         title="Vizitka"
         description="One page, five links, no framework."
         tags={["Web"]}
@@ -97,7 +101,7 @@ export const APortfolioGrid: Story = {
       <ProjectCard
         href="#night-drive"
         image={oleksiiInParis}
-        logo={<Avatar initials="ND" size="sm" />}
+        logo={<Logo showLabel={false} size={32} />}
         title="Night drive"
         description="A record and the site that carries it."
         tags={["Audio", "Web"]}
@@ -117,7 +121,7 @@ export const WithoutAnImage: Story = {
     <div style={grid}>
       <ProjectCard
         href="#a"
-        logo={<Avatar initials="OK" size="sm" />}
+        logo={<Logo showLabel={false} size={32} />}
         title="Okryshto"
         description="A design system in three frameworks, one token pipeline."
         tags={["Design system", "Tokens"]}
@@ -125,7 +129,7 @@ export const WithoutAnImage: Story = {
       <ProjectCard
         href="#b"
         image={oleksiiInParis}
-        logo={<Avatar initials="NR" size="sm" color="dante" />}
+        logo={<Logo showLabel={false} size={32} tone="dante" />}
         title="Night drive"
         description="A record and the site that carries it."
         tags={["Audio", "Web"]}
@@ -146,7 +150,7 @@ export const WithADevice: Story = {
       <ProjectCard
         href="#app"
         device
-        logo={<Avatar initials="OR" size="sm" color="indigo" />}
+        logo={<Logo showLabel={false} size={32} tone="indigo" />}
         title="Orbit"
         description="A messenger built on Fastify and Vue, shipped in six weeks."
         tags={["Product", "Vue"]}
@@ -155,7 +159,7 @@ export const WithADevice: Story = {
         href="#app2"
         device
         image={oleksiiInParis}
-        logo={<Avatar initials="NR" size="sm" color="dante" />}
+        logo={<Logo showLabel={false} size={32} tone="dante" />}
         title="Night drive"
         description="The mockup sits over the artwork."
         tags={["Audio"]}
@@ -190,7 +194,7 @@ export const Slots: Story = {
       />
       <ProjectCard
         href="#d"
-        logo={<Avatar initials="OK" size="sm" />}
+        logo={<Logo showLabel={false} size={32} />}
         title="Everything"
         description="A design system in three frameworks, one token pipeline, and about as much copy as this tile will take."
         tags={["Design system", "Tokens"]}
@@ -211,13 +215,13 @@ export const LinkedAndStatic: Story = {
         <ProjectCard
           href="#linked"
           image={oleksiiInParis}
-          logo={<Avatar initials="OK" size="sm" />}
+          logo={<Logo showLabel={false} size={32} />}
           title="Linked"
           description="One anchor around the whole tile."
           tags={["Case study"]}
         />
         <ProjectCard
-          logo={<Avatar initials="OK" size="sm" color="indigo" />}
+          logo={<Logo showLabel={false} size={32} tone="indigo" />}
           title="Not published"
           description="No href — nothing to tab to."
           tags={["Draft"]}

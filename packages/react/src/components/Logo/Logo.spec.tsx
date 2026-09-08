@@ -6,7 +6,7 @@ import { Logo } from "./Logo";
 describe("Logo", () => {
   it("renders the default wordmark", () => {
     render(<Logo />);
-    expect(screen.getByText("okryshto.dev")).toBeInTheDocument();
+    expect(screen.getByText("okkly")).toBeInTheDocument();
   });
 
   it("renders a custom label", () => {
@@ -43,9 +43,33 @@ describe("Logo", () => {
     expect(container.querySelector(".okkly-logo")?.className).not.toMatch(/okkly-logo--tone-/);
   });
 
+  it("applies a variant modifier only for non-filled variants", () => {
+    const { rerender, container } = render(<Logo variant="outlined" />);
+    expect(container.querySelector(".okkly-logo")).toHaveClass("okkly-logo--outlined");
+
+    rerender(<Logo variant="pure" />);
+    expect(container.querySelector(".okkly-logo")).toHaveClass("okkly-logo--pure");
+
+    rerender(<Logo variant="filled" />);
+    expect(container.querySelector(".okkly-logo")?.className).not.toMatch(
+      /okkly-logo--(filled|outlined|pure)/,
+    );
+  });
+
+  it("crops the viewBox to the glyph for the pure variant", () => {
+    const { container } = render(<Logo variant="pure" />);
+    const svg = container.querySelector(".okkly-logo__emblem");
+    expect(svg).toHaveAttribute("viewBox", "18.28125 19.125 37.125 37.125");
+  });
+
+  it("drops the gradient for flat tones", () => {
+    const { container } = render(<Logo tone="dante" />);
+    expect(container.querySelector("linearGradient")).toBeNull();
+  });
+
   it("hides the wordmark when showLabel is false", () => {
     render(<Logo showLabel={false} />);
-    expect(screen.queryByText("okryshto.dev")).not.toBeInTheDocument();
+    expect(screen.queryByText("okkly")).not.toBeInTheDocument();
   });
 
   it("renders the emblem svg", () => {

@@ -1,8 +1,8 @@
 /**
- * Okryshto Storybook chrome theme — mirrors `@okkly/design-system` tokens.
+ * okkly Storybook chrome theme — mirrors `@okkly/design-system` tokens.
  *
- * Brand mark: Header lockup from Figma Static Logo Lockups
- * https://www.figma.com/design/3YsJJl5QukJZPkjoOOZahx/?node-id=422-168
+ * Brand mark: the horizontal lockup — the emblem in its "multi" tone beside the
+ * wordmark, matching the `Logo` component's `filled` variant.
  * Drop a replacement at `.storybook/brand/logo.svg` (or `.png` + update `brandImage`).
  */
 import { create } from "storybook/internal/theming";
@@ -10,8 +10,8 @@ import { create } from "storybook/internal/theming";
 export const okklyTheme = create({
   base: "dark",
 
-  // Brand — Figma header lockup (422:179) as default
-  brandTitle: "okryshto.dev",
+  // Brand — the horizontal lockup; brandTitle is the alt text / no-image fallback
+  brandTitle: "okkly",
   brandUrl: "./",
   brandImage: "/brand/logo.svg",
   brandTarget: "_self",

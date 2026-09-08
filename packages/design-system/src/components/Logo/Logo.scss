@@ -2,24 +2,21 @@
 
 .okkly-logo {
   @include layers.component() {
-    // 1. full variable API, defaults = layout "horizontal", tone "multi"
+    // 1. full variable API, defaults = layout "horizontal", tone "multi",
+    //    variant "filled"
     --okkly-logo-tone: var(--okkly-accent-primary);
     --okkly-logo-emblem-size: 3rem; // 48px (from Figma design)
     --okkly-logo-gap: 1rem; // 16px
     --okkly-logo-label-color: var(--okkly-text-primary);
     --okkly-logo-label-font-size: 1rem; // 16px
 
-    // the emblem's two "yin"/"yang" halves are each a light→dark gradient of
-    // the same tone; a light dot sits on the dark half, a dark dot on the
-    // light half — identical geometry across every tone, only these derived
-    // colors change
-    --okkly-logo-light-start: var(--okkly-logo-tone);
-    --okkly-logo-light-end: color-mix(in srgb, var(--okkly-logo-tone) 60%, black);
-    --okkly-logo-dark-start: color-mix(in srgb, var(--okkly-logo-tone) 20%, black);
-    --okkly-logo-dark-end: color-mix(in srgb, var(--okkly-logo-tone) 9%, black);
-    --okkly-logo-dot-on-light: var(--okkly-logo-dark-end);
-    --okkly-logo-dot-on-dark: var(--okkly-logo-tone);
-    --okkly-logo-ring-color: color-mix(in srgb, var(--okkly-logo-tone) 18%, transparent);
+    // the glyph sits on a filled disc, so it is drawn in the on-accent ink;
+    // outlined and pure have no disc and stroke in the tone itself
+    --okkly-logo-ink: var(--okkly-accent-contrast);
+
+    // "multi" is the only non-flat tone — the signature mint→dante sweep
+    --okkly-logo-gradient-start: var(--okkly-accent-primary);
+    --okkly-logo-gradient-end: var(--okkly-accent-dante);
 
     display: inline-flex;
     align-items: center;
@@ -40,7 +37,7 @@
       text-align: center;
     }
 
-    // 3. tone — multi (default, combines all brand colors) needs no modifier
+    // 3. tone — multi (default, the brand gradient) needs no modifier
     &--tone-indigo {
       --okkly-logo-tone: var(--okkly-accent-secondary);
     }
@@ -57,30 +54,14 @@
       --okkly-logo-tone: var(--okkly-accent-ember);
     }
 
-    // monochrome pair — one half is a flat near-extreme, the other a flat
-    // near-opposite; no gradient, no shared --okkly-logo-tone
-    &--tone-mono-dark {
-      --okkly-logo-light-start: var(--okkly-text-primary);
-      --okkly-logo-light-end: var(--okkly-text-primary);
-      --okkly-logo-dark-start: var(--okkly-bg-surface-raised);
-      --okkly-logo-dark-end: var(--okkly-bg-surface-raised);
-      --okkly-logo-dot-on-light: var(--okkly-bg-canvas);
-      --okkly-logo-dot-on-dark: var(--okkly-text-primary);
-      --okkly-logo-ring-color: color-mix(in srgb, var(--okkly-text-primary) 12%, transparent);
+    // 4. variant — filled (default) needs no modifier; outlined and pure carry
+    //    no disc, so the mark reads a touch lighter at the same box size
+    &--outlined,
+    &--pure {
+      --okkly-logo-ink: var(--okkly-logo-tone);
     }
 
-    &--tone-mono-light {
-      --okkly-logo-light-start: var(--okkly-bg-canvas);
-      --okkly-logo-light-end: var(--okkly-bg-canvas);
-      --okkly-logo-dark-start: var(--okkly-text-primary);
-      --okkly-logo-dark-end: var(--okkly-text-primary);
-      --okkly-logo-dot-on-light: var(--okkly-text-primary);
-      --okkly-logo-dot-on-dark: var(--okkly-bg-canvas);
-      --okkly-logo-ring-color: color-mix(in srgb, var(--okkly-bg-canvas) 20%, transparent);
-      --okkly-logo-label-color: var(--okkly-bg-canvas);
-    }
-
-    // 4. elements
+    // 5. elements
     &__emblem {
       flex-shrink: 0;
       width: var(--okkly-logo-emblem-size);
