@@ -7,11 +7,11 @@ pnpm add @okkly/react react react-dom
 ```
 
 ```tsx
-import { OkryshtoButton } from "@okkly/react";
+import { Button } from "@okkly/react";
 import "@okkly/react/style.css";
 
 export function App() {
-  return <OkryshtoButton variant="primary">Click me</OkryshtoButton>;
+  return <Button variant="primary">Click me</Button>;
 }
 ```
 
