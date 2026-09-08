@@ -90,9 +90,6 @@ export type {
 export { Logo } from "./components/Logo/Logo";
 export type { LogoProps, LogoLayout, LogoTone } from "./components/Logo/Logo";
 
-export { AnimatedLogo } from "./components/AnimatedLogo/AnimatedLogo";
-export type { AnimatedLogoProps, AnimatedLogoMode } from "./components/AnimatedLogo/AnimatedLogo";
-
 export { Fab } from "./components/FAB/FAB";
 export type { FabProps, FabVariant, FabColor, FabSize } from "./components/FAB/FAB";
 

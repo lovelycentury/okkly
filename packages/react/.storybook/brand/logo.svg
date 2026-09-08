@@ -1,40 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Default Storybook brand mark — Header lockup from Figma
-  https://www.figma.com/design/3YsJJl5QukJZPkjoOOZahx/?node-id=422-168
-  (Lockup 1 — Header Context / node 422:179)
+  Storybook sidebar brand mark — the horizontal lockup of the okkly logo.
 
-  Prefer this SVG; `logo.png` is the raster export of the same lockup.
-  Replace either file to swap the Storybook sidebar logo.
+  Geometry is the 32-grid Figma export, identical to the `Logo` component's
+  `filled` variant (packages/react/src/components/Logo/Logo.tsx), with the
+  "multi" tone's mint→dante sweep. Colors are inlined rather than tokenised
+  because Storybook's manager loads this file standalone, outside the app's
+  stylesheet.
+
+  Replace this file to swap the sidebar logo. Keep the background transparent
+  and the artwork readable on `#0a0a0b`.
 -->
-<svg width="156" height="32" viewBox="0 0 156 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="okryshto.dev">
-  <g transform="translate(0 2)">
-    <!-- outer dial ticks -->
-    <circle cx="14" cy="14" r="13.5" stroke="rgba(255,255,255,0.14)" stroke-width="1" stroke-dasharray="0.8 2.2" fill="none"/>
-    <circle cx="14" cy="14" r="11.5" stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none"/>
-    <!-- yin-yang orb (Figma gradients: mint↔dante / indigo↔violet) -->
-    <g clip-path="url(#okkly-sb-clip)">
-      <circle cx="14" cy="14" r="10" fill="#080809"/>
-      <rect x="4" y="4" width="10" height="20" fill="url(#okkly-sb-light)"/>
-      <rect x="14" y="4" width="10" height="20" fill="url(#okkly-sb-dark)"/>
-      <rect x="9" y="4" width="10" height="10" rx="5" fill="url(#okkly-sb-light)"/>
-      <circle cx="14" cy="9" r="1.1" fill="#04140F"/>
-      <rect x="9" y="14" width="10" height="10" rx="5" fill="url(#okkly-sb-dark)"/>
-      <circle cx="14" cy="19" r="1.1" fill="#FFFFFF"/>
-    </g>
+<svg
+  width="92"
+  height="32"
+  viewBox="0 0 92 32"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label="okkly"
+>
+  <circle cx="16" cy="16" r="16" fill="url(#okkly-sb-gradient)" />
+  <g
+    stroke="#04140F"
+    fill="none"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path
+      d="M14.4549 17.545L11.4999 20.5L10.0749 19.075C9.93547 18.9357 9.82484 18.7703 9.74935 18.5882C9.67386 18.4061 9.63501 18.2109 9.63501 18.0137C9.63501 17.8166 9.67386 17.6214 9.74935 17.4393C9.82484 17.2572 9.93547 17.0918 10.0749 16.9525L15.9999 11.0275C16.1392 10.888 16.3047 10.7774 16.4868 10.7019C16.6689 10.6264 16.8641 10.5876 17.0612 10.5876C17.2583 10.5876 17.4535 10.6264 17.6356 10.7019C17.8177 10.7774 17.9831 10.888 18.1224 11.0275L20.4999 11.5"
+    />
+    <path d="M16 9.25V12.25" />
+    <path d="M9.25 16H12.25" />
+    <path
+      d="M20.5 18.25L21.25 20.5L23.5 21.25L21.25 22L20.5 24.25L19.75 22L17.5 21.25L19.75 20.5L20.5 18.25Z"
+    />
   </g>
-  <text x="34" y="21" fill="#F5F5F7" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" letter-spacing="-0.02em">okryshto.dev</text>
+  <text
+    x="44"
+    y="22"
+    fill="#F5F5F7"
+    font-family="Inter, system-ui, sans-serif"
+    font-size="17"
+    font-weight="600"
+    letter-spacing="-0.02em"
+  >
+    okkly
+  </text>
   <defs>
-    <linearGradient id="okkly-sb-light" x1="5" y1="4" x2="18" y2="8" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#5EE6C1"/>
-      <stop offset="1" stop-color="#FF3D8B"/>
+    <linearGradient
+      id="okkly-sb-gradient"
+      x1="0"
+      y1="0"
+      x2="32"
+      y2="32"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop stop-color="#5EE6C1" />
+      <stop offset="1" stop-color="#FF3D8B" />
     </linearGradient>
-    <linearGradient id="okkly-sb-dark" x1="14" y1="4" x2="24" y2="4" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#4F46E5"/>
-      <stop offset="1" stop-color="#9063FF"/>
-    </linearGradient>
-    <clipPath id="okkly-sb-clip">
-      <circle cx="14" cy="14" r="10"/>
-    </clipPath>
   </defs>
 </svg>

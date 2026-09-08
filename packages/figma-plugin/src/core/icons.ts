@@ -7,13 +7,13 @@
  * and then recolored to a color token.
  *
  * Every icon is a 24×24 stroke glyph; `icon()` imports, rescales, and recolors.
- * Reuse everywhere via `icon(t, name, size, token)`.
+ * Reuse everywhere via `icon(t, name, size, token)`. The brand logo is not an
+ * icon — it is cloned from the hand-drawn logo page by `core/logo`.
  */
 
 import * as okklyIcons from "@okkly/icons";
 import { ICON_METADATA, getIconImportName } from "@okkly/icons/utils";
 import { ThemeContext, colorVar } from "./theme";
-import { linearGradient } from "./color";
 
 function bound(v: Variable): SolidPaint {
   const p: SolidPaint = { type: "SOLID", color: { r: 0, g: 0, b: 0 } };
@@ -84,85 +84,4 @@ export function iconFilled(
     (child as VectorNode).fills = [paint];
   }
   return node;
-}
-
-/**
- * The okkly brand mark — a circle with the `brand` glyph. Doubles as the
- * avatar. Background is the signature mint→dante gradient ("blood of Dante")
- * by default; pass gradient:false for a flat mint disc.
- */
-/**
- * AI mark — the same key+spark glyph in a rounded square (squircle) on an
- * indigo tile. Used wherever the product talks to a model: AI entry points,
- * assistant avatars, "generated with AI" badges, app-icon-style tiles.
- * The circular gradient `brandMark` stays the identity mark; this is the
- * functional AI icon, so the two never get confused.
- */
-export function aiMark(
-  t: ThemeContext,
-  d = 40,
-  opts: { tone?: string; glyphToken?: string; soft?: boolean; gradient?: boolean } = {},
-): FrameNode {
-  const tone = opts.tone ?? "accent/secondary";
-  const f = figma.createFrame();
-  f.name = "ai/mark";
-  f.resize(d, d);
-  f.cornerRadius = Math.round(d * 0.3); // squircle — app-icon proportions
-  f.clipsContent = false;
-  if (opts.gradient) {
-    f.fills = [
-      linearGradient(
-        [
-          { hex: "#818CF8", position: 0 },
-          { hex: "#B84BFF", position: 1 },
-        ],
-        "diagonal",
-      ),
-    ];
-  } else if (opts.soft) {
-    // tinted tile for inline use next to text — glyph carries the colour
-    const p: SolidPaint = { ...bound(colorVar(t, tone)), opacity: 0.16 };
-    f.fills = [p];
-  } else {
-    f.fills = [bound(colorVar(t, tone))];
-  }
-  f.strokes = [];
-  const gs = Math.round(d * 0.5);
-  const g = icon(t, "brand", gs, opts.glyphToken ?? (opts.soft ? tone : "text/inverse"));
-  f.appendChild(g);
-  g.x = Math.round((d - gs) / 2);
-  g.y = Math.round((d - gs) / 2);
-  return f;
-}
-
-export function brandMark(
-  t: ThemeContext,
-  d = 40,
-  opts: { gradient?: boolean; glyphToken?: string } = {},
-): FrameNode {
-  const f = figma.createFrame();
-  f.name = "brand/mark";
-  f.resize(d, d);
-  f.cornerRadius = d; // full circle
-  f.clipsContent = false;
-  if (opts.gradient === false) {
-    f.fills = [bound(colorVar(t, "accent/primary"))];
-  } else {
-    f.fills = [
-      linearGradient(
-        [
-          { hex: "#5EE6C1", position: 0 },
-          { hex: "#FF3D8B", position: 1 },
-        ],
-        "diagonal",
-      ),
-    ];
-  }
-  f.strokes = [];
-  const gs = Math.round(d * 0.56);
-  const g = icon(t, "brand", gs, opts.glyphToken ?? "accent/contrast");
-  f.appendChild(g);
-  g.x = Math.round((d - gs) / 2);
-  g.y = Math.round((d - gs) / 2);
-  return f;
 }

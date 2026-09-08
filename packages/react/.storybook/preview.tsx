@@ -55,7 +55,7 @@ const preview: Preview = {
             "Component showcase",
           ],
           "Brand",
-          ["Logo", "AnimatedLogo"],
+          ["Logo"],
           "Control",
           "Navigation",
           "Feedback",

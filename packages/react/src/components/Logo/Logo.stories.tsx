@@ -1,40 +1,41 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { StaticBackground } from "../StaticBackground/StaticBackground";
 import { Logo } from "./Logo";
 
 /**
- * Static brand lockup. Choose layout for nav (`compact`), headers (`horizontal`), or stacked mobile placements.
+ * Static brand lockup. Choose layout for nav (`compact`), headers (`horizontal`), or stacked
+ * mobile placements, and `variant` for the container treatment: filled disc, outlined ring, or
+ * the bare glyph.
  */
 const meta: Meta<typeof Logo> = {
   title: "Brand/Logo",
   component: Logo,
   args: {
     layout: "horizontal",
+    variant: "filled",
     tone: "multi",
-    label: "okryshto.dev",
+    label: "okkly",
     showLabel: true,
   },
   argTypes: {
     layout: { control: "inline-radio", options: ["compact", "horizontal", "stacked"] },
+    variant: { control: "inline-radio", options: ["filled", "outlined", "pure"] },
     tone: {
       control: "select",
-      options: ["multi", "mint", "indigo", "dante", "violet", "ember", "mono-dark", "mono-light"],
+      options: ["multi", "mint", "indigo", "dante", "violet", "ember"],
     },
   },
   render: (args) => (
-    <StaticBackground preset="void" style={{ width: "100%", height: "600px" }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        <Logo {...args} />
-      </div>
-    </StaticBackground>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <Logo {...args} />
+    </div>
   ),
   parameters: {
     layout: "fullscreen",
@@ -57,22 +58,6 @@ export const Compact: Story = { args: { layout: "compact" } };
  */
 export const Stacked: Story = { args: { layout: "stacked" } };
 /**
- * This example shows mono dark.
- */
-export const MonoDark: Story = { name: "Mono — White on Black", args: { tone: "mono-dark" } };
-/**
- * This example shows mono light.
- */
-export const MonoLight: Story = {
-  name: "Mono — Black on White",
-  args: { tone: "mono-light" },
-  render: (args) => (
-    <div style={{ background: "#ffffff", padding: "24px", borderRadius: "12px" }}>
-      <Logo {...args} />
-    </div>
-  ),
-};
-/**
  * This example shows emblem only.
  */
 export const EmblemOnly: Story = { name: "Emblem only", args: { showLabel: false } };
@@ -91,6 +76,19 @@ export const Layouts: Story = {
 };
 
 /**
+ * This example shows variants.
+ */
+export const Variants: Story = {
+  render: () => (
+    <div style={{ display: "flex", alignItems: "center", gap: "32px" }}>
+      <Logo variant="filled" layout="stacked" label="filled" />
+      <Logo variant="outlined" layout="stacked" label="outlined" />
+      <Logo variant="pure" layout="stacked" label="pure" />
+    </div>
+  ),
+};
+
+/**
  * This example shows tones.
  */
 export const Tones: Story = {
@@ -99,6 +97,9 @@ export const Tones: Story = {
       <Logo tone="multi" layout="stacked" />
       {(["mint", "indigo", "dante", "violet", "ember"] as const).map((tone) => (
         <Logo key={tone} tone={tone} layout="stacked" />
+      ))}
+      {(["mint", "indigo", "dante", "violet", "ember"] as const).map((tone) => (
+        <Logo key={`${tone}-outlined`} tone={tone} variant="outlined" layout="stacked" />
       ))}
     </div>
   ),

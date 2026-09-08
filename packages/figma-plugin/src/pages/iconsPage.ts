@@ -6,7 +6,7 @@
 import { RADII } from "../tokens";
 import { autoFrame } from "../core/layout";
 import { fillToken, makeText, strokeToken } from "../core/nodes";
-import { icon, brandMark, ICON_NAMES } from "../core/icons";
+import { icon, ICON_NAMES } from "../core/icons";
 import { ThemeContext } from "../core/theme";
 import { addAtmosphere, board, boardTitle } from "./scaffold";
 
@@ -234,61 +234,6 @@ async function groupBlock(t: ThemeContext, group: Group): Promise<FrameNode> {
   return col;
 }
 
-/** Featured brand mark — the primary short symbol of the brand. */
-async function brandBlock(t: ThemeContext): Promise<FrameNode> {
-  const col = autoFrame({ direction: "VERTICAL", gap: 16 });
-  col.layoutAlign = "STRETCH";
-  col.appendChild(await makeText(t, "overline", "Brand mark", "accent/primary"));
-  const card = autoFrame({ direction: "HORIZONTAL", gap: 36, cross: "CENTER", padding: 32 });
-  card.layoutAlign = "STRETCH";
-  card.primaryAxisSizingMode = "FIXED";
-  card.cornerRadius = RADII.xl;
-  fillToken(t, card, "bg/inset");
-  strokeToken(t, card, "border/subtle", 1);
-  // hero mark
-  card.appendChild(brandMark(t, 104));
-  // description
-  const txt = autoFrame({ direction: "VERTICAL", gap: 6 });
-  txt.appendChild(await makeText(t, "heading/h3", "okkly", "text/primary"));
-  txt.appendChild(
-    await makeText(
-      t,
-      "body/md",
-      "Celestial Yin-Yang — balance, access, unlocked. The primary brand symbol; doubles as the avatar. Ancient sacred geometry meets modern cryptographic design.",
-      "text/secondary",
-      { maxWidth: 380 },
-    ),
-  );
-  txt.appendChild(
-    await makeText(
-      t,
-      "caption",
-      "Celestial yin-yang. Primary brand mark and avatar. Background — Dante blood gradient (mint → dante). Balance and accessibility.",
-      "text/muted",
-      { maxWidth: 380 },
-    ),
-  );
-  card.appendChild(txt);
-  txt.layoutGrow = 1;
-  // sizes + flat variant
-  const sizes = autoFrame({ direction: "VERTICAL", gap: 10, cross: "CENTER" });
-  const row = autoFrame({ direction: "HORIZONTAL", gap: 14, cross: "CENTER" });
-  row.appendChild(brandMark(t, 24));
-  row.appendChild(brandMark(t, 32));
-  row.appendChild(brandMark(t, 48));
-  sizes.appendChild(row);
-  const flatRow = autoFrame({ direction: "HORIZONTAL", gap: 14, cross: "CENTER" });
-  flatRow.appendChild(brandMark(t, 48, { gradient: false }));
-  const flatCap = autoFrame({ direction: "VERTICAL", gap: 0 });
-  flatCap.appendChild(await makeText(t, "caption", "flat mint", "text/muted"));
-  flatCap.appendChild(await makeText(t, "caption", "gradient →", "accent/primary"));
-  flatRow.appendChild(flatCap);
-  sizes.appendChild(flatRow);
-  card.appendChild(sizes);
-  col.appendChild(card);
-  return col;
-}
-
 export async function paintIcons(t: ThemeContext, page: PageNode): Promise<void> {
   const b = board(t, "Icons", BOARD_W, { gap: 44, pad: PAD });
   addAtmosphere(b, [{ x: 1000, y: -80, size: 560, hex: "#5EE6C1" }]);
@@ -302,12 +247,11 @@ export async function paintIcons(t: ThemeContext, page: PageNode): Promise<void>
     ),
   );
 
-  b.appendChild(await brandBlock(t));
-
   for (const group of GROUPS) b.appendChild(await groupBlock(t, group));
 
   // Safety net: anything registered but not listed above still shows up.
-  // `brand` is featured above, so keep it out of the leftovers grid.
+  // `brand` is the old identity glyph — the logo lives on Foundations · Brand,
+  // so it stays out of the icon grid.
   const listed = new Set(GROUPS.flatMap((g) => g.names));
   const rest = ICON_NAMES.filter((n) => !listed.has(n) && n !== "brand");
   if (rest.length) b.appendChild(await groupBlock(t, { title: "More", names: rest }));

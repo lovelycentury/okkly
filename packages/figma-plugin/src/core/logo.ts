@@ -1,10 +1,11 @@
 /**
  * Brand logo — cloned from the hand-drawn "◆ Logo" page, never regenerated.
  *
- * That page is in `PRESERVE_PAGES`, so it survives teardown and stays the single
- * source of truth: redraw the lockup there and the next run picks it up
- * everywhere. Nodes are found by name rather than by id, so the lookup survives
- * the ids changing when the artwork is re-made.
+ * Teardown keeps the first page of the file and wipes every page after it, so
+ * keep the logo page first and it stays the single source of truth: redraw the
+ * lockup there and the next run picks it up everywhere. Nodes are found by name
+ * rather than by id, so the lookup survives the ids changing when the artwork
+ * is re-made.
  *
  * The three approved lockups (per the usage guide on that page):
  *   header     — emblem + label to its right, for nav bars. Smallest approved.
@@ -27,8 +28,8 @@ let sources: Partial<Record<Lockup, SceneNode>> = {};
 /**
  * Find the lockups once, before any generated page exists.
  *
- * Call right after teardown: at that point the only pages left are the user's,
- * so a name match can't accidentally hit something the plugin drew itself.
+ * Call right after teardown: at that point a name match can't accidentally hit
+ * something the plugin drew itself.
  */
 export async function primeLogos(): Promise<void> {
   sources = {};

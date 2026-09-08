@@ -21,7 +21,6 @@ import {
 } from "./brand/BrandDocs";
 
 import { Logo } from "./components/Logo/Logo";
-import { AnimatedLogo } from "./components/AnimatedLogo/AnimatedLogo";
 
 import { Button } from "./components/Button/Button";
 import { ButtonGroup } from "./components/ButtonGroup/ButtonGroup";
@@ -223,7 +222,7 @@ const componentIndex = [
   { category: "Data", items: ["Avatar", "AvatarGroup", "Divider", "List", "StatCard", "Table"] },
   { category: "Media", items: ["AnimatedBackground", "Card", "LinkCard", "Photo", "ProjectCard"] },
   { category: "Transitions", items: ["Collapse", "Fade", "Grow", "Ripple", "Slide", "Zoom"] },
-  { category: "Brand", items: ["Logo", "AnimatedLogo"] },
+  { category: "Brand", items: ["Logo"] },
 ];
 
 const hooks = [
@@ -1172,9 +1171,6 @@ function Showcase() {
           <Tile label="Logo" grow>
             <Logo layout="horizontal" tone="multi" label="okkly" />
           </Tile>
-          <Tile label="AnimatedLogo" grow>
-            <AnimatedLogo size={72} mode="loop" />
-          </Tile>
         </Grid>
       </BrandDocsSection>
 
@@ -1473,6 +1469,7 @@ function Showcase() {
           </Tile>
           <Tile label="ProjectCard" grow>
             <ProjectCard
+              logo={<Logo showLabel={false} size={32} />}
               title="Finance App"
               description="Case-study card for portfolio grids."
               tags={["Product", "Mobile"]}
