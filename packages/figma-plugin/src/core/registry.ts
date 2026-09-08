@@ -1,33 +1,24 @@
 /**
  * Idempotent teardown so the plugin is safely rerunnable.
  *
- * Everything the plugin creates is namespaced: pages start with `PAGE_MARK`,
- * variable collections and styles start with `NS`. Teardown removes exactly
- * those and nothing the user made by hand.
+ * Pages are wiped by position, not by name: the first page in the file always
+ * stays (it holds the hand-drawn logo — see `core/logo`) and every page after
+ * it goes, whatever it is called. Variable collections and styles are still
+ * namespaced with `NS`, so teardown removes exactly those and leaves the user's
+ * own styles alone.
  */
 
 import { NS, PAGE_MARK } from "../tokens";
 
+/** Wipe the previous run: every page but the first, plus namespaced styles. */
 export async function teardown(): Promise<void> {
   await figma.loadAllPagesAsync();
 
   // ── Pages ───────────────────────────────────────────────────
-  // Pages to preserve (created by user, not by the plugin)
-  const PRESERVE_PAGES = ["◆ Logo"];
-
-  const generatedPages = figma.root.children.filter(
-    (p) => p.name.startsWith(PAGE_MARK) && !PRESERVE_PAGES.includes(p.name),
-  );
-  let survivor = figma.root.children.find((p) => !p.name.startsWith(PAGE_MARK));
-  if (!survivor) {
-    // Only generated pages exist — create a temporary anchor so we can remove them.
-    survivor = figma.createPage();
-    survivor.name = "Untitled";
-  }
+  // Generated pages are appended, so the first page is never one of ours.
+  const [survivor, ...doomed] = figma.root.children;
   await figma.setCurrentPageAsync(survivor);
-  for (const p of generatedPages) {
-    if (figma.root.children.length > 1) p.remove();
-  }
+  for (const p of doomed) p.remove();
 
   // ── Variable collections ────────────────────────────────────
   const collections = await figma.variables.getLocalVariableCollectionsAsync();

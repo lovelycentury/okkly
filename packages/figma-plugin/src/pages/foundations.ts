@@ -17,15 +17,22 @@ import {
   TYPE_TOKENS,
 } from "../tokens";
 import { linearGradient, solid } from "../core/color";
-import { aiMark } from "../core/icons";
 import { autoFrame } from "../core/layout";
 import { auroraBlob, fillToken, makeText, rect, strokeToken } from "../core/nodes";
+import { Lockup, hasLogo, logoLockup } from "../core/logo";
+import {
+  LOGO_SIZES,
+  LOGO_TONES,
+  LOGO_VARIANTS,
+  LogoLayout,
+  LogoVariant,
+  WORDMARK,
+  brandLockup,
+  logoEmblem,
+} from "../core/emblem";
 import { ThemeContext } from "../core/theme";
 import { applyEffect, glassSurface } from "../components/primitives";
 import { addAtmosphere, board, boardTitle, rowBoards } from "./scaffold";
-
-/** [English, Russian] descriptive pair. */
-type Bi = [string, string];
 
 // Per-board geometry (padding-first — generous breathing room).
 const PALETTE = { w: 1368, pad: 96, content: 1368 - 192, swatch: 220 };
@@ -37,23 +44,29 @@ const TERM_W = 200;
 // ── Shared blocks ─────────────────────────────────────────────
 
 /** English line + muted Russian line, stacked. */
-async function bi(
+/** Descriptive paragraph, wrapped so callers can stretch it in a column. */
+async function para(
   t: ThemeContext,
   style: string,
-  [en]: Bi,
-  colorEn: string,
+  text: string,
+  color: string,
   maxWidth?: number,
 ): Promise<FrameNode> {
   const wrap = autoFrame({ direction: "VERTICAL", gap: 3 });
-  wrap.appendChild(await makeText(t, style, en, colorEn, { maxWidth }));
+  wrap.appendChild(await makeText(t, style, text, color, { maxWidth }));
   return wrap;
 }
 
-async function subhead(t: ThemeContext, title: string, note: Bi, maxW: number): Promise<FrameNode> {
+async function subhead(
+  t: ThemeContext,
+  title: string,
+  note: string,
+  maxW: number,
+): Promise<FrameNode> {
   const col = autoFrame({ direction: "VERTICAL", gap: 8 });
   col.layoutAlign = "STRETCH";
   col.appendChild(await makeText(t, "heading/h2", title, "text/primary"));
-  col.appendChild(await bi(t, "body/md", note, "text/secondary", maxW));
+  col.appendChild(await para(t, "body/md", note, "text/secondary", maxW));
   return col;
 }
 
@@ -82,59 +95,44 @@ function hairline(t: ThemeContext, w: number): RectangleNode {
 interface ColorGroup {
   prefix: string;
   title: string;
-  note: Bi;
+  note: string;
 }
 
 const COLOR_GROUPS: ColorGroup[] = [
   {
     prefix: "bg/",
     title: "Backgrounds",
-    note: [
-      "Layering, deepest canvas → raised surfaces. Put dense content on a surface, not straight on canvas.",
-      ": canvas . — surface, canvas.",
-    ],
+    note: "Layering, deepest canvas → raised surfaces. Put dense content on a surface, not straight on canvas.",
   },
   {
     prefix: "text/",
     title: "Text",
-    note: [
-      "Contrast tiers. Primary for headings & key copy, secondary for body, muted for metadata, inverse on accent.",
-      ". Primary — , secondary — , muted — , inverse — .",
-    ],
+    note: "Contrast tiers. Primary for headings & key copy, secondary for body, muted for metadata, inverse on accent.",
   },
   {
     prefix: "accent/",
     title: "Accent — aurora",
-    note: [
-      "The signature. Use sparingly: one primary action per view. accent/soft is for glows & washes, never text.",
-      ". : . accent/soft — , .",
-    ],
+    note: "The signature. Use sparingly: one primary action per view. accent/soft is for glows & washes, never text.",
   },
   {
     prefix: "border/",
     title: "Borders",
-    note: [
-      "Translucent by design. Subtle for dividers, default for components, strong for emphasis & focus.",
-      ". Subtle — , default — , strong — .",
-    ],
+    note: "Translucent by design. Subtle for dividers, default for components, strong for emphasis & focus.",
   },
   {
     prefix: "glass/",
     title: "Glass",
-    note: [
-      "Translucent fills & hairline borders for frosted materials. Always pair fill + border + background blur.",
-      "",
-    ],
+    note: "Translucent fills & hairline borders for frosted materials. Always pair fill + border + background blur.",
   },
   {
     prefix: "feedback/",
     title: "Feedback",
-    note: ["Reserve strictly for status: success, warning, danger. Never decorative.", ""],
+    note: "Reserve strictly for status: success, warning, danger. Never decorative.",
   },
   {
     prefix: "state/",
     title: "State",
-    note: ["Interaction states — focus ring color, driven by the accent.", ""],
+    note: "Interaction states — focus ring color, driven by the accent.",
   },
 ];
 
@@ -302,10 +300,47 @@ async function glowCard(t: ThemeContext, name: string): Promise<FrameNode> {
   return box;
 }
 
-/** Featured AI mark + its sizes and variants. */
-async function aiMarkCard(t: ThemeContext, w: number): Promise<FrameNode> {
-  const card = autoFrame({ direction: "VERTICAL", gap: 24, padding: 28 });
-  card.name = "ai-mark";
+/**
+ * The three approved lockups, cloned from the hand-drawn logo page so this board
+ * never drifts from the artwork — redraw them there and the next run picks it up.
+ */
+const LOCKUP_NOTES: Array<[Lockup, string, string]> = [
+  ["header", "Header", "Emblem + label to its right. Nav bars — the smallest approved size."],
+  ["horizontal", "Horizontal", "Emblem + label on a shared baseline. Desktop headers."],
+  ["vertical", "Vertical", "Emblem stacked over the label. Square compositions."],
+];
+
+/** One lockup on a tile, captioned with its name and where it belongs. */
+async function lockupTile(
+  t: ThemeContext,
+  kind: Lockup,
+  title: string,
+  note: string,
+  w: number,
+): Promise<FrameNode> {
+  const tile = autoFrame({ direction: "VERTICAL", gap: 20, padding: 24 });
+  tile.name = `logo/${kind}`;
+  tile.resize(w, tile.height);
+  tile.primaryAxisSizingMode = "AUTO";
+  tile.counterAxisSizingMode = "FIXED";
+  tile.cornerRadius = RADII.lg;
+  fillToken(t, tile, "bg/surface-raised");
+  strokeToken(t, tile, "border/subtle", 1);
+
+  const art = logoLockup(kind, 48);
+  if (art) tile.appendChild(art);
+
+  const cap = autoFrame({ direction: "VERTICAL", gap: 4 });
+  cap.appendChild(await makeText(t, "label/sm", title, "text/secondary"));
+  cap.appendChild(await makeText(t, "caption", note, "text/muted", { maxWidth: w - 48 }));
+  tile.appendChild(cap);
+  return tile;
+}
+
+/** Logo specimen card — the lockups as they are drawn on the logo page. */
+async function logoCard(t: ThemeContext, w: number): Promise<FrameNode> {
+  const card = autoFrame({ direction: "VERTICAL", gap: 20, padding: 28 });
+  card.name = "logo";
   card.resize(w, card.height);
   card.primaryAxisSizingMode = "AUTO";
   card.counterAxisSizingMode = "FIXED";
@@ -313,64 +348,154 @@ async function aiMarkCard(t: ThemeContext, w: number): Promise<FrameNode> {
   fillToken(t, card, "bg/surface");
   strokeToken(t, card, "border/subtle", 1);
 
-  const head = autoFrame({ direction: "HORIZONTAL", gap: 24, cross: "CENTER" });
-  head.appendChild(aiMark(t, 104));
-  const txt = autoFrame({ direction: "VERTICAL", gap: 8 });
-  txt.appendChild(await makeText(t, "heading/h3", "AI mark", "text/primary"));
-  txt.appendChild(
-    await bi(
-      t,
-      "body/md",
-      [
-        "Key + spark in a squircle on indigo — the functional icon for anything model-driven: AI entry points, assistant avatars, generated-content badges.",
-        "— , AI: , , .",
-      ],
-      "text/secondary",
-      460,
-    ),
-  );
-  txt.appendChild(
-    await makeText(
-      t,
-      "mono/sm",
-      "aiMark() · accent/secondary · r = 0.3d · glyph 0.5d",
-      "text/muted",
-    ),
-  );
-  head.appendChild(txt);
-  card.appendChild(head);
-
-  card.appendChild(hairline(t, w - 56));
-
-  const sizes = autoFrame({ direction: "VERTICAL", gap: 12 });
-  sizes.appendChild(await makeText(t, "overline", "SIZES", "text/muted"));
-  const sizeRow = autoFrame({ direction: "HORIZONTAL", gap: 20, cross: "CENTER" });
-  for (const d of [20, 24, 32, 40, 56]) {
-    const col = autoFrame({ direction: "VERTICAL", gap: 8, cross: "CENTER" });
-    col.appendChild(aiMark(t, d));
-    col.appendChild(await makeText(t, "mono/sm", `${d}`, "text/muted"));
-    sizeRow.appendChild(col);
+  if (!hasLogo()) {
+    card.appendChild(
+      await makeText(
+        t,
+        "body/sm",
+        "No logo page found — keep the hand-drawn lockups on the first page of the file.",
+        "text/muted",
+        { maxWidth: w - 56 },
+      ),
+    );
+    return card;
   }
-  sizes.appendChild(sizeRow);
-  card.appendChild(sizes);
 
-  const variants = autoFrame({ direction: "VERTICAL", gap: 12 });
-  variants.appendChild(await makeText(t, "overline", "VARIANTS", "text/muted"));
-  const varRow = autoFrame({ direction: "HORIZONTAL", gap: 24, cross: "CENTER" });
-  const specs: Array<[FrameNode, Bi]> = [
-    [aiMark(t, 56), ["Solid · default", ""]],
-    [aiMark(t, 56, { soft: true }), ["Soft · inline with text", ""]],
-    [aiMark(t, 56, { gradient: true }), ["Gradient · hero / app icon", ""]],
-    [aiMark(t, 56, { tone: "accent/dante" }), ["Dante · alt accent", ""]],
+  const inner = w - 56;
+  const tileW = Math.floor((inner - 40) / 3);
+  const tiles = grid(20, inner);
+  for (const [kind, title, note] of LOCKUP_NOTES) {
+    tiles.appendChild(await lockupTile(t, kind, title, note, tileW));
+  }
+  card.appendChild(tiles);
+  return card;
+}
+
+/** Specimen column: one emblem over its tone name and matching color token. */
+async function emblemSpecimen(
+  t: ThemeContext,
+  spec: (typeof LOGO_TONES)[number],
+  variant: LogoVariant,
+  d: number,
+): Promise<FrameNode> {
+  const col = autoFrame({ direction: "VERTICAL", gap: 10, cross: "CENTER" });
+  col.appendChild(logoEmblem(spec.tone, d, variant));
+  col.appendChild(await makeText(t, "label/sm", spec.label, "text/secondary"));
+  col.appendChild(await makeText(t, "mono/sm", spec.token, "text/muted"));
+  return col;
+}
+
+/**
+ * The emblem in every approved colorway: five accent tones, filled and
+ * outlined. Filled is the identity mark; outlined is the one-ink reduction.
+ */
+async function emblemTonesCard(t: ThemeContext, w: number): Promise<FrameNode> {
+  const card = autoFrame({ direction: "VERTICAL", gap: 24, padding: 28 });
+  card.name = "logo/tones";
+  card.resize(w, card.height);
+  card.primaryAxisSizingMode = "AUTO";
+  card.counterAxisSizingMode = "FIXED";
+  card.cornerRadius = RADII.xl;
+  fillToken(t, card, "bg/surface");
+  strokeToken(t, card, "border/subtle", 1);
+
+  const inner = w - 56;
+  for (const variant of LOGO_VARIANTS) {
+    const block = autoFrame({ direction: "VERTICAL", gap: 16 });
+    block.layoutAlign = "STRETCH";
+    block.appendChild(await makeText(t, "overline", `${variant} · 5 tones`, "text/muted"));
+    const row = grid(32, inner);
+    for (const spec of LOGO_TONES) row.appendChild(await emblemSpecimen(t, spec, variant, 72));
+    block.appendChild(row);
+    card.appendChild(block);
+  }
+  return card;
+}
+
+/** The size ramp, per treatment — emblems sit on a shared baseline. */
+async function emblemSizesCard(t: ThemeContext, w: number): Promise<FrameNode> {
+  const card = autoFrame({ direction: "VERTICAL", gap: 24, padding: 28 });
+  card.name = "logo/sizes";
+  card.resize(w, card.height);
+  card.primaryAxisSizingMode = "AUTO";
+  card.counterAxisSizingMode = "FIXED";
+  card.cornerRadius = RADII.xl;
+  fillToken(t, card, "bg/surface");
+  strokeToken(t, card, "border/subtle", 1);
+
+  for (const variant of LOGO_VARIANTS) {
+    const block = autoFrame({ direction: "VERTICAL", gap: 16 });
+    block.layoutAlign = "STRETCH";
+    block.appendChild(await makeText(t, "overline", variant, "text/muted"));
+    // MAX on the counter axis puts every emblem on one baseline, so the ramp
+    // reads as a ramp rather than a row of centred boxes.
+    const row = autoFrame({ direction: "HORIZONTAL", gap: 28, cross: "MAX" });
+    for (const d of LOGO_SIZES) {
+      const col = autoFrame({ direction: "VERTICAL", gap: 10, cross: "CENTER" });
+      col.appendChild(logoEmblem("mint", d, variant));
+      col.appendChild(await makeText(t, "mono/sm", `${d}`, "text/muted"));
+      row.appendChild(col);
+    }
+    block.appendChild(row);
+    card.appendChild(block);
+  }
+  return card;
+}
+
+/** One lockup on a tile, captioned with its arrangement and treatment. */
+async function brandTile(
+  t: ThemeContext,
+  layout: LogoLayout,
+  variant: LogoVariant,
+  note: string,
+  w: number,
+): Promise<FrameNode> {
+  const tile = autoFrame({ direction: "VERTICAL", gap: 20, padding: 24 });
+  tile.name = `logo/lockup/${layout}/${variant}`;
+  tile.resize(w, tile.height);
+  tile.primaryAxisSizingMode = "AUTO";
+  tile.counterAxisSizingMode = "FIXED";
+  tile.cornerRadius = RADII.lg;
+  fillToken(t, tile, "bg/surface-raised");
+  strokeToken(t, tile, "border/subtle", 1);
+
+  tile.appendChild(await brandLockup(t, { tone: "mint", variant, layout }));
+  const cap = autoFrame({ direction: "VERTICAL", gap: 4 });
+  cap.appendChild(await makeText(t, "label/sm", `${layout} · ${variant}`, "text/secondary"));
+  cap.appendChild(await makeText(t, "caption", note, "text/muted", { maxWidth: w - 48 }));
+  tile.appendChild(cap);
+  return tile;
+}
+
+/** The emblem locked up with the wordmark, label right and label below. */
+async function emblemLockupsCard(t: ThemeContext, w: number): Promise<FrameNode> {
+  const card = autoFrame({ direction: "VERTICAL", gap: 20, padding: 28 });
+  card.name = "logo/wordmark";
+  card.resize(w, card.height);
+  card.primaryAxisSizingMode = "AUTO";
+  card.counterAxisSizingMode = "FIXED";
+  card.cornerRadius = RADII.xl;
+  fillToken(t, card, "bg/surface");
+  strokeToken(t, card, "border/subtle", 1);
+
+  const notes: Array<[LogoLayout, string]> = [
+    ["horizontal", "Label right of the emblem. Nav bars, headers, email signatures."],
+    ["stacked", "Label below the emblem. App icons, avatars, social covers."],
   ];
-  for (const [node, label] of specs) {
-    const col = autoFrame({ direction: "VERTICAL", gap: 8, cross: "CENTER" });
-    col.appendChild(node);
-    col.appendChild(await bi(t, "caption", label, "text/secondary", 150));
-    varRow.appendChild(col);
+
+  const inner = w - 56;
+  const tileW = Math.floor((inner - 40) / 3);
+  for (const [layout, note] of notes) {
+    const block = autoFrame({ direction: "VERTICAL", gap: 16 });
+    block.layoutAlign = "STRETCH";
+    block.appendChild(await makeText(t, "overline", `${layout} · "${WORDMARK}"`, "text/muted"));
+    const tiles = grid(20, inner);
+    for (const variant of LOGO_VARIANTS) {
+      tiles.appendChild(await brandTile(t, layout, variant, note, tileW));
+    }
+    block.appendChild(tiles);
+    card.appendChild(block);
   }
-  variants.appendChild(varRow);
-  card.appendChild(variants);
   return card;
 }
 
@@ -439,7 +564,7 @@ async function paintSystemBoard(t: ThemeContext, page: PageNode): Promise<FrameN
     await subhead(
       t,
       "Typography",
-      ["Editorial modular scale — display for identity, text for reading.", "— display , text ."],
+      "Editorial modular scale — display for identity, text for reading.",
       SYS.content,
     ),
   );
@@ -452,7 +577,7 @@ async function paintSystemBoard(t: ThemeContext, page: PageNode): Promise<FrameN
     await subhead(
       t,
       "Spacing",
-      ["4px base grid — use these steps, avoid arbitrary values.", "4px — , ."],
+      "4px base grid — use these steps, avoid arbitrary values.",
       SYS.content,
     ),
   );
@@ -464,7 +589,7 @@ async function paintSystemBoard(t: ThemeContext, page: PageNode): Promise<FrameN
 
   const radii = autoFrame({ direction: "VERTICAL", gap: 20 });
   radii.layoutAlign = "STRETCH";
-  radii.appendChild(await subhead(t, "Radii", ["Soft, consistent corners.", ""], SYS.content));
+  radii.appendChild(await subhead(t, "Radii", "Soft, consistent corners.", SYS.content));
   const radiiGrid = grid(20);
   for (const [name, value] of Object.entries(RADII)) {
     if (name === "full") continue;
@@ -476,12 +601,7 @@ async function paintSystemBoard(t: ThemeContext, page: PageNode): Promise<FrameN
   const elevation = autoFrame({ direction: "VERTICAL", gap: 20 });
   elevation.layoutAlign = "STRETCH";
   elevation.appendChild(
-    await subhead(
-      t,
-      "Elevation",
-      ["Shadows tuned for a dark canvas — prefer subtle.", ""],
-      SYS.content,
-    ),
+    await subhead(t, "Elevation", "Shadows tuned for a dark canvas — prefer subtle.", SYS.content),
   );
   const elevationGrid = grid(20);
   for (const s of SHADOW_TOKENS) elevationGrid.appendChild(await elevationCard(t, s.name));
@@ -494,7 +614,7 @@ async function paintSystemBoard(t: ThemeContext, page: PageNode): Promise<FrameN
     await subhead(
       t,
       "Glass & blur",
-      ["Apple-like frosted materials for headers, menus and cards.", "Apple , ."],
+      "Apple-like frosted materials for headers, menus and cards.",
       SYS.content,
     ),
   );
@@ -520,10 +640,7 @@ async function paintSystemBoard(t: ThemeContext, page: PageNode): Promise<FrameN
     await subhead(
       t,
       "Glow — aurora",
-      [
-        "Ambient accent light: focus rings, hover, filled-button & gradient auras, EQ node drag.",
-        "-: , hover, /, EQ.",
-      ],
+      "Ambient accent light: focus rings, hover, filled-button & gradient auras, EQ node drag.",
       SYS.content,
     ),
   );
@@ -538,25 +655,28 @@ async function paintSystemBoard(t: ThemeContext, page: PageNode): Promise<FrameN
     await subhead(
       t,
       "Atmosphere",
-      ["The cosmic aurora backdrop behind boards, social covers and the call screen.", ""],
+      "The cosmic aurora backdrop behind boards, social covers and the call screen.",
       SYS.content,
     ),
   );
   atmo.appendChild(await atmosphereSample(t, SYS.content));
   b.appendChild(atmo);
 
-  const ai = autoFrame({ direction: "VERTICAL", gap: 20 });
-  ai.layoutAlign = "STRETCH";
-  ai.appendChild(
+  const logo = autoFrame({ direction: "VERTICAL", gap: 20 });
+  logo.layoutAlign = "STRETCH";
+  logo.appendChild(
     await subhead(
       t,
-      "AI mark",
-      ["The icon for AI-driven surfaces — squircle tile, indigo, key + spark.", "AI- — , , ."],
+      "Logo",
+      "The hand-drawn lockups, then the emblem parametrically: five accent tones, three treatments, the size ramp, and the wordmark lockups.",
       SYS.content,
     ),
   );
-  ai.appendChild(await aiMarkCard(t, SYS.content));
-  b.appendChild(ai);
+  logo.appendChild(await logoCard(t, SYS.content));
+  logo.appendChild(await emblemTonesCard(t, SYS.content));
+  logo.appendChild(await emblemSizesCard(t, SYS.content));
+  logo.appendChild(await emblemLockupsCard(t, SYS.content));
+  b.appendChild(logo);
 
   page.appendChild(b);
   return b;
@@ -568,7 +688,7 @@ async function paintSystemBoard(t: ThemeContext, page: PageNode): Promise<FrameN
 async function usageRow(
   t: ThemeContext,
   term: string,
-  desc: Bi,
+  desc: string,
   descMax: number,
 ): Promise<FrameNode> {
   const row = autoFrame({ direction: "HORIZONTAL", gap: 20, cross: "MIN" });
@@ -577,14 +697,14 @@ async function usageRow(
   termWrap.counterAxisSizingMode = "FIXED";
   termWrap.appendChild(await makeText(t, "mono/sm", term, "accent/primary"));
   row.appendChild(termWrap);
-  row.appendChild(await bi(t, "body/sm", desc, "text/secondary", descMax));
+  row.appendChild(await para(t, "body/sm", desc, "text/secondary", descMax));
   return row;
 }
 
 interface UsageSection {
   title: string;
-  note: Bi;
-  rows: Array<[string, Bi]>;
+  note: string;
+  rows: Array<[string, string]>;
 }
 
 async function usageCard(t: ThemeContext, s: UsageSection, w: number): Promise<FrameNode> {
@@ -598,7 +718,7 @@ async function usageCard(t: ThemeContext, s: UsageSection, w: number): Promise<F
   const head = autoFrame({ direction: "VERTICAL", gap: 8 });
   head.layoutAlign = "STRETCH";
   head.appendChild(await makeText(t, "heading/h3", s.title, "text/primary"));
-  head.appendChild(await bi(t, "body/sm", s.note, "text/muted", w - 64));
+  head.appendChild(await para(t, "body/sm", s.note, "text/muted", w - 64));
   card.appendChild(head);
   card.appendChild(hairline(t, w - 64));
 
@@ -610,15 +730,15 @@ async function usageCard(t: ThemeContext, s: UsageSection, w: number): Promise<F
 // Do / Don't card (fixed-width columns — deterministic, no overflow)
 interface DoDont {
   title: string;
-  note: Bi;
-  dos: Bi[];
-  donts: Bi[];
+  note: string;
+  dos: string[];
+  donts: string[];
 }
 
 async function bulletList(
   t: ThemeContext,
   label: string,
-  items: Bi[],
+  items: string[],
   colorToken: string,
   colW: number,
 ): Promise<FrameNode> {
@@ -632,7 +752,7 @@ async function bulletList(
     row.resize(colW, row.height);
     row.counterAxisSizingMode = "FIXED";
     row.appendChild(await makeText(t, "body/sm", label === "Do" ? "✓" : "✕", colorToken));
-    row.appendChild(await bi(t, "body/sm", item, "text/secondary", textMax));
+    row.appendChild(await para(t, "body/sm", item, "text/secondary", textMax));
     col.appendChild(row);
   }
   return col;
@@ -649,7 +769,7 @@ async function doDontCard(t: ThemeContext, g: DoDont, w: number): Promise<FrameN
   const head = autoFrame({ direction: "VERTICAL", gap: 8 });
   head.layoutAlign = "STRETCH";
   head.appendChild(await makeText(t, "heading/h3", g.title, "text/primary"));
-  head.appendChild(await bi(t, "body/sm", g.note, "text/muted", w - 64));
+  head.appendChild(await para(t, "body/sm", g.note, "text/muted", w - 64));
   card.appendChild(head);
   card.appendChild(hairline(t, w - 64));
 
@@ -664,7 +784,7 @@ async function doDontCard(t: ThemeContext, g: DoDont, w: number): Promise<FrameN
 // Font card
 interface FontSpec {
   name: string;
-  role: Bi;
+  role: string;
   weights: string;
   download: string;
 }
@@ -672,19 +792,19 @@ interface FontSpec {
 const FONTS: FontSpec[] = [
   {
     name: "Inter Tight",
-    role: ["Display & headings", ""],
+    role: "Display & headings",
     weights: "Medium · Semi Bold",
     download: "fonts.google.com/specimen/Inter+Tight",
   },
   {
     name: "Inter",
-    role: ["Body, labels & UI", ", UI"],
+    role: "Body, labels & UI",
     weights: "Regular · Medium · Semi Bold",
     download: "fonts.google.com/specimen/Inter",
   },
   {
     name: "JetBrains Mono",
-    role: ["Metadata & code", ""],
+    role: "Metadata & code",
     weights: "Regular",
     download: "fonts.google.com/specimen/JetBrains+Mono",
   },
@@ -710,149 +830,114 @@ async function fontCard(t: ThemeContext, f: FontSpec, w: number): Promise<FrameN
 
 const TYPE_USAGE: UsageSection = {
   title: "Typography — when to use each style",
-  note: [
-    "Hierarchy comes from scale, not weight. Pick the smallest style that still reads as its level.",
-    "",
-  ],
+  note: "Hierarchy comes from scale, not weight. Pick the smallest style that still reads as its level.",
   rows: [
-    ["display/2xl", ["Hero identity — your name. Once per site, largest moment on the page.", ""]],
-    ["display/xl", ["Screen titles & the contact headline. One per screen.", ""]],
-    ["display/lg", ["Big section openers; the hero headline on mobile.", ""]],
-    ["heading/h1", ["Section titles (Links, Credibility, About).", "(Links, Credibility, About)."]],
-    ["heading/h2", ["Sub-sections and large pull-quotes.", ""]],
-    ["heading/h3", ["Card titles, link-row titles, guideline headers.", ""]],
-    ["heading/h4", ["Small card titles, nav brand name, list headers.", ""]],
-    ["body/lg", ["Lead paragraph directly under a headline.", ""]],
-    ["body/md", ["Default reading text — the 16px baseline.", "— 16px."]],
-    ["body/sm", ["Supporting copy, secondary lines, dense lists.", ""]],
-    ["label/md", ["Buttons, nav links, form field labels.", ""]],
-    ["label/sm", ["Small buttons, tags/badges, dense labels.", ""]],
-    ["caption", ["Metadata, helper text, timestamps.", ""]],
-    ["overline", ["Eyebrows/kickers above titles (UPPERCASE, tracked).", ""]],
-    ["mono/sm", ["Technical meta, code, values, handles.", ""]],
+    ["display/2xl", "Hero identity — your name. Once per site, largest moment on the page."],
+    ["display/xl", "Screen titles & the contact headline. One per screen."],
+    ["display/lg", "Big section openers; the hero headline on mobile."],
+    ["heading/h1", "Section titles (Links, Credibility, About)."],
+    ["heading/h2", "Sub-sections and large pull-quotes."],
+    ["heading/h3", "Card titles, link-row titles, guideline headers."],
+    ["heading/h4", "Small card titles, nav brand name, list headers."],
+    ["body/lg", "Lead paragraph directly under a headline."],
+    ["body/md", "Default reading text — the 16px baseline."],
+    ["body/sm", "Supporting copy, secondary lines, dense lists."],
+    ["label/md", "Buttons, nav links, form field labels."],
+    ["label/sm", "Small buttons, tags/badges, dense labels."],
+    ["caption", "Metadata, helper text, timestamps."],
+    ["overline", "Eyebrows/kickers above titles (UPPERCASE, tracked)."],
+    ["mono/sm", "Technical meta, code, values, handles."],
   ],
 };
 
 const RADII_USAGE: UsageSection = {
   title: "Radii — when to use each",
-  note: ["Match radius to element size: the bigger the surface, the softer the corner.", ""],
+  note: "Match radius to element size: the bigger the surface, the softer the corner.",
   rows: [
-    ["radius/sm · 6", ["Tiny elements — checkboxes, small inline tags, code chips.", ""]],
-    ["radius/md · 10", ["Buttons, inputs, icon buttons — the everyday control radius.", ""]],
-    ["radius/lg · 14", ["Link rows, small cards, list tiles.", ""]],
-    ["radius/xl · 20", ["Content cards, stat cards, guideline cards.", ""]],
-    ["radius/2xl · 28", ["Large panels, quote blocks, feature surfaces.", ""]],
-    ["radius/3xl · 36", ["Hero panels, the portrait slot, marketing surfaces.", ""]],
-    [
-      "radius/full",
-      ["Pills & circles — CTAs, badges, avatars, availability chip.", "— CTA, , , ."],
-    ],
+    ["radius/sm · 6", "Tiny elements — checkboxes, small inline tags, code chips."],
+    ["radius/md · 10", "Buttons, inputs, icon buttons — the everyday control radius."],
+    ["radius/lg · 14", "Link rows, small cards, list tiles."],
+    ["radius/xl · 20", "Content cards, stat cards, guideline cards."],
+    ["radius/2xl · 28", "Large panels, quote blocks, feature surfaces."],
+    ["radius/3xl · 36", "Hero panels, the portrait slot, marketing surfaces."],
+    ["radius/full", "Pills & circles — CTAs, badges, avatars, availability chip."],
   ],
 };
 
 const ELEVATION_USAGE: UsageSection = {
   title: "Elevation — when to use each",
-  note: [
-    "On a dark canvas, shadow reads as a soft halo. Use one level per element; never stack.",
-    "",
-  ],
+  note: "On a dark canvas, shadow reads as a soft halo. Use one level per element; never stack.",
   rows: [
-    ["shadow/xs", ["Hairline lift — hover on an otherwise flat row or chip.", "— hover ."]],
-    ["shadow/sm", ["Chips, badges, small floating controls.", ""]],
-    ["shadow/md", ["Cards and popovers resting above the surface.", ""]],
-    ["shadow/lg", ["Menus, modals, the burger overlay — top layer only.", ""]],
-    ["glow/accent", ["Lift primary actions & focus — the aurora halo on CTAs.", "— - CTA."]],
-    ["glow/indigo", ["Ambient section accent behind quotes / feature blocks.", ""]],
+    ["shadow/xs", "Hairline lift — hover on an otherwise flat row or chip."],
+    ["shadow/sm", "Chips, badges, small floating controls."],
+    ["shadow/md", "Cards and popovers resting above the surface."],
+    ["shadow/lg", "Menus, modals, the burger overlay — top layer only."],
+    ["glow/accent", "Lift primary actions & focus — the aurora halo on CTAs."],
+    ["glow/indigo", "Ambient section accent behind quotes / feature blocks."],
   ],
 };
 
 const COLOR_DODONT: DoDont = {
   title: "Color",
-  note: ["A restrained dark palette. Let the accent do the pointing.", ""],
+  note: "A restrained dark palette. Let the accent do the pointing.",
   dos: [
-    ["One primary accent action per view", ""],
-    ["text/secondary for body, muted for meta", "text/secondary , muted"],
-    ["accent/soft for glows & washes", "accent/soft"],
-    ["Keep AA contrast for essential text", "AA"],
+    "One primary accent action per view",
+    "text/secondary for body, muted for meta",
+    "accent/soft for glows & washes",
+    "Keep AA contrast for essential text",
   ],
-  donts: [
-    ["Accent for body text", ""],
-    ["Muted text for essential copy", "Muted"],
-    ["Hex values outside the tokens", "Hex-"],
-  ],
+  donts: ["Accent for body text", "Muted text for essential copy", "Hex values outside the tokens"],
 };
 
 const SPACING_DODONT: DoDont = {
   title: "Spacing & layout",
-  note: ["Rhythm comes from the 4px scale.", "4px."],
+  note: "Rhythm comes from the 4px scale.",
   dos: [
-    ["96–120 vertical rhythm between sections", ""],
-    ["12–28 padding inside components", ""],
-    ["Auto-layout everywhere", "Auto-layout"],
-    ["Whitespace over density", ""],
+    "96–120 vertical rhythm between sections",
+    "12–28 padding inside components",
+    "Auto-layout everywhere",
+    "Whitespace over density",
   ],
-  donts: [
-    ["Off-scale values (7, 15, 33…)", ""],
-    ["Cramped sections", ""],
-    ["Manual absolute positioning", ""],
-  ],
+  donts: ["Off-scale values (7, 15, 33…)", "Cramped sections", "Manual absolute positioning"],
 };
 
 const GLASS_DODONT: DoDont = {
   title: "Glass & blur — where & how",
-  note: ["Depth is a cue, not decoration. Glass only earns its keep over something.", ""],
+  note: "Depth is a cue, not decoration. Glass only earns its keep over something.",
   dos: [
-    ["glass/header (blur 24) on the sticky nav", "glass/header (blur 24)"],
-    ["glass/menu (blur 40) on the mobile overlay", "glass/menu (blur 40)"],
-    ["glass/card (blur 16) over imagery or gradients", "glass/card (blur 16)"],
-    ["Always fill 8–12% + hairline border + blur", ""],
-    ["Layer one soft glow behind for depth", "glow —"],
+    "glass/header (blur 24) on the sticky nav",
+    "glass/menu (blur 40) on the mobile overlay",
+    "glass/card (blur 16) over imagery or gradients",
+    "Always fill 8–12% + hairline border + blur",
+    "Layer one soft glow behind for depth",
   ],
   donts: [
-    ["Glass over a flat solid background", ""],
-    ["Blur without a border (edges vanish)", ""],
-    ["Stacking multiple heavy blurs", ""],
-    ["Opaque fills — it stops being glass", ""],
+    "Glass over a flat solid background",
+    "Blur without a border (edges vanish)",
+    "Stacking multiple heavy blurs",
+    "Opaque fills — it stops being glass",
   ],
 };
 
-const MOTION_STEPS: Array<[string, Bi]> = [
+const MOTION_STEPS: Array<[string, string]> = [
   [
     "Artboard",
-    [
-      "Two soft blurred ellipses — teal (accent/primary) + indigo (accent/secondary), 60–120px blur, 60–90% opacity, blend Screen.",
-      "— teal (accent/primary) + indigo (accent/secondary), 60–120px, 60–90%, Screen.",
-    ],
+    "Two soft blurred ellipses — teal (accent/primary) + indigo (accent/secondary), 60–120px blur, 60–90% opacity, blend Screen.",
   ],
   [
     "Breathe",
-    ["Scale each blob 1.0 → 1.08 → 1.0 on a loop; offset the two so they never peak together.", ""],
+    "Scale each blob 1.0 → 1.08 → 1.0 on a loop; offset the two so they never peak together.",
   ],
-  [
-    "Drift",
-    [
-      "Translate ±4–6% on X/Y, slow ping-pong — barely perceptible wandering light.",
-      "±4–6% X/Y, - — .",
-    ],
-  ],
+  ["Drift", "Translate ±4–6% on X/Y, slow ping-pong — barely perceptible wandering light."],
   [
     "Pulse",
-    [
-      "Opacity 0.6 → 1.0 driven by a State-Machine input; trigger on primary-CTA hover or page load.",
-      "0.6 → 1.0 State Machine; hover CTA .",
-    ],
+    "Opacity 0.6 → 1.0 driven by a State-Machine input; trigger on primary-CTA hover or page load.",
   ],
   [
     "Embed",
-    [
-      "Export .riv, render with @rive-app/canvas behind the hero at ~40% opacity, position fixed, pointer-events none, z-index below content.",
-      ".riv, @rive-app/canvas ~40%, position fixed, pointer-events none, z-index .",
-    ],
+    "Export .riv, render with @rive-app/canvas behind the hero at ~40% opacity, position fixed, pointer-events none, z-index below content.",
   ],
-  [
-    "Respect users",
-    ["Freeze to a static frame when prefers-reduced-motion is set.", "prefers-reduced-motion."],
-  ],
+  ["Respect users", "Freeze to a static frame when prefers-reduced-motion is set."],
 ];
 
 async function motionCard(t: ThemeContext, w: number): Promise<FrameNode> {
@@ -870,13 +955,10 @@ async function motionCard(t: ThemeContext, w: number): Promise<FrameNode> {
     await makeText(t, "heading/h3", "Motion & glow — Rive (for the future)", "text/primary"),
   );
   head.appendChild(
-    await bi(
+    await para(
       t,
       "body/sm",
-      [
-        "The aurora background is built to breathe. Here's how to bring it alive later with Rive so it glows and gently pulses — subtle, never distracting.",
-        "- «». Rive, — , .",
-      ],
+      "The aurora background is built to breathe. Here's how to bring it alive later with Rive so it glows and gently pulses — subtle, never distracting.",
       "text/muted",
       w - 64,
     ),
@@ -931,10 +1013,7 @@ async function paintGuidelinesBoard(t: ThemeContext, page: PageNode): Promise<Fr
     await subhead(
       t,
       "Fonts — what & where",
-      [
-        "All three are free (SIL Open Font License) and available in the Figma font picker. Missing one? Install it, then restart Figma. The fallback chain degrades to Roboto so nothing breaks.",
-        "( SIL OFL) Figma. -? Figma. Roboto — .",
-      ],
+      "All three are free (SIL Open Font License) and available in the Figma font picker. Missing one? Install it, then restart Figma. The fallback chain degrades to Roboto so nothing breaks.",
       full,
     ),
   );
