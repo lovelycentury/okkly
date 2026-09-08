@@ -1,5 +1,12 @@
 # @okkly/react
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`1d821e8`](https://github.com/lovelycentury/okkly/commit/1d821e8c1450d387a098dd56c5b2550cc6e4579c)]:
+  - @okkly/design-system@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes
