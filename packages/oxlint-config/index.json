@@ -24,6 +24,7 @@
     "no-param-reassign": "warn",
     "no-await-in-loop": "off",
     "typescript/no-explicit-any": "warn",
+    "typescript/no-extraneous-class": ["warn", { "allowWithDecorator": true }],
     "typescript/consistent-type-imports": "warn",
     "typescript/no-non-null-assertion": "off",
     "import/no-duplicates": "warn",

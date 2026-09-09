@@ -14,6 +14,11 @@
     {
       "files": ["*.md", "*.mdx"],
       "options": { "proseWrap": "preserve" }
+    },
+    {
+      "comment": "Angular component templates: the html parser chokes on @if/@for blocks and {{ }}.",
+      "files": ["packages/angular/src/**/*.html"],
+      "options": { "parser": "angular" }
     }
   ]
 }
