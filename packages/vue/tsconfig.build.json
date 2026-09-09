@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue", "env.d.ts"],
+  // Stories and unit tests live next to their component but are workbench/test-only —
+  // keep them out of the published bundle's type build.
+  "exclude": ["src/**/*.stories.ts", "src/**/*.spec.ts"]
+}

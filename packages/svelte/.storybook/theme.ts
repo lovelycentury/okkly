@@ -1,0 +1,55 @@
+/**
+ * okkly Storybook chrome theme — mirrors `@okkly/design-system` tokens.
+ *
+ * Brand mark: the horizontal lockup — the emblem in its "multi" tone beside the
+ * wordmark, matching the `Logo` component's `filled` variant.
+ * The mark itself is served from the React workbench's `.storybook/brand`
+ * directory (see `staticDirs` in main.ts), so both Storybooks share one file.
+ */
+import { create } from "storybook/theming";
+
+export const okklyTheme = create({
+  base: "dark",
+
+  // Brand — the horizontal lockup; brandTitle is the alt text / no-image fallback
+  brandTitle: "okkly",
+  brandUrl: "./",
+  brandImage: "/brand/logo.svg",
+  brandTarget: "_self",
+
+  // Accents — indigo for chrome + selected tree item
+  colorPrimary: "#818cf8", // --okkly-accent-secondary (indigo)
+  colorSecondary: "#818cf8", // selected tree surface (text stays black via manager-head)
+
+  // Surfaces
+  appBg: "#0a0a0b", // --okkly-bg-canvas
+  appContentBg: "#0f0f12", // --okkly-bg-surface
+  appPreviewBg: "#0a0a0b",
+  appBorderColor: "rgba(255, 255, 255, 0.12)", // --okkly-border-default
+  appBorderRadius: 10,
+
+  // Typography
+  fontBase: '"Inter", system-ui, sans-serif',
+  fontCode: '"JetBrains Mono", ui-monospace, monospace',
+  textColor: "#f5f5f7", // --okkly-text-primary
+  textInverseColor: "#000000", // selected tree item label on indigo
+  textMutedColor: "#6e6e78", // --okkly-text-muted
+
+  // Toolbar
+  barTextColor: "#a9a9b2", // --okkly-text-secondary
+  barSelectedColor: "#818cf8",
+  barHoverColor: "#818cf8",
+  barBg: "#0f0f12",
+
+  // Inputs / controls
+  inputBg: "#16161a", // --okkly-bg-surface-raised
+  inputBorder: "rgba(255, 255, 255, 0.12)",
+  inputTextColor: "#f5f5f7",
+  inputBorderRadius: 10,
+
+  // Buttons
+  buttonBg: "#16161a",
+  buttonBorder: "rgba(255, 255, 255, 0.12)",
+  booleanBg: "#16161a",
+  booleanSelectedBg: "#818cf8",
+});

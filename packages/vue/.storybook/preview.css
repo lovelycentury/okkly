@@ -1,0 +1,22 @@
+/*
+ * Storybook-only presentation. Nothing here ships in `@okkly/design-system` —
+ * it exists so stories are read at a realistic size, not so components change.
+ *
+ * Deliberately unlayered: the design system puts its rules in
+ * `@layer okkly.component`, and unlayered styles outrank every layer, so these
+ * win without a specificity contest.
+ */
+.okkly-storybook-canvas {
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding: 2.5rem;
+  background: var(--okkly-bg-canvas, #0a0a0b);
+  color: var(--okkly-text-primary);
+  font-family: var(--okkly-font-family-sans);
+}
+
+/* Docs inline stories hug their content instead of forcing a viewport. */
+.sb-story .okkly-storybook-canvas {
+  min-height: 0;
+  padding: 2rem;
+}
