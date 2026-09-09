@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "pnpm -r --if-present run build",
-    "build:libs": "pnpm --filter \"@okkly/react...\" --filter \"@okkly/angular...\" --if-present run build",
+    "build:libs": "pnpm --filter \"@okkly/react...\" --filter \"@okkly/angular...\" --filter \"@okkly/vue...\" --filter \"@okkly/svelte...\" --if-present run build",
     "test": "pnpm -r --if-present run test",
     "typecheck": "pnpm run build:libs && pnpm -r --if-present run typecheck",
     "lint": "oxlint",
@@ -34,7 +34,9 @@
     "@types/node": "catalog:",
     "oxlint": "1.77.0",
     "prettier": "^3.4.2",
+    "prettier-plugin-svelte": "^4.1.1",
     "simple-git-hooks": "^2.14.0",
+    "svelte": "^5.57.0",
     "typescript": "catalog:"
   },
   "simple-git-hooks": {

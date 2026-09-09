@@ -1,0 +1,8 @@
+// Global stylesheet for @okkly/svelte, published as `@okkly/svelte/style.css`.
+// `svelte-package` copies sources rather than bundling them, so — unlike
+// @okkly/react and @okkly/vue — the component CSS is compiled here explicitly.
+// Keep this in step with the stylesheets `.storybook/preview.ts` imports.
+// Lives outside `src/` because svelte-package copies whatever it finds there
+// into `dist/`, and the compiled CSS is what ships.
+@use "@okkly/design-system/src/components/Button/Button.scss";
+@use "@okkly/design-system/src/components/Ripple/Ripple.scss";

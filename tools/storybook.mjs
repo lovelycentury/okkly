@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // oxlint-disable no-console
 /**
- * Usage: pnpm storybook <package>   (e.g. `pnpm storybook react` or `pnpm storybook iam`)
+ * Usage: pnpm storybook <package>   (e.g. `pnpm storybook react` or `pnpm storybook vue`)
  *
  * Fails if <package> has no "storybook" script. Otherwise, before starting
- * Storybook, it launches `dev` (vite build --watch) in every workspace
- * package <package> depends on, so edits there rebuild dist/ and Storybook's
- * dev server picks the change up live — no separate terminal per dependency.
+ * Storybook, it launches `dev` (a watch build) in every workspace package
+ * <package> depends on, so edits there rebuild dist/ and Storybook's dev
+ * server picks the change up live — no separate terminal per dependency.
  */
 import { spawn } from "node:child_process";
 import { readFile } from "node:fs/promises";
@@ -18,7 +18,7 @@ const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 
 const pkgArg = process.argv[2];
 if (!pkgArg) {
-  console.error("Usage: pnpm storybook <package>  (e.g. pnpm storybook react, pnpm storybook iam)");
+  console.error("Usage: pnpm storybook <package>  (e.g. pnpm storybook react, pnpm storybook vue)");
   process.exit(1);
 }
 
