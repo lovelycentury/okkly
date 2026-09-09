@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    // Angular's decorators are legacy-style; ngtsc and esbuild (vitest) both key
+    // off this flag to emit the `__decorate` calls the JIT compiler reads.
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "useDefineForClassFields": false,
+    "target": "ES2022",
+    "rootDir": ".",
+    "outDir": "dist"
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true
+  },
+  "include": ["src/**/*.ts", "env.d.ts", ".storybook/**/*.ts", "vitest.setup.ts"]
+}

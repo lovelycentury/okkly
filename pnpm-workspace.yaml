@@ -27,11 +27,18 @@ minimumReleaseAge: 2880
 # Only these packages may run install/build lifecycle scripts. Everything else is
 # blocked by default, so a malicious transitive dep cannot run code on install.
 allowBuilds:
+  # Its lifecycle script only prints a funding notice; the CLI itself is plain JS.
+  "@compodoc/compodoc": false
   # The prebuilt binaries cover macOS/Linux, so nothing needs its node-gyp fallback here.
   "@parcel/watcher": false
   # Platform-specific prebuilt binaries are published separately; no local build needed.
   "@swc/core": false
   esbuild: true
+  # @angular/build's on-disk cache, dev-only and reached from the Vitest
+  # transform in @okkly/angular. Both ship prebuilt bindings for macOS/Linux,
+  # so neither needs its node-gyp fallback here.
+  lmdb: false
+  msgpackr-extract: false
   sass-embedded: true
   # Its lifecycle script only re-registers the git hooks, which the root
   # `prepare` script already does explicitly — no need to let it run on install.

@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src"
+  },
+  "angularCompilerOptions": {
+    // Angular Package Format: ship linker-ready partial declarations so the
+    // consuming app's compiler — not ours — decides the final output.
+    "compilationMode": "partial"
+  },
+  "include": ["src/**/*.ts"],
+  // Tests and stories live next to their component but are workbench/test-only —
+  // keep them out of the published bundle's type build (same split as
+  // @okkly/react). Compodoc reads this config too, so they stay out of the
+  // generated API docs as well.
+  "exclude": ["src/**/*.spec.ts", "src/**/*.stories.ts"]
+}

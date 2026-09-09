@@ -1,0 +1,44 @@
+<ng-template #spinner>
+  <span class="okkly-button__spinner" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none">
+      <circle
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-dasharray="42 100"
+      />
+    </svg>
+  </span>
+</ng-template>
+
+@if (spinnerPosition() === "start") {
+  <ng-container [ngTemplateOutlet]="spinner" />
+}
+<!--
+  The icon slots render unconditionally and collapse through `display`: an empty
+  `.okkly-button__icon` is still a 1rem flex item with a gap either side of it.
+  No whitespace inside the spans — a text node would keep the slot from reading
+  as empty.
+-->
+<span class="okkly-button__icon" [style.display]="showStartIcon() ? null : 'none'"
+  ><ng-content select="[okklyButtonStartIcon]"
+/></span>
+<span
+  class="okkly-button__label okkly-truncation-ellipsis"
+  [class.okkly-button__label--hidden]="spinnerPosition() === 'center'"
+  ><ng-content
+/></span>
+<span class="okkly-button__icon" [style.display]="showEndIcon() ? null : 'none'"
+  ><ng-content select="[okklyButtonEndIcon]"
+/></span>
+@if (spinnerPosition() === "end") {
+  <ng-container [ngTemplateOutlet]="spinner" />
+}
+@if (spinnerPosition() === "center") {
+  <span class="okkly-button__loader">
+    <ng-container [ngTemplateOutlet]="spinner" />
+  </span>
+}

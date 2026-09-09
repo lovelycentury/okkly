@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "pnpm -r --if-present run build",
-    "build:libs": "pnpm --filter \"@okkly/react...\" --if-present run build",
+    "build:libs": "pnpm --filter \"@okkly/react...\" --filter \"@okkly/angular...\" --if-present run build",
     "test": "pnpm -r --if-present run test",
     "typecheck": "pnpm run build:libs && pnpm -r --if-present run typecheck",
     "lint": "oxlint",
