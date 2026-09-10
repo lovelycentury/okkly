@@ -4,6 +4,12 @@ build
 coverage
 storybook-static
 documentation.json
+# Playwright component-test artifacts (the bundle is rebuilt on every run;
+# `playwright/snapshots` holds committed PNGs).
+**/playwright/.cache
+**/playwright-report
+**/test-results
+**/blob-report
 .turbo
 .mastra
 pnpm-lock.yaml

@@ -13,6 +13,13 @@ packageExtensions:
       sass-embedded: "*"
 
 catalog:
+  # Playwright's component-test runner is released slightly behind the main
+  # package, and the two must match exactly or the CT transform is skipped.
+  # Bump all four together.
+  "@playwright/experimental-ct-react": 1.62.1
+  "@playwright/test": 1.62.1
+  playwright: 1.62.1
+  playwright-core: 1.62.1
   "@types/node": ^22.10.2
   sass-embedded: ^1.83.0
   typescript: ^5.7.2
@@ -48,6 +55,12 @@ allowBuilds:
 # All are dev-only and never reach a runtime image, but a compromised dev dep
 # still runs on a laptop and in CI. Drop an entry once the parent resolves it.
 overrides:
+  # Keep one Playwright version across the tree, so a single browser download
+  # serves every package and the CT runner never drifts from the test runner.
+  "@playwright/experimental-ct-react": "catalog:"
+  "@playwright/test": "catalog:"
+  playwright: "catalog:"
+  playwright-core: "catalog:"
   # GHSA-2v37-7h3g-55p8 — infinite loop in customAlphabet/customRandom(size: 0).
   "nanoid@<3.3.17": "^3.3.17"
   # GHSA-w5hq-g745-h8pq — v3/v5/v6 skip bounds checks on a caller-supplied buf.

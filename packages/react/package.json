@@ -1,7 +1,7 @@
 {
   "name": "@okkly/react",
   "version": "0.1.1",
-  "description": "Okryshto design system — React component library",
+  "description": "Okryshto design system \u2014 React component library",
   "license": "MIT",
   "type": "module",
   "repository": {
@@ -33,9 +33,11 @@
     "dev": "vite build --watch",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "lint": "oxlint --config ../oxlint-config/index.json .",
+    "lint": "oxlint --config ../oxlint-config/index.json --ignore-pattern \"playwright/.cache/**\" --ignore-pattern \"playwright-report/**\" --ignore-pattern \"test-results/**\" --ignore-pattern \"blob-report/**\" .",
     "storybook": "storybook dev -p 6006 --no-open",
-    "storybook:build": "storybook build"
+    "storybook:build": "storybook build",
+    "test:playwright": "playwright install --with-deps chromium && playwright test",
+    "test:playwright:update": "PW_UPDATE_SNAPSHOTS=true CI=true playwright test"
   },
   "dependencies": {
     "@maskito/core": "^5.3.1",
@@ -55,18 +57,21 @@
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/experimental-ct-react": "catalog:",
+    "@playwright/test": "catalog:",
     "@storybook/addon-designs": "^8.2.1",
     "@storybook/addon-docs": "^8.6.14",
     "@storybook/addon-essentials": "^8.4.7",
     "@storybook/react": "^8.4.7",
     "@storybook/react-vite": "^8.4.7",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.1.0",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "@types/react-transition-group": "^4.4.12",
     "@vitejs/plugin-react": "^4.3.4",
+    "axe-core": "^4.13.0",
     "jsdom": "^25.0.1",
+    "playwright-core": "catalog:",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sass-embedded": "catalog:",

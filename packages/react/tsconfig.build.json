@@ -4,12 +4,16 @@
     "rootDir": "./src"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "env.d.ts"],
-  // Stories and unit tests live next to their component but are workbench/test-only —
-  // keep them out of the published bundle's type build.
+  // Stories, unit tests and component tests live next to their component but
+  // are workbench/test-only — keep them out of the published bundle's type
+  // build, along with the Playwright helpers they share.
   "exclude": [
     "src/**/*.stories.ts",
     "src/**/*.stories.tsx",
     "src/**/*.spec.ts",
-    "src/**/*.spec.tsx"
+    "src/**/*.spec.tsx",
+    "src/**/*.ct.ts",
+    "src/**/*.ct.tsx",
+    "src/playwright/**"
   ]
 }

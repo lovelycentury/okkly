@@ -1,8 +1,5 @@
-import "@testing-library/jest-dom/vitest";
-import { cleanup } from "@testing-library/react";
-import { afterEach } from "vitest";
-
-// `globals: false` in vitest.config.ts means Testing Library can't
-// auto-detect `afterEach` off globalThis — register cleanup explicitly so
-// the DOM doesn't leak between tests in the same file.
-afterEach(() => cleanup());
+// The component suite runs in a real browser through Playwright, so nothing is
+// rendered here any more. What is left for Vitest are the pure helpers in
+// `src/helpers`, a couple of which touch the DOM — hence the jsdom environment
+// in vitest.config.ts — but none of which mount a component.
+export {};
