@@ -22,6 +22,12 @@ out/
 .remember
 lokki.zip
 .playwright-mcp
+# Playwright component-test artifacts. `playwright/snapshots` is committed.
+playwright/.cache/
+playwright-report/
+test-results/
+blob-report/
 .pnpm-store
 **/keycloakify-dev-resources/
 .keycloakify
+.cache

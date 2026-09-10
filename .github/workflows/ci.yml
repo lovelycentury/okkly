@@ -34,3 +34,7 @@ jobs:
       - run: pnpm run build:libs
 
       - run: pnpm run test
+
+  # Real browsers, so this runs on its own image rather than alongside `check`.
+  # component-tests:
+  #  uses: ./.github/workflows/playwright.yml

@@ -1,0 +1,46 @@
+name: Update Playwright screenshots
+
+# Baselines are pixel-exact per platform, so they are never generated on a
+# developer's machine — `ignoreSnapshots` skips the comparison there. Run this
+# workflow to (re)generate them on the pinned Linux image and open a PR with
+# the result. It is also how the very first set of baselines is created.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    uses: ./.github/workflows/playwright.yml
+    with:
+      update-snapshots: true
+
+  pull-request:
+    name: Create pull request
+    runs-on: ubuntu-latest
+    needs: screenshots
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the refreshed screenshots
+        uses: actions/download-artifact@v4
+        with:
+          name: screenshots
+          path: packages/react/playwright/snapshots
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: ":camera: chore: update Playwright screenshots"
+          title: "chore: update Playwright screenshots"
+          body: >
+            Auto-generated. Every component screenshot baseline has been
+            regenerated on the pinned Playwright Linux image. Review the image
+            diffs before merging — an unexpected one is a visual regression.
+          branch: chore/playwright-screenshots
+          branch-suffix: short-commit-hash
+          add-paths: packages/react/playwright/snapshots
