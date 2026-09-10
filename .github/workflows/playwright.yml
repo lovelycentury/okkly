@@ -35,6 +35,13 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # The workspace packages @okkly/react imports (react-hooks, helpers,
+      # icons) resolve through their `exports` to `dist`, which a fresh
+      # checkout does not have. Build them — not @okkly/react itself, whose
+      # tests alias it to its sources.
+      - name: Build the workspace dependencies
+        run: pnpm --filter "@okkly/react^..." --if-present run build
+
       - name: Run component tests
         working-directory: packages/react
         env:
