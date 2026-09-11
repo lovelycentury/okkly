@@ -6,6 +6,12 @@ import {
 } from "@playwright/experimental-ct-react";
 import react from "@vitejs/plugin-react";
 
+// Tests assert against `Date`s built by the Node test runner *and* by the
+// browser-rendered component, so both must agree on "local time" or every
+// such assertion drifts by the offset between them. Pin Node to the same
+// zone as `use.timezoneId` below, rather than trusting the host/CI default.
+process.env.TZ = "Europe/Berlin";
+
 export type DefineOkklyPlaywrightConfigOptions = {
   /**
    * Run the tests in every browser okkly targets, or only in Chromium.

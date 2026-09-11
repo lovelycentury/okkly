@@ -108,9 +108,12 @@ test("should apply a color modifier only for non-primary colors", async ({ mount
 });
 
 test("should apply a color modifier for every accent color", async ({ mount }) => {
-  for (const color of COLORS.filter((c) => c !== "primary")) {
+  const colors = COLORS.filter((c) => c !== "primary");
+  const component = await mount(<TextField label="Email" color={colors[0]} />);
+
+  for (const color of colors) {
     // ACT
-    const component = await mount(<TextField label="Email" color={color} />);
+    await component.update(<TextField label="Email" color={color} />);
 
     // ASSERT
     await expect(component).toHaveClass(new RegExp(`okkly-text-field--color-${color}`));
