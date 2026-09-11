@@ -1,5 +1,12 @@
 # @okkly/angular
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`6e1c97a`](https://github.com/lovelycentury/okkly/commit/6e1c97aa57f2ab66c4d063032f9d941b67b44f51)]:
+  - @okkly/design-system@0.2.0
+
 ## 0.1.0
 
 ### Minor Changes
