@@ -4,7 +4,15 @@ import { useFocusStateHooks } from "../../playwright/matrix";
 import { TextField } from "./TextField";
 import type { TextFieldColor, TextFieldSize } from "./TextField";
 
-const COLORS = ["primary", "dante"] as const satisfies readonly TextFieldColor[];
+const COLORS = [
+  "primary",
+  "secondary",
+  "dante",
+  "violet",
+  "ember",
+  "ice",
+  "contrast",
+] as const satisfies readonly TextFieldColor[];
 const SIZES = ["small", "medium", "large"] as const satisfies readonly TextFieldSize[];
 
 test.describe("Screenshot tests", () => {
@@ -37,7 +45,7 @@ test.describe("Screenshot tests", () => {
       <TextField
         label="Email"
         size={column}
-        color={row === "dante" ? "dante" : "primary"}
+        color={(COLORS as readonly string[]).includes(row) ? (row as TextFieldColor) : "primary"}
         required={row === "required"}
         hideLabel={row === "no-label"}
         placeholder="you@example.com"
@@ -97,6 +105,19 @@ test("should apply a color modifier only for non-primary colors", async ({ mount
 
   // ASSERT
   await expect(component).not.toHaveClass(/okkly-text-field--color-/);
+});
+
+test("should apply a color modifier for every accent color", async ({ mount }) => {
+  const colors = COLORS.filter((c) => c !== "primary");
+  const component = await mount(<TextField label="Email" color={colors[0]} />);
+
+  for (const color of colors) {
+    // ACT
+    await component.update(<TextField label="Email" color={color} />);
+
+    // ASSERT
+    await expect(component).toHaveClass(new RegExp(`okkly-text-field--color-${color}`));
+  }
 });
 
 test("should apply the error modifier and mark aria-invalid", async ({ mount }) => {

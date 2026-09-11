@@ -2,10 +2,10 @@
 
 import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from "react";
 import "@okkly/design-system/components/TextField/TextField.scss";
-import { Field, getFieldIds, type FieldColor, type FieldSize } from "../Field/Field";
+import { Field, getFieldIds, type FieldAccentColor, type FieldSize } from "../Field/Field";
 
 export type TextFieldSize = FieldSize;
-export type TextFieldColor = FieldColor;
+export type TextFieldColor = FieldAccentColor;
 
 /**
  * Props follow MUI's TextField API (https://mui.com/material-ui/api/text-field/)
@@ -44,7 +44,9 @@ export interface TextFieldProps extends Omit<
    */
   size?: TextFieldSize;
   /**
-   * Tints the focus ring/glow. `dante` is a rare, deliberate accent moment.
+   * Tints the focus ring/glow. One of the design system's accent colors —
+   * `dante` is a rare, deliberate accent moment; the rest are for matching
+   * a field to surrounding brand/section color.
    *
    * @default "primary"
    * @type {TextFieldColor}

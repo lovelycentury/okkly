@@ -21,7 +21,10 @@ const meta: Meta<typeof TextField> = {
   },
   argTypes: {
     size: { control: "inline-radio", options: ["small", "medium", "large"] },
-    color: { control: "inline-radio", options: ["primary", "dante"] },
+    color: {
+      control: "inline-radio",
+      options: ["primary", "secondary", "dante", "violet", "ember", "ice", "contrast"],
+    },
   },
   render: (args) => <TextField {...args} />,
 };
@@ -59,6 +62,21 @@ export const NoLabel: Story = { args: { hideLabel: true } };
  * This example shows dante focus.
  */
 export const DanteFocus: Story = { args: { color: "dante" } };
+
+/**
+ * This example shows every available accent color.
+ */
+export const Colors: Story = {
+  render: () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+      {(["primary", "secondary", "dante", "violet", "ember", "ice", "contrast"] as const).map(
+        (color) => (
+          <TextField key={color} color={color} label={color} placeholder="hello@oleksii.dev" />
+        ),
+      )}
+    </div>
+  ),
+};
 /**
  * This example shows the full-width layout.
  */
