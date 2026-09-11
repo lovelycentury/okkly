@@ -1,0 +1,26 @@
+@if (label()) {
+  <label
+    [id]="labelId()"
+    [attr.for]="computedFor()"
+    class="{{ block() }}__label{{ hideLabel() ? ' ' + block() + '__label--hidden' : '' }}"
+  >
+    {{ label() }}
+    @if (required()) {
+      <span class="{{ block() }}__required" aria-hidden="true">*</span>
+    }
+  </label>
+}
+
+<div class="{{ block() }}__control">
+  @if (hasStartAdornment()) {
+    <span class="{{ block() }}__adornment"><ng-content select="[okklyFieldStartAdornment]" /></span>
+  }
+  <ng-content />
+  @if (hasEndAdornment()) {
+    <span class="{{ block() }}__adornment"><ng-content select="[okklyFieldEndAdornment]" /></span>
+  }
+</div>
+
+@if (helperText()) {
+  <span [id]="helperId()" class="{{ block() }}__helper">{{ helperText() }}</span>
+}

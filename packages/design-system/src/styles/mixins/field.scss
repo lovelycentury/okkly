@@ -25,9 +25,13 @@
 @mixin shell($var) {
   // 1. full variable API, defaults = color "primary" (mint focus ring), size "medium"
   --okkly-#{$var}-border-color: var(--okkly-border-default);
-  --okkly-#{$var}-focus-border-color: var(--okkly-accent-primary);
-  --okkly-#{$var}-glow: 0 0 2.5rem rgba(94, 230, 193, 0.24);
-  --okkly-#{$var}-glow-dante: 0 0 0.4375rem rgba(255, 61, 139, 0.35);
+  // `focus-tone` is the one thing a color modifier remaps; border color and glow
+  // below both consume it, so a 7th accent needs only its own tone remap, not a
+  // second hardcoded glow like the old dante-only special case.
+  --okkly-#{$var}-focus-tone: var(--okkly-accent-primary);
+  --okkly-#{$var}-focus-border-color: var(--okkly-#{$var}-focus-tone);
+  --okkly-#{$var}-glow: 0 0 2.5rem
+    color-mix(in srgb, var(--okkly-#{$var}-focus-tone) 24%, transparent);
   --okkly-#{$var}-padding-inline: 0.875rem;
   --okkly-#{$var}-padding-block: 0.75rem;
   --okkly-#{$var}-font-size: 1rem;
@@ -164,12 +168,25 @@
     color: var(--okkly-feedback-danger);
   }
 
-  // 3. color modifier — rare, tints the focus ring/glow (e.g. Dante theme moments)
-  &--color-dante &__control:focus-within {
-    border-color: var(--okkly-accent-dante);
-    box-shadow:
-      0 0 0 0.03125rem var(--okkly-accent-dante),
-      var(--okkly-#{$var}-glow-dante);
+  // 3. color modifiers — every accent but primary; each just remaps the focus
+  // tone, so the border-color/glow rules above pick it up unchanged.
+  &--color-secondary {
+    --okkly-#{$var}-focus-tone: var(--okkly-accent-secondary);
+  }
+  &--color-dante {
+    --okkly-#{$var}-focus-tone: var(--okkly-accent-dante);
+  }
+  &--color-violet {
+    --okkly-#{$var}-focus-tone: var(--okkly-accent-violet);
+  }
+  &--color-ember {
+    --okkly-#{$var}-focus-tone: var(--okkly-accent-ember);
+  }
+  &--color-ice {
+    --okkly-#{$var}-focus-tone: var(--okkly-accent-ice);
+  }
+  &--color-contrast {
+    --okkly-#{$var}-focus-tone: var(--okkly-accent-contrast);
   }
 
   // 4. size
