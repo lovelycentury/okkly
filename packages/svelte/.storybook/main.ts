@@ -5,13 +5,14 @@ const config: StorybookConfig = {
   stories: ["../src/**/*.stories.svelte"],
   addons: ["@storybook/addon-docs", "@storybook/addon-svelte-csf"],
   /**
-   * Brand marks and favicons are shared with the React workbench rather than
-   * copied — one set of binaries, one place to update them. Paths are relative
-   * to this directory.
+   * Favicons are shared with the React workbench — one set of binaries, one
+   * place to update them. The brand mark is this package's own (`./brand`):
+   * it carries a `.svelte` suffix so the sidebar doesn't read as the plain,
+   * shared `okkly` mark. Paths are relative to this directory.
    */
   staticDirs: [
     "../../react/.storybook/favicon",
-    { from: "../../react/.storybook/brand", to: "/brand" },
+    { from: "./brand", to: "/brand" },
   ],
   framework: {
     name: "@storybook/svelte-vite",
