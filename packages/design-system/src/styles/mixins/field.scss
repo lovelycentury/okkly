@@ -164,12 +164,23 @@
     color: var(--okkly-feedback-danger);
   }
 
-  // 3. color modifier — rare, tints the focus ring/glow (e.g. Dante theme moments)
+  // 3. color modifiers — tint the focus ring/glow. `dante` keeps its own
+  // hand-tuned glow (see above); the rest share one generated rule since they
+  // all follow `--okkly-accent-<name>` and the same glow shape as `primary`.
   &--color-dante &__control:focus-within {
     border-color: var(--okkly-accent-dante);
     box-shadow:
       0 0 0 0.03125rem var(--okkly-accent-dante),
       var(--okkly-#{$var}-glow-dante);
+  }
+
+  @each $name in "secondary", "violet", "ember", "ice", "contrast" {
+    &--color-#{$name} &__control:focus-within {
+      border-color: var(--okkly-accent-#{$name});
+      box-shadow:
+        0 0 0 0.03125rem var(--okkly-accent-#{$name}),
+        0 0 2.5rem color-mix(in srgb, var(--okkly-accent-#{$name}) 24%, transparent);
+    }
   }
 
   // 4. size
