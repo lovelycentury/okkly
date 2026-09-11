@@ -5,7 +5,7 @@ This monorepo deploys one thing: the Storybook static site.
 - https://storybook.okkly.lol — static build of `@okkly/react`
 
 This is the only host on the okkly.lol domain; the other repos stay on
-`*.okryshto.dev`. The old `storybook.okryshto.dev` answers 301 to the new URL.
+`*.okkly.dev`. The old `storybook.okkly.dev` answers 301 to the new URL.
 
 The apps moved to their own repos and deploy themselves:
 `lovelycentury/profile`, `lovelycentury/iam`, `lovelycentury/resume`.
@@ -23,7 +23,7 @@ The apps moved to their own repos and deploy themselves:
                  └───────────┘   static files inside caddy:alpine, :80
 ```
 
-One hop. There used to be a second proxy (`okryshto-caddy`) between the two;
+One hop. There used to be a second proxy (`okkly-caddy`) between the two;
 it was removed along with `ops/Caddyfile`, and the security headers it added
 moved into `~/vps-infra/Caddyfile`'s `(common)` snippet.
 
@@ -51,7 +51,7 @@ An A record with the **orange cloud** (Proxied):
 
 - `storybook.okkly.lol` → VPS IP
 
-SSL/TLS → Overview → **Full**, same as the `*.okryshto.dev` hosts, if okkly.lol
+SSL/TLS → Overview → **Full**, same as the `*.okkly.dev` hosts, if okkly.lol
 is on Cloudflare too. A plain A record elsewhere works as well — Caddy gets its
 own certificate over HTTP-01 either way.
 
@@ -73,17 +73,17 @@ sudo ufw enable
 ### 4. Stack files
 
 ```bash
-sudo mkdir -p /srv/okryshto && sudo chown "$USER":"$USER" /srv/okryshto
+sudo mkdir -p /srv/okkly && sudo chown "$USER":"$USER" /srv/okkly
 # copy docker-compose.yml and Caddyfile from the repo
 ```
 
 ### 5. Deploy key for GitHub Actions
 
 ```bash
-ssh-keygen -t ed25519 -f ~/.ssh/okryshto_deploy -C "github-actions" -N ""
-ssh-copy-id -i ~/.ssh/okryshto_deploy.pub user@VPS_IP
+ssh-keygen -t ed25519 -f ~/.ssh/okkly_deploy -C "github-actions" -N ""
+ssh-copy-id -i ~/.ssh/okkly_deploy.pub user@VPS_IP
 ssh-keyscan VPS_IP
-cat ~/.ssh/okryshto_deploy
+cat ~/.ssh/okkly_deploy
 ```
 
 Repo secrets: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`, `DEPLOY_PATH`.
@@ -91,7 +91,7 @@ Repo secrets: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`, `DEPLOY_PATH`.
 ### 6. First start
 
 ```bash
-cd /srv/okryshto
+cd /srv/okkly
 docker pull caddy:2-alpine
 docker compose up -d
 docker compose logs -f caddy

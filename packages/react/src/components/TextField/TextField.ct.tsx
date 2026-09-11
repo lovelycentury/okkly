@@ -28,7 +28,7 @@ test.describe("Screenshot tests", () => {
       <TextField
         label="Email"
         placeholder="you@example.com"
-        defaultValue={column === "filled" ? "hello@okryshto.dev" : undefined}
+        defaultValue={column === "filled" ? "hello@okkly.dev" : undefined}
         error={column === "error"}
         disabled={column === "disabled"}
         helperText={column === "error" ? "That address looks wrong" : undefined}
