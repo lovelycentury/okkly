@@ -13,3 +13,10 @@ export type { RippleProps } from "./components/Ripple/Ripple.vue";
 
 export { useRipple } from "./composables/useRipple";
 export type { RippleInstance, UseRippleReturn } from "./composables/useRipple";
+
+export { default as TextField } from "./components/TextField/TextField.vue";
+export type {
+  TextFieldProps,
+  TextFieldSize,
+  TextFieldColor,
+} from "./components/TextField/TextField.vue";

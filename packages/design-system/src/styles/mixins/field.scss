@@ -164,7 +164,23 @@
     color: var(--okkly-feedback-danger);
   }
 
-  // 3. color modifier — rare, tints the focus ring/glow (e.g. Dante theme moments)
+  // 3. color modifiers — tint the focus ring/glow. Every non-primary accent
+  // token is a valid choice; the glow is derived from that same token via
+  // `color-mix`, so a theme swap (colors.css calls out "dante-ready") carries
+  // through without a second hardcoded value to keep in sync.
+  // Quoted: "violet" is a CSS color keyword, and Sass warns when an unquoted
+  // color name is interpolated as a string rather than used as a color value.
+  @each $color in ("secondary", "violet", "ember", "ice", "contrast") {
+    &--color-#{$color} &__control:focus-within {
+      border-color: var(--okkly-accent-#{$color});
+      box-shadow:
+        0 0 0 0.03125rem var(--okkly-accent-#{$color}),
+        0 0 2.5rem color-mix(in srgb, var(--okkly-accent-#{$color}) 24%, transparent);
+    }
+  }
+
+  // Dante keeps its own tighter, more saturated glow — a rare, deliberate
+  // accent moment, not the generic per-color treatment above.
   &--color-dante &__control:focus-within {
     border-color: var(--okkly-accent-dante);
     box-shadow:
