@@ -92,8 +92,8 @@ describe("Button", () => {
   });
 
   it("renders an anchor for href and drops it while disabled", async () => {
-    const wrapper = mount(Button, { props: { href: "https://okryshto.dev" }, slots: label });
-    expect(wrapper.get("a").attributes("href")).toBe("https://okryshto.dev");
+    const wrapper = mount(Button, { props: { href: "https://okkly.dev" }, slots: label });
+    expect(wrapper.get("a").attributes("href")).toBe("https://okkly.dev");
 
     await wrapper.setProps({ disabled: true });
     expect(wrapper.get("a").attributes("href")).toBeUndefined();

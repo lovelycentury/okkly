@@ -159,7 +159,7 @@
   This example shows the component used as a link. An anchor cannot be disabled
   natively, so a disabled one drops its href and gets `aria-disabled`.
 -->
-<Story name="As link" args={{ href: "https://okryshto.dev" }}>
+<Story name="As link" args={{ href: "https://okkly.dev" }}>
   {#snippet template(args)}
     <Button {...args} endIcon={arrow}>Get in touch</Button>
   {/snippet}

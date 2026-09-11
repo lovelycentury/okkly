@@ -94,5 +94,5 @@ export const Colors: Story = {
  * This example shows the component used as a link.
  */
 export const AsLink: Story = {
-  args: { href: "https://okryshto.dev", icon: plusIcon, "aria-label": "Create" },
+  args: { href: "https://okkly.dev", icon: plusIcon, "aria-label": "Create" },
 };

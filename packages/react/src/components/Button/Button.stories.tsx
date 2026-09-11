@@ -82,7 +82,7 @@ export const FullWidth: Story = {
  * This example shows the component used as a link.
  */
 export const AsLink: Story = {
-  args: { href: "https://okryshto.dev", endIcon: icon, children: "Get in touch" },
+  args: { href: "https://okkly.dev", endIcon: icon, children: "Get in touch" },
 };
 
 /**
