@@ -62,6 +62,46 @@ design system's own classes, and `onclick`, `aria-*`, `data-*` land on it
 directly. An anchor cannot be disabled natively, so a disabled one drops its
 href and gets `aria-disabled="true"` and `tabindex="-1"`.
 
+## TextField
+
+Single-line text input with label, helper, and error — the foundation for most
+form fields. Props mirror `@okkly/react`'s `<TextField>` name-for-name, except
+`color`, which takes every accent token the design system defines rather than
+just `primary`/`dante`.
+
+| Prop             | Type                                                                  | Default     |
+| ---------------- | --------------------------------------------------------------------- | ----------- |
+| `label`          | `Snippet`                                                             | `undefined` |
+| `hideLabel`      | `boolean`                                                             | `false`     |
+| `size`           | `small \| medium \| large`                                            | `medium`    |
+| `color`          | `primary \| secondary \| dante \| violet \| ember \| ice \| contrast` | `primary`   |
+| `error`          | `boolean`                                                             | `false`     |
+| `helperText`     | `Snippet`                                                             | `undefined` |
+| `fullWidth`      | `boolean`                                                             | `false`     |
+| `required`       | `boolean`                                                             | `false`     |
+| `startAdornment` | `Snippet`                                                             | `undefined` |
+| `endAdornment`   | `Snippet`                                                             | `undefined` |
+| `value`          | bindable                                                              | `undefined` |
+
+```svelte
+<script lang="ts">
+  import { TextField } from "@okkly/svelte";
+
+  let email = $state("");
+</script>
+
+{#snippet label()}Email{/snippet}
+{#snippet helper()}We'll never share it{/snippet}
+
+<TextField {label} helperText={helper} bind:value={email} placeholder="you@company.com" />
+```
+
+`label`/`helperText`/`startAdornment`/`endAdornment` are snippets, so a
+consumer skips whichever it doesn't need — no gap is reserved for it. `value`
+is a `$bindable` prop for two-way binding; pass a native `defaultValue`
+instead for an uncontrolled field. Anything else — `oninput`, `disabled`,
+`aria-*`, `data-*` — spreads through to the rendered `<input>`.
+
 ## ripple
 
 `ripple` is a Svelte action — the framework's own primitive for behaviour
