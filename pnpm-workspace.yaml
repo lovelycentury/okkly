@@ -15,8 +15,9 @@ packageExtensions:
 catalog:
   # Playwright's component-test runner is released slightly behind the main
   # package, and the two must match exactly or the CT transform is skipped.
-  # Bump all four together.
+  # Bump all five together.
   "@playwright/experimental-ct-react": 1.62.1
+  "@playwright/experimental-ct-vue": 1.62.1
   "@playwright/test": 1.62.1
   playwright: 1.62.1
   playwright-core: 1.62.1
@@ -58,6 +59,7 @@ overrides:
   # Keep one Playwright version across the tree, so a single browser download
   # serves every package and the CT runner never drifts from the test runner.
   "@playwright/experimental-ct-react": "catalog:"
+  "@playwright/experimental-ct-vue": "catalog:"
   "@playwright/test": "catalog:"
   playwright: "catalog:"
   playwright-core: "catalog:"

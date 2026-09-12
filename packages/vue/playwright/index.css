@@ -1,0 +1,14 @@
+/*
+ * The design system is dark-only, so give the mount root the same surface a
+ * consumer paints. Screenshots would otherwise capture light text on white.
+ */
+body {
+  margin: 0;
+  background: var(--okkly-bg-canvas);
+  color: var(--okkly-text-primary);
+  font-family: var(--okkly-font-family-sans);
+}
+
+#root {
+  width: max-content;
+}

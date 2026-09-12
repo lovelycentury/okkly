@@ -27,6 +27,7 @@ catalogs:
 
 overrides:
   '@playwright/experimental-ct-react': 1.62.1
+  '@playwright/experimental-ct-vue': 1.62.1
   '@playwright/test': 1.62.1
   playwright: 1.62.1
   playwright-core: 1.62.1
@@ -442,6 +443,15 @@ importers:
         specifier: workspace:*
         version: link:../design-system
     devDependencies:
+      '@axe-core/playwright':
+        specifier: ^4.13.0
+        version: 4.13.0(playwright-core@1.62.1)
+      '@playwright/experimental-ct-vue':
+        specifier: 1.62.1
+        version: 1.62.1(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))(vue@3.5.42(typescript@5.9.3))(yaml@2.9.0)
+      '@playwright/test':
+        specifier: 1.62.1
+        version: 1.62.1
       '@storybook/addon-docs':
         specifier: ^10.6.0
         version: 10.6.0(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(storybook@10.6.0(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8))
@@ -451,12 +461,21 @@ importers:
       '@vitejs/plugin-vue':
         specifier: ^6.0.8
         version: 6.0.8(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))(vue@3.5.42(typescript@5.9.3))
+      '@vue/compiler-dom':
+        specifier: ^3.5.42
+        version: 3.5.42
       '@vue/test-utils':
         specifier: ^2.5.0
         version: 2.5.0(@vue/compiler-dom@3.5.42)(@vue/server-renderer@3.5.42)(vue@3.5.42(typescript@5.9.3))
+      axe-core:
+        specifier: ^4.13.0
+        version: 4.13.0
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1(supports-color@8.1.1)
+      playwright-core:
+        specifier: 1.62.1
+        version: 1.62.1
       sass-embedded:
         specifier: 'catalog:'
         version: 1.100.0
@@ -3093,6 +3112,11 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
+  '@playwright/experimental-ct-vue@1.62.1':
+    resolution: {integrity: sha512-TKhUR1gmz1KKfqORZVn75xTjzvCZJtq/jFMMAmkoXzwb0vTuzYt2UTndjw8/r+vFm+hvWjj3UY1fGCzUaWep8w==}
+    engines: {node: '>=20'}
+    hasBin: true
+
   '@playwright/test@1.62.1':
     resolution: {integrity: sha512-DTcUc8qii+cpHvtOwggMtBRMjKZHXYWdw8syRYu2vtzuq4Wxphqq4NfCs5Zt44L6mA8rfDfj+PHnxFc/FeK6mQ==}
     engines: {node: '>=20'}
@@ -4292,14 +4316,8 @@ packages:
       typescript:
         optional: true
 
-  '@vue/compiler-core@3.5.41':
-    resolution: {integrity: sha512-q0Xtv/F9w2YO/7htQhtiL+Ev2WCJbe5N2hc+XfgyKkEKqWpSxknmT8QOuGdEKNdjPq0c3F7rNpFkTo3Kfrm7pg==}
-
   '@vue/compiler-core@3.5.42':
     resolution: {integrity: sha512-2Ye1ilMtKXxl8qZUrQ5j0CdgenFp/HFQmta6rfRyfEsTG69L6Wk+tWuNoHYHMx9E8tF2Slvdg1FuwDvAXdy1LQ==}
-
-  '@vue/compiler-dom@3.5.41':
-    resolution: {integrity: sha512-oKacVfNglLvGjnS6BXOlGL7EyG2h8X03pqXCjzotRZUaXGjbrTJUnVAQjrCqUnS+lyu31nwQjZY/d817GmCnfw==}
 
   '@vue/compiler-dom@3.5.42':
     resolution: {integrity: sha512-qbhQZEFmycr+ni/qyuccS4sucNN7VAbDfbkvNxWOX2VfgFm90MNs3/UhRNKoPMEIVn0F8gdlYjLPvqxHwHeQOA==}
@@ -4335,9 +4353,6 @@ packages:
 
   '@vue/server-renderer@3.5.42':
     resolution: {integrity: sha512-2++5dUyYS4gvo7xQXSECUDhB7TS0aOl5SeVfC5qSq1Jgfhjvegw1zqhwTIR3imZ+QYPJQw9gfcFvXGAjGZ7ajQ==}
-
-  '@vue/shared@3.5.41':
-    resolution: {integrity: sha512-IOnwSCma8j+9xJT6b8H0dEYidC80NsYmNMlZxRsukYcSoGaDBohog5hDxzeUXdFeGWFA++vWvxqOmrr96VlqMA==}
 
   '@vue/shared@3.5.42':
     resolution: {integrity: sha512-2rPxex1jQf4jvl9MOHl6YaXCPcrNqz/FstMOEh3QWY+/OME9nQTvl9WYeCwhW7AFjaR0SnngZGlp/wkR6rkI6g==}
@@ -11871,6 +11886,25 @@ snapshots:
       - tsx
       - yaml
 
+  '@playwright/experimental-ct-core@1.62.1(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)':
+    dependencies:
+      playwright: 1.62.1
+      playwright-core: 1.62.1
+      vite: 8.1.5(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)
+    transitivePeerDependencies:
+      - '@types/node'
+      - '@vitejs/devtools'
+      - esbuild
+      - jiti
+      - less
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - yaml
+
   '@playwright/experimental-ct-react@1.62.1(@types/node@22.20.1)(esbuild@0.25.12)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))(yaml@2.9.0)':
     dependencies:
       '@playwright/experimental-ct-core': 1.62.1(@types/node@22.20.1)(esbuild@0.25.12)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)
@@ -11891,6 +11925,26 @@ snapshots:
       - terser
       - tsx
       - vite
+      - yaml
+
+  '@playwright/experimental-ct-vue@1.62.1(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))(vue@3.5.42(typescript@5.9.3))(yaml@2.9.0)':
+    dependencies:
+      '@playwright/experimental-ct-core': 1.62.1(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)
+      '@vitejs/plugin-vue': 6.0.8(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))(vue@3.5.42(typescript@5.9.3))
+    transitivePeerDependencies:
+      - '@types/node'
+      - '@vitejs/devtools'
+      - esbuild
+      - jiti
+      - less
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - vite
+      - vue
       - yaml
 
   '@playwright/test@1.62.1':
@@ -13125,14 +13179,6 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  '@vue/compiler-core@3.5.41':
-    dependencies:
-      '@babel/parser': 7.29.8
-      '@vue/shared': 3.5.41
-      entities: 7.0.1
-      estree-walker: 2.0.2
-      source-map-js: 1.2.1
-
   '@vue/compiler-core@3.5.42':
     dependencies:
       '@babel/parser': 7.29.8
@@ -13140,11 +13186,6 @@ snapshots:
       entities: 7.0.1
       estree-walker: 2.0.2
       source-map-js: 1.2.1
-
-  '@vue/compiler-dom@3.5.41':
-    dependencies:
-      '@vue/compiler-core': 3.5.41
-      '@vue/shared': 3.5.41
 
   '@vue/compiler-dom@3.5.42':
     dependencies:
@@ -13176,9 +13217,9 @@ snapshots:
   '@vue/language-core@2.2.0(typescript@5.9.3)':
     dependencies:
       '@volar/language-core': 2.4.28
-      '@vue/compiler-dom': 3.5.41
+      '@vue/compiler-dom': 3.5.42
       '@vue/compiler-vue2': 2.7.16
-      '@vue/shared': 3.5.41
+      '@vue/shared': 3.5.42
       alien-signals: 0.4.14
       minimatch: 9.0.9
       muggle-string: 0.4.1
@@ -13189,8 +13230,8 @@ snapshots:
   '@vue/language-core@3.3.11':
     dependencies:
       '@volar/language-core': 2.4.28
-      '@vue/compiler-dom': 3.5.41
-      '@vue/shared': 3.5.41
+      '@vue/compiler-dom': 3.5.42
+      '@vue/shared': 3.5.42
       alien-signals: 3.2.1
       muggle-string: 0.4.1
       path-browserify: 1.0.1
@@ -13217,8 +13258,6 @@ snapshots:
       '@vue/compiler-ssr': 3.5.42
       '@vue/runtime-dom': 3.5.42
       '@vue/shared': 3.5.42
-
-  '@vue/shared@3.5.41': {}
 
   '@vue/shared@3.5.42': {}
 
@@ -17721,6 +17760,25 @@ snapshots:
       jiti: 2.7.0
       less: 4.9.0(supports-color@8.1.1)
       sass: 1.97.3
+      sass-embedded: 1.100.0
+      terser: 5.51.2
+      tsx: 4.23.11
+      yaml: 2.9.0
+
+  vite@8.1.5(@types/node@22.20.1)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0):
+    dependencies:
+      lightningcss: 1.33.0
+      picomatch: 4.0.5
+      postcss: 8.5.26
+      rolldown: 1.1.5
+      tinyglobby: 0.2.17
+    optionalDependencies:
+      '@types/node': 22.20.1
+      esbuild: 0.28.2
+      fsevents: 2.3.3
+      jiti: 2.7.0
+      less: 4.9.1(supports-color@8.1.1)
+      sass: 1.101.0
       sass-embedded: 1.100.0
       terser: 5.51.2
       tsx: 4.23.11

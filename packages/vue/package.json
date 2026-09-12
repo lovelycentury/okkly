@@ -33,19 +33,27 @@
     "dev": "vite build --config vite.lib.config.ts --watch",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
-    "lint": "oxlint --config ../oxlint-config/index.json .",
+    "lint": "oxlint --config ../oxlint-config/index.json --ignore-pattern \"playwright/.cache/**\" --ignore-pattern \"playwright-report/**\" --ignore-pattern \"test-results/**\" --ignore-pattern \"blob-report/**\" .",
     "storybook": "storybook dev -p 6008 --no-open",
-    "storybook:build": "storybook build"
+    "storybook:build": "storybook build",
+    "test:playwright": "playwright install --with-deps chromium && playwright test",
+    "test:playwright:update": "PW_UPDATE_SNAPSHOTS=true CI=true playwright test"
   },
   "dependencies": {
     "@okkly/design-system": "workspace:*"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/experimental-ct-vue": "catalog:",
+    "@playwright/test": "catalog:",
     "@storybook/addon-docs": "^10.6.0",
     "@storybook/vue3-vite": "^10.6.0",
     "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/compiler-dom": "^3.5.42",
     "@vue/test-utils": "^2.5.0",
+    "axe-core": "^4.13.0",
     "jsdom": "^25.0.1",
+    "playwright-core": "catalog:",
     "sass-embedded": "catalog:",
     "storybook": "^10.6.0",
     "typescript": "catalog:",

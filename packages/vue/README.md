@@ -63,6 +63,49 @@ Anything the element itself understands — `class`, `type`, `@click`, `aria-*` 
 falls through to the rendered `<button>`/`<a>`. A disabled `<a>` drops its href
 and reports `aria-disabled`.
 
+## TextField
+
+Single-line text input with label, helper text, and error state — the
+foundation most form fields build on. Props mirror `@okkly/react`'s
+`<TextField>` name-for-name.
+
+| Prop        | Type                                                                  | Default        |
+| ----------- | --------------------------------------------------------------------- | -------------- |
+| `hideLabel` | `boolean`                                                             | `false`        |
+| `size`      | `small \| medium \| large`                                            | `medium`       |
+| `color`     | `primary \| secondary \| dante \| violet \| ember \| ice \| contrast` | `primary`      |
+| `error`     | `boolean`                                                             | `false`        |
+| `fullWidth` | `boolean`                                                             | `false`        |
+| `required`  | `boolean`                                                             | `false`        |
+| `disabled`  | `boolean`                                                             | `false`        |
+| `id`        | `string`                                                              | auto-generated |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { TextField } from "@okkly/vue";
+
+const email = ref("");
+</script>
+
+<template>
+  <TextField v-model="email" required>
+    <template #label>Email</template>
+    <template #helper-text>We'll never share it</template>
+  </TextField>
+</template>
+```
+
+`label`, `helper-text`, `start-adornment` and `end-adornment` are slots rather
+than props, since Vue has no `ReactNode`; each renders only when filled. The
+controlled value is `v-model`. Anything else the `<input>` itself understands
+(`type`, `placeholder`, `name`, `maxlength`, `@input`, `@change`…) falls
+through to it — `class` is the one exception, which lands on the outer field
+wrapper instead, matching React's `className`.
+
+`color` tints the focus ring/glow — `dante` is a rare, deliberate accent
+moment; the rest are for matching a field to surrounding brand/section color.
+
 ## useRipple
 
 `useRipple` is the Vue counterpart of the `@okkly/react-hooks` hook, and
@@ -98,6 +141,40 @@ pnpm --filter @okkly/vue storybook:build    # static build → storybook-static/
 
 Stories never ship: `files` publishes only `dist`, and `tsconfig.build.json`
 excludes `*.stories.ts`.
+
+## Tests
+
+Components are tested with [Playwright component testing][ct]: each one is
+mounted in a real Chromium and driven the way a user would drive it, so the
+assertions run against the CSS the package actually ships. A component's tests
+sit next to it as `*.ct.ts`, one file per component.
+
+```bash
+pnpm --filter @okkly/vue test:playwright   # component tests
+pnpm --filter @okkly/vue test              # vitest + @vue/test-utils
+```
+
+`playwright/index.html` is the mount harness; it loads the design tokens once,
+exactly as an app entry point does. Shared helpers live in `src/playwright`:
+`a11y.ts` configures axe, `screenshots.ts` wires it into the screenshot runs,
+and `matrix/` builds the labelled grid — Vue's `mount(Component, { props,
+slots, on })` takes a component and its props/slots/listeners separately
+rather than one composed element, so each matrix cell is described as that bag
+instead of the JSX React's version builds directly.
+
+### Screenshots
+
+Each component also has one or more **matrix screenshots**: a single committed
+image holding every variant of a component in a labelled grid, so a visual
+regression shows up as one changed cell rather than a wall of near-identical
+files. Every cell is scanned by axe as it is captured, so a component is only
+signed off once it both looks right and reads right.
+
+Baselines are pixel-exact per platform, so they are generated on CI's pinned
+Linux image and never on a developer's machine — locally the comparison is
+skipped entirely (`ignoreSnapshots`).
+
+[ct]: https://playwright.dev/docs/test-components
 
 ## Development
 
