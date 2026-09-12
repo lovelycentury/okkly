@@ -225,20 +225,26 @@ test.describe("handle", () => {
     // ASSERT — no edge strip to catch anything.
     await expect(page.locator(".okkly-swipeable-drawer__edge")).toHaveCount(0);
 
-    // ACT — drag from the sliver, well away from the centred handle.
+    // ACT — drag from the sliver, well away from the centred handle. Paused
+    // before release, like the hysteresis tests above: release logged right
+    // after the move can otherwise read as an implausibly fast fling.
     await page.mouse.move(20, 60);
     await page.mouse.down();
     await page.mouse.move(280, 60);
+    await page.waitForTimeout(150);
     await page.mouse.up();
 
     // ASSERT
     await expect(page.getByTestId("opens")).toHaveText("0");
 
     // ACT — the same drag from the handle.
-    const box = await page.locator(".okkly-swipeable-drawer__handle").boundingBox();
+    const handle = page.locator(".okkly-swipeable-drawer__handle");
+    await expect.poll(() => handle.boundingBox()).not.toBeNull();
+    const box = await handle.boundingBox();
     await page.mouse.move((box?.x ?? 0) + 2, 200);
     await page.mouse.down();
     await page.mouse.move(280, 200);
+    await page.waitForTimeout(150);
     await page.mouse.up();
 
     // ASSERT
