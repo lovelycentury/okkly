@@ -61,7 +61,7 @@ export const PolymorphicAs: Story = {
       <Typography variant="h1" as="div">
         Same styling, rendered as a div
       </Typography>
-      <Typography variant="h1" as="a" href="https://okryshto.dev">
+      <Typography variant="h1" as="a" href="https://okkly.dev">
         Rendered as a link — href is type-checked
       </Typography>
     </div>
@@ -136,7 +136,7 @@ export const InContext: Story = {
         level.
       </Typography>
       <Typography variant="mono-sm" color="muted">
-        orbit.okryshto.dev
+        orbit.okkly.dev
       </Typography>
     </article>
   ),

@@ -283,8 +283,19 @@ export type {
   PopperTransitionProps,
 } from "./components/Popper/Popper";
 
-export { Drawer } from "./components/Drawer/Drawer";
-export type { DrawerProps, DrawerAnchor, DrawerVariant } from "./components/Drawer/Drawer";
+export { Drawer, useDrawerState } from "./components/Drawer/Drawer";
+export type {
+  DrawerProps,
+  DrawerAnchor,
+  DrawerVariant,
+  DrawerState,
+} from "./components/Drawer/Drawer";
+
+export { SwipeableDrawer } from "./components/SwipeableDrawer/SwipeableDrawer";
+export type {
+  SwipeableDrawerProps,
+  SwipeableDrawerHandlePosition,
+} from "./components/SwipeableDrawer/SwipeableDrawer";
 
 export { List, ListItem, ListItemText, ListItemIcon } from "./components/List/List";
 export type {

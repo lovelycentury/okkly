@@ -93,7 +93,7 @@ export const SITE = {
         },
         {
           name: "Orbit",
-          role: "orbit.okryshto.dev",
+          role: "orbit.okkly.dev",
           desc: "A public map with self-intro access: request access, introduce yourself, get approved, download the payload.",
           tech: ["Web", "Maps", "Access flow"],
           hex1: "#1D2150",
@@ -101,7 +101,7 @@ export const SITE = {
         },
         {
           name: "Omm",
-          role: "omm.okryshto.dev",
+          role: "omm.okkly.dev",
           desc: "Internal dashboard behind custom SSO — overview, CRUD over points, and reviewing the intro requests coming in from Orbit.",
           tech: ["Dashboard", "Keycloak SSO"],
           hex1: "#20223A",
@@ -175,7 +175,7 @@ export const SITE = {
       eyebrow: "Let's build",
       headline:
         "If you're shipping something that matters and need someone who moves code and people equally well.",
-      ctas: ["orbit.okryshto.dev", "okryshto.dev"],
+      ctas: ["orbit.okkly.dev", "okkly.dev"],
     },
   },
 

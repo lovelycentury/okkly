@@ -11,9 +11,9 @@ export type CalendarMode = "single" | "range";
 export type CalendarValue = Date | [Date, Date];
 
 /**
- * Accent names the surrounding date components already speak. `Calendar` itself
- * has no `color` prop — its accent is the CSS variable `--okkly-calendar-tone`,
- * and this is the one place that maps a name onto it.
+ * Accent names the surrounding date components already speak — `Calendar`'s own
+ * `color` prop, and the one this maps onto its `--okkly-calendar-tone` CSS
+ * variable via `calendarToneStyle`, below.
  */
 export type CalendarTone = "primary" | "dante" | "indigo" | "violet" | "ember" | "ice";
 
@@ -196,7 +196,16 @@ export interface CalendarBaseProps {
    */
   className?: string;
   /**
-   * Inline styles. The accent tone is a CSS variable rather than a prop, so this is how a caller retints the calendar: `style={{ "--okkly-calendar-tone": "var(--okkly-accent-dante)" }}`.
+   * Accent tone — the same named palette Button/Chip use. Applied via
+   * `calendarToneStyle`, so it merges into `style` rather than replacing it;
+   * an explicit `--okkly-calendar-tone` in `style` still wins.
+   *
+   * @default "primary"
+   * @type {CalendarTone}
+   */
+  color?: CalendarTone;
+  /**
+   * Inline styles. The accent tone is a CSS variable rather than a prop, so this is how a caller retints the calendar directly: `style={{ "--okkly-calendar-tone": "var(--okkly-accent-dante)" }}`. Prefer `color` for the named palette — this is for a one-off/custom tone.
    *
    * @default undefined
    * @type {CSSProperties}
@@ -279,8 +288,11 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calen
     previousMonthLabel = "Previous month",
     nextMonthLabel = "Next month",
     className,
+    color = "primary",
     style,
   } = props as CalendarInternalProps;
+
+  const toneStyle = { ...calendarToneStyle(color), ...style };
 
   const [internalMonth, setInternalMonth] = useState<Date>(() => startOfMonth(month ?? new Date()));
   const visibleMonth = month ? startOfMonth(month) : internalMonth;
@@ -381,7 +393,7 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calen
   const classes = ["okkly-component", "okkly-calendar", className].filter(Boolean).join(" ");
 
   return (
-    <div ref={ref} className={classes} style={style}>
+    <div ref={ref} className={classes} style={toneStyle}>
       <div className="okkly-calendar__panel">
         <div className="okkly-calendar__header">
           <button

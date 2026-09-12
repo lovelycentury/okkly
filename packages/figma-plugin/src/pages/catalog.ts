@@ -9152,7 +9152,7 @@ async function listBoard(t: ThemeContext): Promise<FrameNode> {
       w: IW,
       lead: await initialsAvatar(t, "Oleksii Kryshtopa"),
       title: "Oleksii Kryshtopa",
-      sub: "hello@okryshto.dev",
+      sub: "hello@okkly.dev",
       trail: await drawBadge(t, { label: "PRO" }),
     }),
   );

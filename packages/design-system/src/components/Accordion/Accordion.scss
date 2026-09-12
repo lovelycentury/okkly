@@ -23,6 +23,14 @@
       pointer-events: none;
     }
 
+    // The summary button has square corners of its own, so its focus outline
+    // is square too — even though the container it sits in is rounded.
+    // Collapsed, the button *is* the whole card, so it takes the full radius;
+    // expanded, only its top corners are ever a visible edge.
+    &:not(&--expanded) &__summary {
+      border-radius: inherit;
+    }
+
     &__summary {
       display: flex;
       align-items: center;
@@ -36,6 +44,7 @@
       font-family: inherit;
       text-align: start;
       cursor: pointer;
+      border-radius: var(--okkly-accordion-border-radius) var(--okkly-accordion-border-radius) 0 0;
       transition: color var(--okkly-duration-sm) ease;
 
       &:hover:not(:disabled) {

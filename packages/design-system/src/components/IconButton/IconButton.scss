@@ -112,7 +112,8 @@
       width: var(--okkly-icon-button-icon-size);
       height: var(--okkly-icon-button-icon-size);
 
-      svg {
+      svg,
+      .okkly-icon {
         width: 100%;
         height: 100%;
       }

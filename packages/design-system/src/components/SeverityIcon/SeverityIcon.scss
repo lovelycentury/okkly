@@ -74,7 +74,8 @@
       width: var(--okkly-severity-icon-icon-size);
       height: var(--okkly-severity-icon-icon-size);
 
-      svg {
+      svg,
+      .okkly-icon {
         width: 100%;
         height: 100%;
       }

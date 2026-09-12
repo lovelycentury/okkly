@@ -2,13 +2,13 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   Calendar,
-  calendarToneStyle,
   type CalendarBaseProps,
   type CalendarMode,
   type CalendarProps,
-  type CalendarTone,
   type CalendarValue,
 } from "./Calendar";
+
+const TONES = ["primary", "dante", "indigo", "violet", "ember", "ice"] as const;
 
 // A fixed month keeps every story's grid identical between runs, which is what
 // makes them comparable at all. The one exception is `Today`, which has to open
@@ -28,10 +28,9 @@ const demoRange: [Date, Date] = [new Date(2024, 10, 12), new Date(2024, 10, 21)]
  * Note that `Bounds (min / max)` is *not* a mode — `min`/`max` limit what is
  * selectable in either of them.
  *
- * The accent is the CSS variable `--okkly-calendar-tone`, not a prop;
- * `calendarToneStyle(name)` maps a palette name onto it. Today's date stays
- * dante regardless of the tone, because it marks "you are here" rather than a
- * selection.
+ * The accent is the `color` prop, the same named palette Button/Chip use.
+ * Today's date stays dante regardless of `color`, because it marks "you are
+ * here" rather than a selection.
  */
 const meta: Meta<typeof Calendar> = {
   title: "Control/Calendar",
@@ -43,6 +42,7 @@ const meta: Meta<typeof Calendar> = {
   argTypes: {
     weekStart: { control: "inline-radio", options: ["mon", "sun"] },
     mode: { control: "inline-radio", options: ["single", "range"] },
+    color: { control: "select", options: TONES },
   },
   render: (args) => <Calendar {...args} />,
 };
@@ -51,29 +51,24 @@ export default meta;
 type Story = StoryObj<typeof Calendar>;
 
 /**
- * Every prop as a control, including the tone. Start here when you want to see
+ * Every prop as a control, including `color`. Start here when you want to see
  * what a combination looks like; the stories below are the states worth naming.
  */
-// `tone` is not a Calendar prop — it is a control that writes the CSS variable,
-// so the override idiom is discoverable from the panel. `mode` is widened back
-// to the union because a control can flip it either way, which the discriminated
-// props type (rightly) forbids at a normal call site.
+// `mode` is widened back to the union because a control can flip it either
+// way, which the discriminated props type (rightly) forbids at a normal call site.
 type PlaygroundArgs = CalendarBaseProps & {
   mode?: CalendarMode;
   value?: CalendarValue | null;
-  tone?: CalendarTone;
 };
 
 export const Playground: StoryObj<PlaygroundArgs> = {
-  args: { month: demoMonth, weekStart: "mon", value: demoSelected, tone: "primary" },
+  args: { month: demoMonth, weekStart: "mon", value: demoSelected, color: "primary" },
   argTypes: {
     mode: { control: "inline-radio", options: ["single", "range"] },
     weekStart: { control: "inline-radio", options: ["mon", "sun"] },
-    tone: { control: "select", options: ["primary", "dante", "indigo", "violet", "ember", "ice"] },
+    color: { control: "select", options: TONES },
   },
-  render: ({ tone, ...args }) => (
-    <Calendar {...(args as CalendarProps)} style={calendarToneStyle(tone ?? "primary")} />
-  ),
+  render: (args) => <Calendar {...(args as CalendarProps)} />,
 };
 
 /* ---------------------------------------------------------------- Single */
@@ -184,7 +179,19 @@ export const Today: Story = {
   render: (args) => (
     <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
       <Calendar {...args} />
-      <Calendar {...args} style={calendarToneStyle("violet")} />
+      <Calendar {...args} color="violet" />
+    </div>
+  ),
+};
+
+/** Every named accent, side by side — the same palette Button/Chip use. */
+export const Colors: Story = {
+  args: { value: demoSelected },
+  render: (args) => (
+    <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+      {TONES.map((tone) => (
+        <Calendar key={tone} {...args} color={tone} />
+      ))}
     </div>
   ),
 };

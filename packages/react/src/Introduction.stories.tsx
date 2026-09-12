@@ -286,7 +286,7 @@ import { Button, TextField } from "@okkly/react";
 export function SignIn() {
   return (
     <form>
-      <TextField label="Email" placeholder="you@okryshto.dev" />
+      <TextField label="Email" placeholder="you@okkly.dev" />
       <Button variant="primary">Continue</Button>
     </form>
   );
@@ -1192,7 +1192,7 @@ function Showcase() {
             />
           </Tile>
           <Tile label="TextField / NumberInput" grow stack>
-            <TextField label="Email" placeholder="you@okryshto.dev" defaultValue="" fullWidth />
+            <TextField label="Email" placeholder="you@okkly.dev" defaultValue="" fullWidth />
             <NumberInput label="Quantity" defaultValue={3} fullWidth />
           </Tile>
           <Tile label="TextArea" grow>
