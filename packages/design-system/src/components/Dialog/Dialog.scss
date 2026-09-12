@@ -146,7 +146,8 @@
       cursor: pointer;
       transition: color var(--okkly-duration-sm) ease;
 
-      svg {
+      svg,
+      .okkly-icon {
         width: 0.875rem;
         height: 0.875rem;
       }
