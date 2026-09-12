@@ -23,11 +23,21 @@
     --okkly-modal-z-index: var(--okkly-dialog-z-index);
     --okkly-modal-backdrop-color: var(--okkly-dialog-backdrop-color);
 
-    opacity: 0;
-    transition: opacity var(--okkly-duration-sm) ease;
+    // Modal paints the backdrop; the dialog only decides when it's opaque, so
+    // the scrim arrives together with the paper's grow rather than a frame
+    // before it. Opting back into `visibility: visible` (overriding Modal's
+    // own hidden state) is what lets the opacity transition play at all
+    // during the exit.
+    > .okkly-modal__backdrop {
+      visibility: visible;
+      opacity: 0;
+      transition: opacity var(--okkly-duration-sm) ease;
+      pointer-events: none;
+    }
 
-    &--open {
+    &--visible > .okkly-modal__backdrop {
       opacity: 1;
+      pointer-events: auto;
     }
 
     &__container {
@@ -41,6 +51,10 @@
     }
 
     &__paper {
+      // Modal turns itself `visibility: hidden` the moment `open` flips false.
+      // The paper opts back in, or the shrink is replaced by a disappearance —
+      // Grow's own inline style takes over once the exit actually finishes.
+      visibility: visible;
       position: relative;
       display: flex;
       flex-direction: column;

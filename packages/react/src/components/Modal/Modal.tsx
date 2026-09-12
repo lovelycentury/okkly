@@ -36,7 +36,8 @@ export interface ModalSlotProps {
  * match name-for-name, and `onClose` receives `(event, reason)`. Deliberate
  * gaps: no `sx`/`classes`, no `slots` component-substitution (only
  * `slotProps`), no `closeAfterTransition` — with no built-in transition to
- * wait on, a consumer that animates keeps itself mounted (as `Drawer` does).
+ * wait on, a consumer that animates keeps itself mounted (as `Dialog` and
+ * `Drawer` do).
  */
 export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, "children"> {
   /**

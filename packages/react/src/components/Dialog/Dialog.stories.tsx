@@ -234,20 +234,41 @@ export const WithACloseButton: Story = {
  */
 export const Widths: Story = {
   render: () => {
-    const [width, setWidth] = useState<"xs" | "sm" | "md" | "lg" | "xl" | false | null>(null);
-    const handleClose = useCallback(() => setWidth(null), []);
+    // `width` and `open` are deliberately separate state: the dialog exits with
+    // a Grow, so it stays mounted (and rendering) for the length of that
+    // shrink. Folding `width` back to a "closed" sentinel on close — as a
+    // single piece of state tempts — would flip `maxWidth` mid-animation and
+    // the paper would visibly resize to the closed value while it shrinks.
+    const [width, setWidth] = useState<"xs" | "sm" | "md" | "lg" | "xl" | false>("sm");
+    const [open, setOpen] = useState(false);
+    const handleClose = useCallback(() => setOpen(false), []);
     const options = ["xs", "sm", "md", "lg", "xl"] as const;
     return (
       <div style={surface}>
         {options.map((option) => (
-          <Button key={option} size="small" variant="secondary" onClick={() => setWidth(option)}>
+          <Button
+            key={option}
+            size="small"
+            variant="secondary"
+            onClick={() => {
+              setWidth(option);
+              setOpen(true);
+            }}
+          >
             {option}
           </Button>
         ))}
-        <Button size="small" variant="ghost" onClick={() => setWidth(false)}>
+        <Button
+          size="small"
+          variant="ghost"
+          onClick={() => {
+            setWidth(false);
+            setOpen(true);
+          }}
+        >
           false (uncapped)
         </Button>
-        <Dialog open={width !== null} onClose={handleClose} fullWidth maxWidth={width ?? false}>
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth={width}>
           <DialogTitle>maxWidth = {String(width)}</DialogTitle>
           <DialogContent>
             With `fullWidth` the paper takes the whole cap. Without it, it would shrink to this
