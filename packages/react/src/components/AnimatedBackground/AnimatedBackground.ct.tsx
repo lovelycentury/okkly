@@ -168,6 +168,9 @@ test("should keep the star field stable between renders", async ({ mount }) => {
       .evaluateAll((nodes) =>
         nodes.map((node) => `${node.getAttribute("cx")},${node.getAttribute("cy")}`).join("|"),
       );
+  // Stars are laid out after the initial paint, so wait for one to actually
+  // exist before capturing the "before" snapshot.
+  await expect(component.locator(".okkly-animated-background__star").first()).toBeVisible();
   const before = await positions();
 
   // ACT

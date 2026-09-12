@@ -65,9 +65,8 @@ href and gets `aria-disabled="true"` and `tabindex="-1"`.
 ## TextField
 
 Single-line text input with label, helper, and error — the foundation for most
-form fields. Props mirror `@okkly/react`'s `<TextField>` name-for-name, except
-`color`, which takes every accent token the design system defines rather than
-just `primary`/`dante`.
+form fields. Props mirror `@okkly/react`'s `<TextField>` name-for-name,
+including `color`, which takes every accent token the design system defines.
 
 | Prop             | Type                                                                  | Default     |
 | ---------------- | --------------------------------------------------------------------- | ----------- |

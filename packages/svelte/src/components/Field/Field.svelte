@@ -3,15 +3,19 @@
   import type { Snippet } from "svelte";
 
   export type FieldSize = "small" | "medium" | "large";
-  export type FieldColor =
-    "primary" | "secondary" | "dante" | "violet" | "ember" | "ice" | "contrast";
+  export type FieldColor = "primary" | "dante";
+  /**
+   * Every accent tint a `Field`-shell control can take. Broader than
+   * `FieldColor`, which is what Select/Autocomplete/DateField/TimeField/etc.
+   * would still expose publicly if ported — TextField is the one consumer
+   * that opts into the full accent set.
+   */
+  export type FieldAccentColor = FieldColor | "secondary" | "violet" | "ember" | "ice" | "contrast";
 
   /**
    * Props mirror `@okkly/react`'s internal `<Field>` name-for-name. `label`,
    * `helperText`, `startAdornment`, `endAdornment` and `children` are snippets
-   * rather than `ReactNode`. `color` is widened beyond React's `"primary" |
-   * "dante"` to every accent token the design system's `field.shell` mixin
-   * now tints the focus ring/glow with.
+   * rather than `ReactNode`.
    */
   export interface FieldProps {
     /**
@@ -58,7 +62,7 @@
      *
      * @default "primary"
      */
-    color?: FieldColor;
+    color?: FieldAccentColor;
     /**
      * Error.
      *

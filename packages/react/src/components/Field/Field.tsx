@@ -4,6 +4,13 @@ import type { HTMLAttributes, Ref, ReactNode } from "react";
 
 export type FieldSize = "small" | "medium" | "large";
 export type FieldColor = "primary" | "dante";
+/**
+ * Every accent tint a `Field`-shell control can take. Broader than
+ * `FieldColor`, which is what Select/Autocomplete/DateField/TimeField/etc.
+ * still expose publicly — TextField is the one consumer that opts into the
+ * full accent set.
+ */
+export type FieldAccentColor = FieldColor | "secondary" | "violet" | "ember" | "ice" | "contrast";
 
 export interface FieldProps {
   /**
@@ -52,9 +59,9 @@ export interface FieldProps {
    * Color.
    *
    * @default "primary"
-   * @type {FieldColor}
+   * @type {FieldAccentColor}
    */
-  color?: FieldColor;
+  color?: FieldAccentColor;
   /**
    * Error.
    *

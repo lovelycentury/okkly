@@ -80,7 +80,11 @@ test("should call onClose on Escape", async ({ mount, page }) => {
     <Snackbar open message="Dismiss me" onClose={() => (closes += 1)} autoHideDuration={0} />,
   );
 
-  // ACT
+  // ACT — wait for the snackbar to actually be on screen before dismissing it:
+  // `useEscapeKey`'s listener attaches in a passive effect, which can still be
+  // pending immediately after `mount()` resolves, so a bare key press right
+  // away can race it and land before the listener exists.
+  await expect(page.getByRole("alert")).toBeVisible();
   await page.keyboard.press("Escape");
 
   // ASSERT

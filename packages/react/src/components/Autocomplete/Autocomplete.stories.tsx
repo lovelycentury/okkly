@@ -286,7 +286,10 @@ export const RecipeRenderInput: Story = {
       helperText="The label, helper text and focus ring are still the field's"
       renderInput={({ inputProps, tags, endAdornment, state }) => (
         <>
-          <span aria-hidden="true" style={{ opacity: state.open ? 1 : 0.5, flexShrink: 0 }}>
+          <span
+            aria-hidden="true"
+            style={{ opacity: state.open ? 1 : 0.5, flexShrink: 0, fontSize: "1.25rem" }}
+          >
             ⌕
           </span>
           {tags}

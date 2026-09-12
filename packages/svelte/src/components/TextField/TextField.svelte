@@ -1,10 +1,10 @@
 <script lang="ts" module>
   import type { HTMLInputAttributes } from "svelte/elements";
   import type { Snippet } from "svelte";
-  import type { FieldColor, FieldSize } from "../Field/Field.svelte";
+  import type { FieldAccentColor, FieldSize } from "../Field/Field.svelte";
 
   export type TextFieldSize = FieldSize;
-  export type TextFieldColor = FieldColor;
+  export type TextFieldColor = FieldAccentColor;
 
   type SharedProps = {
     /**
@@ -86,11 +86,10 @@
    * are lifted to the top level rather than living under `InputProps`.
    * `label`/`helperText`/`startAdornment`/`endAdornment` are snippets rather
    * than `ReactNode`, and a controlled `value` + `onChange` pair becomes
-   * `value = $bindable()` paired with the native `oninput`. `color` diverges
-   * from React's `"primary" | "dante"`: it takes every accent token the
-   * design system defines (`secondary`, `violet`, `ember`, `ice`, `contrast`
-   * besides `primary`/`dante`), now that `field.shell` tints the focus
-   * ring/glow with all of them.
+   * `value = $bindable()` paired with the native `oninput`. `color` is
+   * `TextFieldColor` (= `FieldAccentColor`), broader than the internal
+   * `Field`'s own default `FieldColor` — every accent token `field.shell`
+   * tints the focus ring/glow with, not just `primary`/`dante`.
    * Deliberate gaps: no `sx`/`classes`/`slots`/`slotProps` (no CSS-in-JS system
    * here), no `variant` (the design has one visual treatment, not
    * filled/outlined/standard), no `multiline`/`rows`/`select`/`margin` (not in

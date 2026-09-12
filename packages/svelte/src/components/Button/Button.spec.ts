@@ -92,12 +92,12 @@ describe("Button", () => {
   it("renders an anchor for href and drops it while disabled", async () => {
     const { rerender } = render(ButtonHarness, {
       label: "Get in touch",
-      href: "https://okryshto.dev",
+      href: "https://okkly.dev",
     });
     const link = screen.getByRole("link");
-    expect(link).toHaveAttribute("href", "https://okryshto.dev");
+    expect(link).toHaveAttribute("href", "https://okkly.dev");
 
-    await rerender({ label: "Get in touch", href: "https://okryshto.dev", disabled: true });
+    await rerender({ label: "Get in touch", href: "https://okkly.dev", disabled: true });
     const disabledLink = screen.getByText("Get in touch").closest("a")!;
     expect(disabledLink).not.toHaveAttribute("href");
     expect(disabledLink).toHaveAttribute("aria-disabled", "true");

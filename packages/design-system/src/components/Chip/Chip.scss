@@ -131,7 +131,8 @@
       width: var(--okkly-chip-icon-size);
       height: var(--okkly-chip-icon-size);
 
-      svg {
+      svg,
+      .okkly-icon {
         width: 100%;
         height: 100%;
       }
@@ -155,7 +156,8 @@
       pointer-events: auto;
       transition: opacity var(--okkly-duration-sm) ease;
 
-      svg {
+      svg,
+      .okkly-icon {
         width: 100%;
         height: 100%;
       }

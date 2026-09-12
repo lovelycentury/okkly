@@ -154,7 +154,7 @@ export const FullWidth: Story = {
  * href and reports `aria-disabled`.
  */
 export const AsLink: Story = {
-  args: { label: "Get in touch", href: "https://okryshto.dev" },
+  args: { label: "Get in touch", href: "https://okkly.dev" },
   render: render(`{{ label }}<template #end-icon>${arrow}</template>`),
 };
 

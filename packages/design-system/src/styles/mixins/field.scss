@@ -27,6 +27,7 @@
   --okkly-#{$var}-border-color: var(--okkly-border-default);
   --okkly-#{$var}-focus-border-color: var(--okkly-accent-primary);
   --okkly-#{$var}-glow: 0 0 2.5rem rgba(94, 230, 193, 0.24);
+  --okkly-#{$var}-glow-dante: 0 0 0.4375rem rgba(255, 61, 139, 0.35);
   --okkly-#{$var}-padding-inline: 0.875rem;
   --okkly-#{$var}-padding-block: 0.75rem;
   --okkly-#{$var}-font-size: 1rem;
@@ -122,7 +123,8 @@
     max-height: 1rem;
     max-width: 2rem;
 
-    svg {
+    svg,
+    .okkly-icon {
       width: 1rem;
       height: 1rem;
     }
@@ -163,20 +165,22 @@
     color: var(--okkly-feedback-danger);
   }
 
-  // 3. color modifiers — tint the focus ring/glow with one of the design
-  // system's accent tokens; "primary" is the default above and gets no
-  // modifier class. Every consumer's color prop is a subset of this list, so
-  // a modifier a given component never applies simply never matches.
-  // Quoted: unquoted `violet` is also a CSS named color, and Sass warns on
-  // interpolating a color value here.
-  $accent-colors: "secondary", "dante", "violet", "ember", "ice", "contrast";
+  // 3. color modifiers — tint the focus ring/glow. `dante` keeps its own
+  // hand-tuned glow (see above); the rest share one generated rule since they
+  // all follow `--okkly-accent-<name>` and the same glow shape as `primary`.
+  &--color-dante &__control:focus-within {
+    border-color: var(--okkly-accent-dante);
+    box-shadow:
+      0 0 0 0.03125rem var(--okkly-accent-dante),
+      var(--okkly-#{$var}-glow-dante);
+  }
 
-  @each $color in $accent-colors {
-    &--color-#{$color} &__control:focus-within {
-      border-color: var(--okkly-accent-#{$color});
+  @each $name in "secondary", "violet", "ember", "ice", "contrast" {
+    &--color-#{$name} &__control:focus-within {
+      border-color: var(--okkly-accent-#{$name});
       box-shadow:
-        0 0 0 0.03125rem var(--okkly-accent-#{$color}),
-        0 0 0.4375rem color-mix(in srgb, var(--okkly-accent-#{$color}) 35%, transparent);
+        0 0 0 0.03125rem var(--okkly-accent-#{$name}),
+        0 0 2.5rem color-mix(in srgb, var(--okkly-accent-#{$name}) 24%, transparent);
     }
   }
 
@@ -303,7 +307,8 @@
     flex-shrink: 0;
     color: var(--okkly-accent-primary);
 
-    svg {
+    svg,
+    .okkly-icon {
       width: 0.875rem;
       height: 0.875rem;
     }

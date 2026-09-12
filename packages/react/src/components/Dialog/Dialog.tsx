@@ -2,6 +2,7 @@
 
 import {
   forwardRef,
+  useState,
   type ButtonHTMLAttributes,
   type HTMLAttributes,
   type MouseEvent as ReactMouseEvent,
@@ -10,6 +11,8 @@ import {
 import { iconX } from "@okkly/icons";
 import "@okkly/design-system/components/Dialog/Dialog.scss";
 import { Modal, type ModalProps } from "../Modal/Modal";
+import { Grow } from "../Grow/Grow";
+import type { TransitionTimeoutWithAuto } from "../../types";
 
 /** `false` removes the cap entirely, as in MUI. */
 export type DialogMaxWidth = "xs" | "sm" | "md" | "lg" | "xl" | false;
@@ -17,7 +20,9 @@ export type DialogMaxWidth = "xs" | "sm" | "md" | "lg" | "xl" | false;
 /**
  * Built on `Modal`, which owns the portal, backdrop, focus trap and scroll
  * lock — exactly the split MUI draws. Dialog adds only the centred container
- * and the sized paper on top.
+ * and the sized paper on top, and opens the paper with Grow (MUI's own
+ * Dialog transition, and the same one `Tooltip`/`Popover` use) while the
+ * backdrop fades in alongside it.
  *
  * Props follow MUI's Dialog API (https://mui.com/material-ui/api/dialog/) as closely as
  * this design allows: `open`/`onClose`/`fullWidth`/`maxWidth`/`fullScreen`/`children`
@@ -51,6 +56,13 @@ export interface DialogProps extends Omit<ModalProps, "children"> {
    */
   fullScreen?: boolean;
   /**
+   * Grow timeout; `'auto'` like MUI.
+   *
+   * @default "auto"
+   * @type {TransitionTimeoutWithAuto}
+   */
+  transitionDuration?: TransitionTimeoutWithAuto;
+  /**
    * Children.
    *
    * @default undefined
@@ -66,15 +78,22 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
     fullWidth = false,
     maxWidth = "sm",
     fullScreen = false,
+    transitionDuration = "auto",
+    keepMounted = false,
     children,
     className,
     ...rest
   },
   forwardedRef,
 ) {
+  // Whether the paper's exit Grow has finished. Starts `true` unless the
+  // dialog opens on first render, so a `Dialog` that never opens renders
+  // nothing rather than a hidden one.
+  const [exited, setExited] = useState(!open);
+
   const classes = [
     "okkly-dialog",
-    open && "okkly-dialog--open",
+    !exited && "okkly-dialog--visible",
     fullWidth && "okkly-dialog--full-width",
     fullScreen && "okkly-dialog--full-screen",
     maxWidth !== false && `okkly-dialog--max-width-${maxWidth}`,
@@ -91,12 +110,33 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
     onClose?.(event, "backdropClick");
   };
 
+  // Modal has no built-in transition and unmounts the instant `open` goes
+  // false, which would cut the paper's shrink short. So Modal is always told
+  // to stay mounted here, and this only lets go once the Grow has actually
+  // finished — the caller's own `keepMounted` still decides what happens after.
+  if (exited && !open && !keepMounted) return null;
+
   return (
-    <Modal ref={forwardedRef} open={open} onClose={onClose} className={classes} {...rest}>
+    <Modal
+      ref={forwardedRef}
+      open={open}
+      onClose={onClose}
+      className={classes}
+      keepMounted
+      {...rest}
+    >
       <div className="okkly-dialog__container" onClick={handleContainerClick}>
-        <div className="okkly-dialog__paper" role="dialog" aria-modal="true">
-          {children}
-        </div>
+        <Grow
+          in={open}
+          appear
+          timeout={transitionDuration}
+          onEnter={() => setExited(false)}
+          onExited={() => setExited(true)}
+        >
+          <div className="okkly-dialog__paper" role="dialog" aria-modal="true">
+            {children}
+          </div>
+        </Grow>
       </div>
     </Modal>
   );
