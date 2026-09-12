@@ -1,6 +1,6 @@
 name: Playwright component tests
 
-# Reusable: `ci.yml` calls it to verify, `playwright-screenshots.yml` calls it
+# Reusable: `ci.yml` calls it to verify, `react-playwright-screenshots.yml` calls it
 # with `update-snapshots` to refresh the committed baselines.
 on:
   workflow_call:

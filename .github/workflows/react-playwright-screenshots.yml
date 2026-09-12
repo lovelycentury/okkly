@@ -1,4 +1,4 @@
-name: Update Playwright screenshots
+name: Update React Playwright screenshots
 
 # Baselines are pixel-exact per platform, so they are never generated on a
 # developer's machine — `ignoreSnapshots` skips the comparison there. Run this
@@ -41,6 +41,6 @@ jobs:
             Auto-generated. Every component screenshot baseline has been
             regenerated on the pinned Playwright Linux image. Review the image
             diffs before merging — an unexpected one is a visual regression.
-          branch: chore/playwright-screenshots
+          branch: chore/react-playwright-screenshots
           branch-suffix: short-commit-hash
           add-paths: packages/react/playwright/snapshots
