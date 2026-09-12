@@ -914,10 +914,13 @@ function AutocompleteInner<T = AutocompleteOption>(
       },
     })
   ) : (
-    <>
+    // Tags and the input wrap together in their own row, so the clear/toggle
+    // buttons — siblings of this in `__control` — never get pushed onto a
+    // wrapped line of their own.
+    <div className="okkly-autocomplete__body">
       {renderTagRow()}
       <input {...inputProps} ref={mergedInputRef} />
-    </>
+    </div>
   );
 
   return (
