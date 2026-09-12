@@ -22,7 +22,6 @@
     justify-content: center;
     width: var(--okkly-avatar-size);
     height: var(--okkly-avatar-size);
-    overflow: hidden;
     border: var(--okkly-1px-in-rem) solid var(--okkly-avatar-border-color);
     border-radius: var(--okkly-avatar-border-radius);
     background: linear-gradient(
@@ -70,6 +69,10 @@
       display: block;
       width: 100%;
       height: 100%;
+      // The avatar itself no longer clips (that would clip the status dot's
+      // overlap too) — a replaced element clips to its own border-radius
+      // without needing `overflow: hidden`, so the image rounds itself here.
+      border-radius: inherit;
       object-fit: cover;
     }
 
