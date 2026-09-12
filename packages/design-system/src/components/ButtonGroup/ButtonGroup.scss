@@ -103,7 +103,11 @@
       width: 0.9375rem; // 15px
       height: 0.9375rem;
 
-      svg {
+      // A raw `<svg>` is sized directly; an `<Icon>` passed here brings its own
+      // box (`.okkly-icon`), which otherwise keeps its default size and
+      // overflows this wrapper instead of shrinking to fit it.
+      svg,
+      .okkly-icon {
         width: 100%;
         height: 100%;
       }
@@ -116,7 +120,8 @@
       height: 1rem;
       transition: transform var(--okkly-duration-sm) ease;
 
-      svg {
+      svg,
+      .okkly-icon {
         width: 100%;
         height: 100%;
       }

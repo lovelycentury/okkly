@@ -193,7 +193,7 @@ export const AsLink: Story = {
   args: { label: "Get in touch" },
   render: (args) => ({
     props: args,
-    template: `<a okklyButton href="https://okryshto.dev"${bindings}>{{ label }}${arrowIcon("okklyButtonEndIcon")}</a>`,
+    template: `<a okklyButton href="https://okkly.dev"${bindings}>{{ label }}${arrowIcon("okklyButtonEndIcon")}</a>`,
   }),
 };
 

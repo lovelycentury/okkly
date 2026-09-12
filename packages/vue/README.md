@@ -66,8 +66,8 @@ and reports `aria-disabled`.
 ## TextField
 
 Single-line text input with label, helper text, and error state — the
-foundation most form fields build on. Props mostly mirror `@okkly/react`'s
-`<TextField>` name-for-name; `color` is wider here (see below).
+foundation most form fields build on. Props mirror `@okkly/react`'s
+`<TextField>` name-for-name.
 
 | Prop        | Type                                                                  | Default        |
 | ----------- | --------------------------------------------------------------------- | -------------- |
@@ -103,8 +103,8 @@ controlled value is `v-model`. Anything else the `<input>` itself understands
 through to it — `class` is the one exception, which lands on the outer field
 wrapper instead, matching React's `className`.
 
-`color` tints the focus ring/glow and accepts any `--okkly-accent-*` token —
-`dante` is a rare, deliberate accent moment; the rest are plain color choices.
+`color` tints the focus ring/glow — `dante` is a rare, deliberate accent
+moment; the rest are for matching a field to surrounding brand/section color.
 
 ## useRipple
 

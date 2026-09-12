@@ -19,10 +19,23 @@
     }
 
     // Tags sit inside the control, before the input, and wrap onto new lines as
-    // they accumulate — so the control has to stop being a single centred row.
-    &__control:has(.okkly-autocomplete__tags) {
+    // they accumulate. That wrapping is scoped to `&__body` (below), not the
+    // control itself, so the clear/toggle buttons — the control's other
+    // children, vertically centred against its full (possibly multi-line)
+    // height by the `align-items: center` `field.shell` already sets — stay
+    // put on the first line instead of being pushed onto a wrapped line of
+    // their own once there is no room left for them.
+
+    // Wraps the tags and the input together so they grow onto new lines as one
+    // unit, while `flex: 1` still lets them yield width to the clear/toggle
+    // buttons sitting beside this in `__control`.
+    &__body {
+      display: flex;
+      flex: 1;
       flex-wrap: wrap;
-      align-items: flex-start;
+      align-items: center;
+      gap: 0.3125rem;
+      min-width: 0;
     }
 
     &__tags {

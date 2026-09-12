@@ -1,5 +1,16 @@
 # @okkly/react
 
+## 0.2.0
+
+### Minor Changes
+
+- [#234](https://github.com/lovelycentury/okkly/pull/234) [`6e1c97a`](https://github.com/lovelycentury/okkly/commit/6e1c97aa57f2ab66c4d063032f9d941b67b44f51) Thanks [@lovelycentury](https://github.com/lovelycentury)! - TextField's `color` prop now accepts every accent color (`primary`, `secondary`, `dante`, `violet`, `ember`, `ice`, `contrast`), not just `primary`/`dante`.
+
+### Patch Changes
+
+- Updated dependencies [[`6e1c97a`](https://github.com/lovelycentury/okkly/commit/6e1c97aa57f2ab66c4d063032f9d941b67b44f51)]:
+  - @okkly/design-system@0.2.0
+
 ## 0.1.1
 
 ### Patch Changes

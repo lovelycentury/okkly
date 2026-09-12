@@ -78,7 +78,8 @@
       background: color-mix(in srgb, var(--okkly-stat-card-tone) 12%, transparent);
       color: var(--okkly-stat-card-tone);
 
-      svg {
+      svg,
+      .okkly-icon {
         width: 1.125rem;
         height: 1.125rem;
       }
@@ -117,7 +118,8 @@
       font-size: var(--okkly-font-size-sm);
       line-height: var(--okkly-font-line-height-sm);
 
-      svg {
+      svg,
+      .okkly-icon {
         width: 0.8125rem;
         height: 0.8125rem;
       }

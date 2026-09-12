@@ -259,7 +259,7 @@ test("should stay fully controlled when value is supplied", async ({ mount }) =>
   await expect(component).toContainText("Nov 15, 2024 · 00:00");
 });
 
-test("should format the summary to match the format prop", async ({ mount }) => {
+test("should format the summary to match the format prop", async ({ mount, page }) => {
   // ARRANGE
   const component = await mount(
     <DateTimePicker defaultValue={new Date(2024, 10, 8, 13, 0)} format="24h" />,
@@ -268,21 +268,21 @@ test("should format the summary to match the format prop", async ({ mount }) => 
   // ASSERT
   await expect(component).toContainText("Nov 8, 2024 · 13:00");
 
-  // ACT
+  // ACT — switching format re-dials the Hours/AM-PM wheels; wait for both to
+  // settle before reading the summary, same as elsewhere in this file, or the
+  // assertion can catch an intermediate scroll position.
   await component.update(
     <DateTimePicker defaultValue={new Date(2024, 10, 8, 13, 0)} format="12h" />,
   );
+  const hours = component.getByRole("spinbutton", { name: "Hours" });
+  const amPm = component.getByRole("spinbutton", { name: "AM/PM" });
+  await waitForWheelToSettle(hours, page);
+  await waitForWheelToSettle(amPm, page);
 
   // ASSERT
   await expect(component).toContainText("Nov 8, 2024 · 01:00 PM");
-  await expect(component.getByRole("spinbutton", { name: "Hours" })).toHaveAttribute(
-    "aria-valuenow",
-    "1",
-  );
-  await expect(component.getByRole("spinbutton", { name: "AM/PM" })).toHaveAttribute(
-    "aria-valuenow",
-    "1",
-  );
+  await expect(hours).toHaveAttribute("aria-valuenow", "1");
+  await expect(amPm).toHaveAttribute("aria-valuenow", "1");
 });
 
 test("should use custom labels for the summary, empty state and confirm button", async ({

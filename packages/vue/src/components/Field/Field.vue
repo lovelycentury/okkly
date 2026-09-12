@@ -1,7 +1,13 @@
 <script lang="ts">
 export type FieldSize = "small" | "medium" | "large";
-export type FieldColor =
-  "primary" | "secondary" | "dante" | "violet" | "ember" | "ice" | "contrast";
+export type FieldColor = "primary" | "dante";
+/**
+ * Every accent tint a `Field`-shell control can take. Broader than
+ * `FieldColor`, which is what Select/Autocomplete/DateField/TimeField/etc.
+ * still expose publicly — TextField is the one consumer that opts into the
+ * full accent set.
+ */
+export type FieldAccentColor = FieldColor | "secondary" | "violet" | "ember" | "ice" | "contrast";
 
 /**
  * Props mirror `@okkly/react`'s internal `<Field>` name-for-name. Deliberate
@@ -10,9 +16,7 @@ export type FieldColor =
  * `start-adornment` and `end-adornment` slots, and `children` is the default
  * slot. `controlProps` and `className` are dropped — nothing yet needs to
  * reach the inner control box, and Vue merges a consumer's `class` onto the
- * root on its own. `color` also diverges: every `--okkly-accent-*` token is a
- * valid value here, not just `primary`/`dante` — the `field.shell` mixin
- * grew a generic per-color modifier, so this just exposes the rest of it.
+ * root on its own.
  *
  * Internal on purpose — not exported from the package. It is the shared shell
  * TextField (and, later, Select/Autocomplete) render inside; its styling
@@ -51,12 +55,12 @@ export interface FieldProps {
    */
   size?: FieldSize;
   /**
-   * Tints the focus ring/glow. Any `--okkly-accent-*` token — `dante` is a
-   * rare, deliberate accent moment; the rest are plain color choices.
+   * Tints the focus ring/glow. `dante` is a rare, deliberate accent moment;
+   * the rest are for matching a field to surrounding brand/section color.
    *
    * @default "primary"
    */
-  color?: FieldColor;
+  color?: FieldAccentColor;
   /**
    * Error.
    *

@@ -81,7 +81,8 @@
         color: var(--okkly-text-primary);
       }
 
-      svg {
+      svg,
+      .okkly-icon {
         width: 0.875rem;
         height: 0.875rem;
       }
@@ -91,7 +92,8 @@
       display: flex;
       transition: transform var(--okkly-duration-sm) ease;
 
-      svg {
+      svg,
+      .okkly-icon {
         width: 1rem;
         height: 1rem;
       }

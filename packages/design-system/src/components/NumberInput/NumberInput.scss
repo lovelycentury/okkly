@@ -144,14 +144,16 @@
         cursor: not-allowed;
       }
 
-      svg {
+      svg,
+      .okkly-icon {
         display: block;
         width: 0.9375rem;
         height: 0.9375rem;
       }
     }
 
-    &__controls--chevrons &__step svg {
+    &__controls--chevrons &__step svg,
+    &__controls--chevrons &__step .okkly-icon {
       width: 0.75rem;
       height: 0.75rem;
     }

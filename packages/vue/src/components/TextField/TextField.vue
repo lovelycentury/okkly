@@ -1,8 +1,8 @@
 <script lang="ts">
-import type { FieldColor, FieldSize } from "../Field/Field.vue";
+import type { FieldAccentColor, FieldSize } from "../Field/Field.vue";
 
 export type TextFieldSize = FieldSize;
-export type TextFieldColor = FieldColor;
+export type TextFieldColor = FieldAccentColor;
 
 /**
  * Props follow MUI's TextField API (https://mui.com/material-ui/api/text-field/)
@@ -14,8 +14,7 @@ export type TextFieldColor = FieldColor;
  * every other native input attribute (`type`, `placeholder`, `name`,
  * `maxlength`, `@input`, `@change`…) falls through to the rendered `<input>`
  * on its own — `class` is the one exception, which lands on the outer field
- * wrapper instead, matching React's `className`. `color` also diverges: every
- * `--okkly-accent-*` token is a valid value here, not just `primary`/`dante`.
+ * wrapper instead, matching React's `className`.
  * Deliberate gaps: no `variant` (the design has one visual treatment, not
  * filled/outlined/standard), no `multiline`/`rows`/`select` (not in this
  * component's Figma spec — would be new, undesigned surface).
@@ -34,8 +33,9 @@ export interface TextFieldProps {
    */
   size?: TextFieldSize;
   /**
-   * Tints the focus ring/glow. Any `--okkly-accent-*` token — `dante` is a
-   * rare, deliberate accent moment; the rest are plain color choices.
+   * Tints the focus ring/glow. One of the design system's accent colors —
+   * `dante` is a rare, deliberate accent moment; the rest are for matching
+   * a field to surrounding brand/section color.
    *
    * @default "primary"
    */

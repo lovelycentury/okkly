@@ -196,7 +196,11 @@
       width: var(--okkly-button-icon-size);
       height: var(--okkly-button-icon-size);
 
-      svg {
+      // A raw `<svg>` is sized directly; an `<Icon>` passed here brings its own
+      // box (`.okkly-icon`), which otherwise keeps its default size and
+      // overflows this wrapper instead of shrinking to fit it.
+      svg,
+      .okkly-icon {
         width: 100%;
         height: 100%;
       }
