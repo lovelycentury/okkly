@@ -1,8 +1,11 @@
 "use client";
 
 import {
+  createContext,
   forwardRef,
+  useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type CSSProperties,
@@ -25,25 +28,53 @@ export type DrawerAnchor = "left" | "right" | "top" | "bottom";
  *
  * - `persistent` toggles through `open`/`onClose` like `temporary`, but stays
  *   mounted always and collapses its own width/height to 0 rather than
- *   sliding off-screen, so it reclaims the layout space it was taking.
+ *   sliding off-screen, so it reclaims the layout space it was taking. With
+ *   `mini`, an open one narrows to a short view instead of its full size.
  * - `permanent` ignores `open`/`onClose`/`keepMounted` entirely and is always
  *   shown at full size — the caller decides whether to render it at all (e.g.
  *   behind a breakpoint).
  */
 export type DrawerVariant = "temporary" | "persistent" | "permanent";
 
-/** The paper's transform at a given point in an open/close drag, 0 (closed) → 1 (open). */
-function dragTransform(anchor: DrawerAnchor, progress: number): string {
+/** What a drawer's content can read about the drawer it sits in. */
+export interface DrawerState {
+  open: boolean;
+  mini: boolean;
+  variant: DrawerVariant;
+  anchor: DrawerAnchor;
+}
+
+const DrawerStateContext = createContext<DrawerState | null>(null);
+
+/**
+ * The state of the enclosing `Drawer`, for content that renders differently
+ * in the `mini` short view — icons with tooltips instead of labels, say. The
+ * `okkly-drawer--mini` class on the drawer root covers the CSS-only case.
+ */
+export function useDrawerState(): DrawerState {
+  const state = useContext(DrawerStateContext);
+  if (!state) throw new Error("useDrawerState must be used within Drawer");
+  return state;
+}
+
+/**
+ * The paper's transform at a given point in an open/close drag, 0 (closed) → 1
+ * (open). "Closed" is the peeking position when `peekSize` is set, so a drag
+ * starts from — and springs back to — what is actually on screen.
+ */
+function dragTransform(anchor: DrawerAnchor, progress: number, peekSize: number): string {
   const closedFraction = 1 - Math.min(1, Math.max(0, progress));
+  const percent = 100 * closedFraction;
+  const pixels = peekSize * closedFraction;
   switch (anchor) {
     case "left":
-      return `translateX(${-100 * closedFraction}%)`;
+      return `translateX(calc(${-percent}% + ${pixels}px))`;
     case "right":
-      return `translateX(${100 * closedFraction}%)`;
+      return `translateX(calc(${percent}% - ${pixels}px))`;
     case "top":
-      return `translateY(${-100 * closedFraction}%)`;
+      return `translateY(calc(${-percent}% + ${pixels}px))`;
     case "bottom":
-      return `translateY(${100 * closedFraction}%)`;
+      return `translateY(calc(${percent}% - ${pixels}px))`;
   }
 }
 
@@ -106,6 +137,27 @@ export interface DrawerProps extends Omit<ModalProps, "children" | "open"> {
    * @type {number}
    */
   dragProgress?: number;
+  /**
+   * Pixels of the closed paper left on screen instead of sliding it fully
+   * away. Internal — `SwipeableDrawer` exposes it as its own `peekSize`.
+   * Only meaningful for `variant="temporary"`.
+   *
+   * @default 0
+   * @type {number}
+   */
+  peekSize?: number;
+  /**
+   * Short view for `variant="persistent"`: while open, narrow to
+   * `--okkly-drawer-mini-width` (`--okkly-drawer-mini-height` for top/bottom)
+   * instead of the full size. Closed stays closed. The paper keeps its full
+   * size and is clipped toward the anchored edge; content can react through
+   * the `okkly-drawer--mini` class or `useDrawerState()`. Ignored by the
+   * other variants.
+   *
+   * @default false
+   * @type {boolean}
+   */
+  mini?: boolean;
 }
 
 export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
@@ -119,6 +171,8 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
     keepMounted = false,
     style,
     dragProgress,
+    peekSize = 0,
+    mini = false,
     container,
     disablePortal,
     disableEscapeKeyDown,
@@ -171,10 +225,17 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
   };
 
   const isOpenClass = isPermanent || (isTemporary ? visible : open);
+  const isMini = variant === "persistent" && open && mini;
+
+  const drawerState = useMemo<DrawerState>(
+    () => ({ open: isPermanent || open, mini: isMini, variant, anchor }),
+    [isPermanent, open, isMini, variant, anchor],
+  );
 
   const classes = [
     "okkly-drawer",
     isOpenClass && "okkly-drawer--open",
+    isMini && "okkly-drawer--mini",
     `okkly-drawer--anchor-${anchor}`,
     `okkly-drawer--variant-${variant}`,
     className,
@@ -183,13 +244,19 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
     .join(" ");
 
   const paperStyle: CSSProperties | undefined = isDragging
-    ? { transform: dragTransform(anchor, dragProgress), transition: "none" }
+    ? { transform: dragTransform(anchor, dragProgress, peekSize), transition: "none" }
     : undefined;
+  // Read by the closed-state transform in Drawer.scss; unset keeps it at 0.
+  const temporaryStyle: CSSProperties | undefined = peekSize
+    ? ({ ...style, "--okkly-drawer-peek": `${peekSize}px` } as CSSProperties)
+    : style;
 
   if (isPermanent) {
     return (
       <div ref={handleRef} className={["okkly-component", classes].join(" ")} style={style} {...rest}>
-        <div className="okkly-drawer__paper">{children}</div>
+        <div className="okkly-drawer__paper">
+          <DrawerStateContext.Provider value={drawerState}>{children}</DrawerStateContext.Provider>
+        </div>
       </div>
     );
   }
@@ -216,7 +283,7 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
         // whether anything survives past the animation, above.
         keepMounted
         className={classes}
-        style={style}
+        style={temporaryStyle}
         {...rest}
       >
         <div
@@ -227,7 +294,7 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
           style={paperStyle}
           onTransitionEnd={handleTemporaryTransitionEnd}
         >
-          {children}
+          <DrawerStateContext.Provider value={drawerState}>{children}</DrawerStateContext.Provider>
         </div>
       </Modal>
     );
@@ -237,7 +304,7 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
   return (
     <div ref={handleRef} className={["okkly-component", classes].join(" ")} style={style} {...rest}>
       <div ref={paperRef} className="okkly-drawer__paper">
-        {children}
+        <DrawerStateContext.Provider value={drawerState}>{children}</DrawerStateContext.Provider>
       </div>
     </div>
   );

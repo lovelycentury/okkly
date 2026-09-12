@@ -26,6 +26,13 @@ const meta: Meta<typeof SwipeableDrawer> = {
     swipeAreaWidth: 20,
     hysteresis: 0.5,
     minFlingVelocity: 0.6,
+    peekSize: 0,
+    disableDiscovery: false,
+    showHandle: false,
+    handleDragOnly: false,
+    handleLength: 32,
+    handleThickness: 4,
+    handlePosition: "center",
   },
   argTypes: {
     anchor: { control: "inline-radio", options: ["left", "right", "top", "bottom"] },
@@ -33,6 +40,14 @@ const meta: Meta<typeof SwipeableDrawer> = {
     swipeAreaWidth: { control: { type: "number", min: 4, max: 64, step: 4 } },
     hysteresis: { control: { type: "number", min: 0.1, max: 0.9, step: 0.05 } },
     minFlingVelocity: { control: { type: "number", min: 0.1, max: 2, step: 0.1 } },
+    peekSize: { control: { type: "number", min: 0, max: 120, step: 4 } },
+    disableDiscovery: { control: "boolean" },
+    showHandle: { control: "boolean" },
+    handleDragOnly: { control: "boolean" },
+    handleLength: { control: { type: "number", min: 8, max: 120, step: 4 } },
+    handleThickness: { control: { type: "number", min: 2, max: 12, step: 1 } },
+    handlePosition: { control: "inline-radio", options: ["start", "center", "end"] },
+    handleColor: { control: "color" },
     open: { control: false },
     onOpen: { control: false },
     onClose: { control: false },
@@ -149,4 +164,41 @@ export const Anchors: Story = {
 export const NoSwipeToOpen: Story = {
   name: "No swipe to open",
   args: { disableSwipeToOpen: true },
+};
+
+/**
+ * A bottom sheet that never fully leaves: `peekSize` keeps a strip of it on
+ * screen while closed, and `showHandle` puts a grab handle on that strip. On
+ * mount it plays the discovery hint once — slides out a little further, then
+ * settles — unless `disableDiscovery` is set. Drag the strip (or the handle)
+ * up to open; drag the sheet down to close.
+ *
+ * Toggle `handleDragOnly` in the controls to make the handle the only thing
+ * that starts a drag.
+ */
+export const APeekingBottomSheet: Story = {
+  name: "A peeking bottom sheet",
+  args: {
+    anchor: "bottom",
+    peekSize: 56,
+    showHandle: true,
+  },
+  render: (args) => {
+    const [open, setOpen] = useState(false);
+    const handleOpen = useCallback(() => setOpen(true), []);
+    const handleClose = useCallback(() => setOpen(false), []);
+    return (
+      <div style={surface}>
+        <Button size="small" variant="secondary" onClick={handleOpen}>
+          Open
+        </Button>
+        <SwipeableDrawer {...args} open={open} onOpen={handleOpen} onClose={handleClose}>
+          <div style={{ ...panel, paddingTop: "24px" }}>
+            <h2 style={heading}>51 results</h2>
+            <p style={{ margin: 0 }}>Everything below the fold of the sheet goes here.</p>
+          </div>
+        </SwipeableDrawer>
+      </div>
+    );
+  },
 };

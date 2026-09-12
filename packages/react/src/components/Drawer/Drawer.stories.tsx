@@ -1,7 +1,9 @@
 import { useCallback, useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { iconFolder, iconHome, iconSearch, iconStar } from "@okkly/icons";
 import { Button } from "../Button/Button";
-import { Drawer, type DrawerAnchor } from "./Drawer";
+import { Icon } from "../Icon/Icon";
+import { Drawer, useDrawerState, type DrawerAnchor } from "./Drawer";
 
 /**
  * A panel that slides in from an edge and takes the page with it. Use it for
@@ -484,6 +486,96 @@ export const APersistentSidebar: Story = {
           </Drawer>
           <main style={appMain}>
             <p style={{ margin: 0 }}>The content here reflows as the sidebar collapses and expands.</p>
+          </main>
+        </div>
+      </div>
+    );
+  },
+};
+
+const railItems = [
+  { label: "Library", icon: iconHome },
+  { label: "Releases", icon: iconFolder },
+  { label: "Favourites", icon: iconStar },
+  { label: "Search", icon: iconSearch },
+];
+
+function RailNavItem({ label, icon, active }: { label: string; icon: string; active?: boolean }) {
+  // `useDrawerState` is the JS route for reacting to `mini` — here, trading the
+  // label for a native tooltip. The CSS-only route is the
+  // `okkly-drawer--mini` class on the drawer root.
+  const { mini } = useDrawerState();
+  return (
+    <a
+      href={`#${label.toLowerCase()}`}
+      title={mini ? label : undefined}
+      aria-label={mini ? label : undefined}
+      style={{
+        ...navItem,
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+        whiteSpace: "nowrap",
+        background: active ? "var(--okkly-bg-surface-raised)" : "transparent",
+        color: active ? "var(--okkly-text-primary)" : "var(--okkly-text-secondary)",
+      }}
+    >
+      <Icon icon={icon} fontSize="small" />
+      {!mini && <span>{label}</span>}
+    </a>
+  );
+}
+
+type RailState = "closed" | "mini" | "open";
+
+/**
+ * `mini` gives a `persistent` drawer a third state between closed and open: a
+ * short view, `--okkly-drawer-mini-width` wide (`--okkly-drawer-mini-height`
+ * tall for the top/bottom anchors). `open` still decides whether it shows at
+ * all; `mini` only narrows an open one. The paper keeps its full size and is
+ * clipped toward the anchored edge, so the icon column stays in view.
+ *
+ * Content can react two ways: CSS against the `okkly-drawer--mini` class on
+ * the drawer root, or `useDrawerState()` in JS — the nav items below use the
+ * hook to swap their labels for tooltips.
+ */
+export const APersistentSidebarWithAShortView: Story = {
+  name: "A persistent sidebar with a short view",
+  render: () => {
+    const [state, setState] = useState<RailState>("mini");
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        <div style={surface}>
+          {(["closed", "mini", "open"] as const).map((value) => (
+            <Button
+              key={value}
+              size="small"
+              variant={state === value ? "primary" : "secondary"}
+              onClick={() => setState(value)}
+            >
+              {value}
+            </Button>
+          ))}
+        </div>
+        <div style={appShell}>
+          <Drawer
+            variant="persistent"
+            anchor="left"
+            open={state !== "closed"}
+            mini={state === "mini"}
+            onClose={() => setState("closed")}
+            style={{ "--okkly-drawer-width": "14rem" } as CSSProperties}
+          >
+            <nav style={{ ...panel, gap: "4px", width: "100%", padding: "12px" }} aria-label="Main">
+              {railItems.map((item, index) => (
+                <RailNavItem key={item.label} {...item} active={index === 0} />
+              ))}
+            </nav>
+          </Drawer>
+          <main style={appMain}>
+            <p style={{ margin: 0 }}>
+              Closed, a short icon rail, or fully open — the content reflows each time.
+            </p>
           </main>
         </div>
       </div>

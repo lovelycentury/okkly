@@ -12,6 +12,10 @@
     --okkly-drawer-border-width: var(--okkly-1px-in-rem);
     --okkly-drawer-width: 20rem;
     --okkly-drawer-height: 50vh;
+    // Short-view (`mini`) size of a `persistent` drawer: a rail wide enough for
+    // a column of icons, or tall enough for a row of them.
+    --okkly-drawer-mini-width: 4.5rem;
+    --okkly-drawer-mini-height: 4.5rem;
     // Not `--okkly-shadow-medium-left`: the shared shadow tokens are 10% black,
     // calibrated for a light surface and invisible against this canvas. A panel
     // lifted off a near-black page needs a shadow darker than the page.
@@ -65,7 +69,7 @@
       width: var(--okkly-drawer-width);
       border-right: var(--okkly-drawer-border-width) solid var(--okkly-drawer-border-color);
       box-shadow: 0.75rem 0 2rem rgba(0, 0, 0, 0.55);
-      transform: translateX(-100%);
+      transform: translateX(calc(-100% + var(--okkly-drawer-peek, 0px)));
     }
 
     &--variant-temporary.okkly-drawer--anchor-right &__paper {
@@ -75,7 +79,7 @@
       width: var(--okkly-drawer-width);
       border-left: var(--okkly-drawer-border-width) solid var(--okkly-drawer-border-color);
       box-shadow: var(--okkly-drawer-shadow);
-      transform: translateX(100%);
+      transform: translateX(calc(100% - var(--okkly-drawer-peek, 0px)));
     }
 
     &--variant-temporary.okkly-drawer--anchor-top &__paper {
@@ -85,7 +89,7 @@
       height: var(--okkly-drawer-height);
       border-bottom: var(--okkly-drawer-border-width) solid var(--okkly-drawer-border-color);
       box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.55);
-      transform: translateY(-100%);
+      transform: translateY(calc(-100% + var(--okkly-drawer-peek, 0px)));
     }
 
     &--variant-temporary.okkly-drawer--anchor-bottom &__paper {
@@ -97,7 +101,7 @@
       border-top-left-radius: 1.75rem;
       border-top-right-radius: 1.75rem;
       box-shadow: 0 -0.75rem 2rem rgba(0, 0, 0, 0.55);
-      transform: translateY(100%);
+      transform: translateY(calc(100% - var(--okkly-drawer-peek, 0px)));
     }
 
     &--variant-temporary.okkly-drawer--open.okkly-drawer--anchor-left &__paper,
@@ -114,7 +118,28 @@
     &--variant-persistent,
     &--variant-permanent {
       position: relative;
+      display: flex;
       overflow: hidden;
+    }
+
+    // Clip toward the screen edge the drawer is anchored to, so a collapsing
+    // (or `mini`) drawer keeps the part of its paper nearest that edge — a
+    // right rail shows the right of it, a bottom bar the bottom.
+    &--variant-persistent.okkly-drawer--anchor-right,
+    &--variant-permanent.okkly-drawer--anchor-right {
+      justify-content: flex-end;
+    }
+
+    &--variant-persistent.okkly-drawer--anchor-top,
+    &--variant-persistent.okkly-drawer--anchor-bottom,
+    &--variant-permanent.okkly-drawer--anchor-top,
+    &--variant-permanent.okkly-drawer--anchor-bottom {
+      flex-direction: column;
+    }
+
+    &--variant-persistent.okkly-drawer--anchor-bottom,
+    &--variant-permanent.okkly-drawer--anchor-bottom {
+      justify-content: flex-end;
     }
 
     &--variant-persistent &__paper,
@@ -186,6 +211,18 @@
     &--variant-persistent.okkly-drawer--open.okkly-drawer--anchor-top,
     &--variant-persistent.okkly-drawer--open.okkly-drawer--anchor-bottom {
       height: var(--okkly-drawer-height);
+    }
+
+    // `mini` — an open `persistent` drawer's short view. One class more than
+    // the open rules above, so it wins without leaning on source order.
+    &--variant-persistent.okkly-drawer--open.okkly-drawer--mini.okkly-drawer--anchor-left,
+    &--variant-persistent.okkly-drawer--open.okkly-drawer--mini.okkly-drawer--anchor-right {
+      width: var(--okkly-drawer-mini-width);
+    }
+
+    &--variant-persistent.okkly-drawer--open.okkly-drawer--mini.okkly-drawer--anchor-top,
+    &--variant-persistent.okkly-drawer--open.okkly-drawer--mini.okkly-drawer--anchor-bottom {
+      height: var(--okkly-drawer-mini-height);
     }
 
     @media (prefers-reduced-motion: reduce) {

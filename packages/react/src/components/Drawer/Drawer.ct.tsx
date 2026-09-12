@@ -1,7 +1,9 @@
+import type { Page } from "@playwright/test";
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Drawer } from "./Drawer";
 import { Button } from "../Button/Button";
+import { DrawerStateProbe } from "../../playwright/fixtures/DrawerFixtures";
 import type { DrawerAnchor } from "./Drawer";
 
 const ANCHORS = ["left", "right", "top", "bottom"] as const satisfies readonly DrawerAnchor[];
@@ -171,5 +173,107 @@ test.describe("variant", () => {
     await expect(async () => {
       expect((await root.boundingBox())?.width).toBeGreaterThan(200);
     }).toPass();
+  });
+});
+
+test.describe("mini", () => {
+  const rootWidth = async (page: Page) =>
+    Math.round((await page.locator(".okkly-drawer").boundingBox())?.width ?? Number.NaN);
+
+  test("persistent should switch between closed, the short view and fully open", async ({
+    mount,
+    page,
+  }) => {
+    // ARRANGE
+    const component = await mount(
+      <Drawer variant="persistent" anchor="left" open mini onClose={() => {}}>
+        <div>Sidebar</div>
+      </Drawer>,
+    );
+    const root = page.locator(".okkly-drawer");
+
+    // ASSERT — short view: 4.5rem.
+    await expect(root).toHaveClass(/okkly-drawer--mini/);
+    await expect.poll(() => rootWidth(page)).toBe(72);
+
+    // ACT
+    await component.update(
+      <Drawer variant="persistent" anchor="left" open mini={false} onClose={() => {}}>
+        <div>Sidebar</div>
+      </Drawer>,
+    );
+
+    // ASSERT — fully open: 20rem.
+    await expect(root).not.toHaveClass(/okkly-drawer--mini/);
+    await expect.poll(() => rootWidth(page)).toBe(320);
+
+    // ACT — `mini` does not keep a closed drawer showing.
+    await component.update(
+      <Drawer variant="persistent" anchor="left" open={false} mini onClose={() => {}}>
+        <div>Sidebar</div>
+      </Drawer>,
+    );
+
+    // ASSERT
+    await expect(root).not.toHaveClass(/okkly-drawer--mini/);
+    await expect.poll(() => rootWidth(page)).toBe(0);
+  });
+
+  test("should clip a right rail toward its anchored edge", async ({ mount, page }) => {
+    // ARRANGE
+    await mount(
+      <Drawer variant="persistent" anchor="right" open mini onClose={() => {}}>
+        <div>Sidebar</div>
+      </Drawer>,
+    );
+    const root = page.locator(".okkly-drawer");
+    const paper = page.locator(".okkly-drawer__paper");
+
+    // ASSERT — the paper's right edge lines up with the rail's, so the part
+    // left showing is the one next to the screen edge.
+    await expect.poll(() => rootWidth(page)).toBe(72);
+    const rootBox = await root.boundingBox();
+    const paperBox = await paper.boundingBox();
+    expect(Math.round((paperBox?.x ?? 0) + (paperBox?.width ?? 0))).toBe(
+      Math.round((rootBox?.x ?? 0) + (rootBox?.width ?? 0)),
+    );
+  });
+
+  test("should be ignored outside the persistent variant", async ({ mount, page }) => {
+    // ARRANGE
+    await mount(
+      <Drawer variant="permanent" anchor="left" mini>
+        <div>Sidebar</div>
+      </Drawer>,
+    );
+
+    // ASSERT
+    await expect(page.locator(".okkly-drawer")).not.toHaveClass(/okkly-drawer--mini/);
+    await expect.poll(() => rootWidth(page)).toBe(320);
+  });
+
+  test("useDrawerState should report the drawer's state to its content", async ({
+    mount,
+    page,
+  }) => {
+    // ARRANGE
+    const component = await mount(
+      <Drawer variant="persistent" anchor="left" open mini onClose={() => {}}>
+        <DrawerStateProbe />
+      </Drawer>,
+    );
+
+    // ASSERT
+    await expect(page.getByTestId("drawer-state")).toHaveText("open mini persistent left");
+
+    // ACT
+    await component.update(
+      <Drawer variant="persistent" anchor="left" open onClose={() => {}}>
+        <DrawerStateProbe />
+      </Drawer>,
+    );
+
+    // ASSERT
+    await expect(page.getByTestId("drawer-state")).toHaveText("open full persistent left");
   });
 });

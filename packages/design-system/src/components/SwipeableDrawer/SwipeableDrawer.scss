@@ -45,5 +45,21 @@
     &__edge--bottom {
       bottom: 0;
     }
+
+    // The grab handle. Size, placement and colour come in as inline styles
+    // from the component's props; only what never varies lives here. It is
+    // absolutely positioned against the paper, which `Drawer` positions itself.
+    &__handle {
+      position: absolute;
+      z-index: 1;
+      border-radius: 9999px;
+      background: var(--okkly-border-strong);
+      cursor: grab;
+      touch-action: none;
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
   }
 }

@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { SwipeableDrawer } from "../../components/SwipeableDrawer/SwipeableDrawer";
-import type { DrawerAnchor } from "../../components/Drawer/Drawer";
+import {
+  SwipeableDrawer,
+  type SwipeableDrawerProps,
+} from "../../components/SwipeableDrawer/SwipeableDrawer";
 
-export function ControlledSwipeableDrawer({
-  anchor = "left",
-  disableSwipeToOpen,
-}: {
-  anchor?: DrawerAnchor;
-  disableSwipeToOpen?: boolean;
-}) {
+type ControlledSwipeableDrawerProps = Omit<
+  SwipeableDrawerProps,
+  "open" | "onOpen" | "onClose" | "children"
+>;
+
+export function ControlledSwipeableDrawer({ anchor = "left", ...props }: ControlledSwipeableDrawerProps) {
   const [open, setOpen] = useState(false);
   const [opens, setOpens] = useState(0);
   const [closes, setCloses] = useState(0);
@@ -18,9 +19,9 @@ export function ControlledSwipeableDrawer({
       <span data-testid="opens">{opens}</span>
       <span data-testid="closes">{closes}</span>
       <SwipeableDrawer
+        {...props}
         open={open}
         anchor={anchor}
-        disableSwipeToOpen={disableSwipeToOpen}
         onOpen={() => {
           setOpen(true);
           setOpens((value) => value + 1);
@@ -30,7 +31,7 @@ export function ControlledSwipeableDrawer({
           setCloses((value) => value + 1);
         }}
       >
-        <div style={{ padding: 16, width: 240, height: "100%" }}>Panel content</div>
+        <div style={{ padding: 16, height: "100%" }}>Panel content</div>
       </SwipeableDrawer>
     </div>
   );

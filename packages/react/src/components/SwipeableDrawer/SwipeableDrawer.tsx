@@ -12,12 +12,25 @@ import {
 import "@okkly/design-system/components/SwipeableDrawer/SwipeableDrawer.scss";
 import { Drawer, type DrawerAnchor, type DrawerProps } from "../Drawer/Drawer";
 
+export type SwipeableDrawerHandlePosition = "start" | "center" | "end";
+
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
 // Below this many pixels of travel, a press is a tap/click rather than a
 // swipe — the gesture is dropped and the open state is left untouched, or a
 // button under the user's thumb would "open"/"close" the drawer on every tap.
 const MIN_DRAG_DISTANCE = 10;
+
+// Discovery: the peek starts hidden, overshoots to this multiple of
+// `peekSize` after a short delay, holds, then settles back to `peekSize`.
+const DISCOVERY_DELAY_MS = 350;
+const DISCOVERY_HOLD_MS = 400;
+const DISCOVERY_OVERSHOOT = 1.6;
+
+// Gap between the handle and the paper edge it sits on, and between the
+// handle and the ends of that edge for `handlePosition` start/end.
+const HANDLE_EDGE_INSET = 8;
+const HANDLE_END_INSET = 16;
 
 type DragAxis = "x" | "y";
 
@@ -34,21 +47,61 @@ function coordFromEvent(event: MouseEvent | TouchEvent, axis: DragAxis): number 
 }
 
 /**
+ * The handle sits on the paper edge *facing into* the screen — the one still
+ * showing while the drawer peeks — so a bottom sheet's handle is at its top,
+ * a left drawer's at its right. It runs along that edge.
+ */
+function handleStyle(
+  anchor: DrawerAnchor,
+  position: SwipeableDrawerHandlePosition,
+  length: number,
+  thickness: number,
+  color: string | undefined,
+): CSSProperties {
+  const style: CSSProperties = color ? { background: color } : {};
+  if (anchor === "top" || anchor === "bottom") {
+    style.width = length;
+    style.height = thickness;
+    if (anchor === "bottom") style.top = HANDLE_EDGE_INSET;
+    else style.bottom = HANDLE_EDGE_INSET;
+    if (position === "start") style.left = HANDLE_END_INSET;
+    else if (position === "end") style.right = HANDLE_END_INSET;
+    else {
+      style.left = "50%";
+      style.transform = "translateX(-50%)";
+    }
+  } else {
+    style.width = thickness;
+    style.height = length;
+    if (anchor === "right") style.left = HANDLE_EDGE_INSET;
+    else style.right = HANDLE_EDGE_INSET;
+    if (position === "start") style.top = HANDLE_END_INSET;
+    else if (position === "end") style.bottom = HANDLE_END_INSET;
+    else {
+      style.top = "50%";
+      style.transform = "translateY(-50%)";
+    }
+  }
+  return style;
+}
+
+/**
  * `Drawer` plus an edge swipe to open it and a drag on the paper to close it,
  * both with the panel tracking the finger live rather than jumping once a
- * gesture completes.
+ * gesture completes. Optionally it peeks — a sliver stays on screen while
+ * closed — and carries a grab handle.
  *
  * Props follow MUI's SwipeableDrawer API
  * (https://mui.com/material-ui/api/swipeable-drawer/) as closely as this
  * design allows: `open`/`onOpen`/`onClose`/`disableSwipeToOpen`/
- * `swipeAreaWidth` match name-for-name, and every other `Drawer` prop is
- * forwarded. Deliberate gaps: no `disableDiscovery`/`disableBackdropTransition`
- * — this has no discovery peek to begin with — and `variant` is fixed to
+ * `swipeAreaWidth`/`disableDiscovery` match name-for-name, and every other
+ * `Drawer` prop is forwarded. Additions: `peekSize` and the `handle*` props.
+ * Deliberate gaps: no `disableBackdropTransition`, and `variant` is fixed to
  * `"temporary"`, since `persistent`/`permanent` have nothing to swipe open
  * from (they are always in the layout).
  */
 export interface SwipeableDrawerProps
-  extends Omit<DrawerProps, "variant" | "dragProgress" | "onClose" | "keepMounted"> {
+  extends Omit<DrawerProps, "variant" | "dragProgress" | "peekSize" | "onClose" | "keepMounted"> {
   /**
    * Open.
    *
@@ -71,8 +124,8 @@ export interface SwipeableDrawerProps
    */
   onOpen: () => void;
   /**
-   * Disables the invisible edge strip that opens the drawer on a swipe from
-   * the screen edge. Swiping an already-open drawer closed is unaffected.
+   * Disables opening on a swipe — from the edge strip, the peeking sliver or
+   * the handle. Swiping an already-open drawer closed is unaffected.
    *
    * @default false
    * @type {boolean}
@@ -101,6 +154,69 @@ export interface SwipeableDrawerProps
    * @type {number}
    */
   minFlingVelocity?: number;
+  /**
+   * Pixels of the closed drawer left on screen as a hint that it can be
+   * swiped open. While peeking, the visible sliver itself starts an opening
+   * drag too. `0` hides it fully.
+   *
+   * @default 0
+   * @type {number}
+   */
+  peekSize?: number;
+  /**
+   * Skips the one-time hint played on mount when `peekSize` is set: the peek
+   * slides out a little further than `peekSize`, then settles back.
+   *
+   * @default false
+   * @type {boolean}
+   */
+  disableDiscovery?: boolean;
+  /**
+   * Shows a grab handle on the paper edge facing into the screen — the edge
+   * still visible while peeking.
+   *
+   * @default false
+   * @type {boolean}
+   */
+  showHandle?: boolean;
+  /**
+   * Only the handle starts a drag: the edge strip, the peeking sliver and the
+   * open panel stop reacting. Useful when the panel scrolls or holds its own
+   * draggable content. With `peekSize` at 0 the handle is off-screen while
+   * closed, so this leaves no way to swipe it open.
+   *
+   * @default false
+   * @type {boolean}
+   */
+  handleDragOnly?: boolean;
+  /**
+   * Handle length along its edge, in pixels.
+   *
+   * @default 32
+   * @type {number}
+   */
+  handleLength?: number;
+  /**
+   * Handle thickness, in pixels.
+   *
+   * @default 4
+   * @type {number}
+   */
+  handleThickness?: number;
+  /**
+   * Where the handle sits along its edge.
+   *
+   * @default "center"
+   * @type {SwipeableDrawerHandlePosition}
+   */
+  handlePosition?: SwipeableDrawerHandlePosition;
+  /**
+   * Handle colour, any CSS colour value. Falls back to the strong border token.
+   *
+   * @default undefined
+   * @type {string}
+   */
+  handleColor?: string;
 }
 
 export function SwipeableDrawer({
@@ -112,6 +228,14 @@ export function SwipeableDrawer({
   swipeAreaWidth = 20,
   hysteresis = 0.5,
   minFlingVelocity = 0.6,
+  peekSize = 0,
+  disableDiscovery = false,
+  showHandle = false,
+  handleDragOnly = false,
+  handleLength = 32,
+  handleThickness = 4,
+  handlePosition = "center",
+  handleColor,
   children,
   className,
   ...rest
@@ -122,11 +246,35 @@ export function SwipeableDrawer({
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [dragProgress, setDragProgress] = useState<number | undefined>(undefined);
 
+  // Discovery plays once, on mount, and only for a drawer that starts closed
+  // and peeking. It is cut short by opening or by the user's own drag.
+  const [discovering, setDiscovering] = useState(() => peekSize > 0 && !disableDiscovery && !open);
+  const [overshooting, setOvershooting] = useState(false);
+
+  useEffect(() => {
+    if (!discovering) return;
+    if (open) {
+      setDiscovering(false);
+      return;
+    }
+    const start = setTimeout(() => setOvershooting(true), DISCOVERY_DELAY_MS);
+    const settle = setTimeout(() => {
+      setOvershooting(false);
+      setDiscovering(false);
+    }, DISCOVERY_DELAY_MS + DISCOVERY_HOLD_MS);
+    return () => {
+      clearTimeout(start);
+      clearTimeout(settle);
+    };
+  }, [discovering, open]);
+
+  const shownPeek = discovering ? (overshooting ? peekSize * DISCOVERY_OVERSHOOT : 0) : peekSize;
+
   // Whether the in-flight gesture opens (started closed) or closes (started
-  // open) the drawer; the size and start point it is measured against; and
-  // the touch identifier so a second finger landing mid-drag is ignored.
+  // open) the drawer; the distance it travels and the point it started from;
+  // and the touch identifier so a second finger landing mid-drag is ignored.
   const openingRef = useRef(false);
-  const sizeRef = useRef(0);
+  const travelRef = useRef(0);
   const startCoordRef = useRef(0);
   const touchIdRef = useRef<number | null>(null);
   // A fling is measured over the *last* leg of the drag, not the whole
@@ -136,19 +284,19 @@ export function SwipeableDrawer({
   const lastMoveCoordRef = useRef(0);
   const lastMoveTimeRef = useRef(0);
 
-  // `Drawer` renders the paper directly, so its rendered size — which is what
-  // "fully open" means in pixels — is read off the DOM rather than threaded
-  // through as a prop.
-  const measurePaperSize = useCallback(() => {
+  // `Drawer` renders the paper directly, so its rendered size is read off the
+  // DOM rather than threaded through as a prop. A peeking drawer travels only
+  // what is not already showing, so the finger and the paper stay in step.
+  const measureTravel = useCallback(() => {
     const paper = rootRef.current?.querySelector<HTMLElement>(".okkly-drawer__paper");
-    if (!paper) return 0;
-    return axis === "x" ? paper.offsetWidth : paper.offsetHeight;
-  }, [axis]);
+    if (!paper) return 1;
+    const size = axis === "x" ? paper.offsetWidth : paper.offsetHeight;
+    return Math.max(1, size - peekSize);
+  }, [axis, peekSize]);
 
   const progressFromCoord = useCallback(
     (coord: number) => {
-      const size = sizeRef.current || 1;
-      const delta = ((coord - startCoordRef.current) * openSign) / size;
+      const delta = ((coord - startCoordRef.current) * openSign) / travelRef.current;
       const base = openingRef.current ? 0 : 1;
       return clamp(base + delta, 0, 1);
     },
@@ -238,23 +386,34 @@ export function SwipeableDrawer({
         document.addEventListener("mousemove", handleMoveRef.current);
         document.addEventListener("mouseup", handleEndRef.current);
       }
+      // The user has found the gesture on their own; no need to keep hinting.
+      setDiscovering(false);
+      setOvershooting(false);
       openingRef.current = opening;
-      sizeRef.current = measurePaperSize();
+      travelRef.current = measureTravel();
       startCoordRef.current = coord;
       lastMoveCoordRef.current = coord;
       lastMoveTimeRef.current = performance.now();
       setDragProgress(opening ? 0 : 1);
     },
-    [axis, measurePaperSize],
+    [axis, measureTravel],
   );
 
-  const handleEdgeMouseDown = (event: ReactMouseEvent<HTMLDivElement>) => beginDrag(event, true);
-  const handleEdgeTouchStart = (event: ReactTouchEvent<HTMLDivElement>) => beginDrag(event, true);
-  const handlePaperMouseDown = (event: ReactMouseEvent<HTMLDivElement>) => {
-    if (open) beginDrag(event, false);
+  // Three places can start a drag. The handle always can; the edge strip and
+  // the panel (the peeking sliver while closed, all of it while open) step
+  // aside when `handleDragOnly` is set.
+  const startFromEdge = (event: ReactMouseEvent | ReactTouchEvent) => {
+    if (handleDragOnly) return;
+    beginDrag(event, true);
   };
-  const handlePaperTouchStart = (event: ReactTouchEvent<HTMLDivElement>) => {
+  const startFromPanel = (event: ReactMouseEvent | ReactTouchEvent) => {
+    if (handleDragOnly) return;
     if (open) beginDrag(event, false);
+    else if (!disableSwipeToOpen) beginDrag(event, true);
+  };
+  const startFromHandle = (event: ReactMouseEvent | ReactTouchEvent) => {
+    if (open) beginDrag(event, false);
+    else if (!disableSwipeToOpen) beginDrag(event, true);
   };
 
   const classes = ["okkly-component", "okkly-swipeable-drawer", className].filter(Boolean).join(" ");
@@ -264,12 +423,12 @@ export function SwipeableDrawer({
 
   return (
     <>
-      {!open && !disableSwipeToOpen && (
+      {!open && !disableSwipeToOpen && !handleDragOnly && (
         <div
           className={`okkly-swipeable-drawer__edge okkly-swipeable-drawer__edge--${anchor}`}
           style={edgeStyle}
-          onMouseDown={handleEdgeMouseDown}
-          onTouchStart={handleEdgeTouchStart}
+          onMouseDown={startFromEdge}
+          onTouchStart={startFromEdge}
           aria-hidden="true"
         />
       )}
@@ -281,14 +440,20 @@ export function SwipeableDrawer({
         open={open}
         onClose={onClose}
         dragProgress={dragProgress}
+        peekSize={shownPeek}
         keepMounted
         className={classes}
       >
-        <div
-          style={{ height: "100%" }}
-          onMouseDown={handlePaperMouseDown}
-          onTouchStart={handlePaperTouchStart}
-        >
+        {showHandle && (
+          <div
+            className="okkly-swipeable-drawer__handle"
+            style={handleStyle(anchor, handlePosition, handleLength, handleThickness, handleColor)}
+            onMouseDown={startFromHandle}
+            onTouchStart={startFromHandle}
+            aria-hidden="true"
+          />
+        )}
+        <div style={{ height: "100%" }} onMouseDown={startFromPanel} onTouchStart={startFromPanel}>
           {children}
         </div>
       </Drawer>
