@@ -38,7 +38,8 @@ const axisFor = (anchor: DrawerAnchor): DragAxis =>
   anchor === "left" || anchor === "right" ? "x" : "y";
 
 /** +1 when dragging toward increasing screen coordinates opens the drawer. */
-const openSignFor = (anchor: DrawerAnchor): 1 | -1 => (anchor === "left" || anchor === "top" ? 1 : -1);
+const openSignFor = (anchor: DrawerAnchor): 1 | -1 =>
+  anchor === "left" || anchor === "top" ? 1 : -1;
 
 function coordFromEvent(event: MouseEvent | TouchEvent, axis: DragAxis): number {
   const point = "changedTouches" in event ? (event.touches[0] ?? event.changedTouches[0]) : event;
@@ -100,8 +101,10 @@ function handleStyle(
  * `"temporary"`, since `persistent`/`permanent` have nothing to swipe open
  * from (they are always in the layout).
  */
-export interface SwipeableDrawerProps
-  extends Omit<DrawerProps, "variant" | "dragProgress" | "peekSize" | "onClose" | "keepMounted"> {
+export interface SwipeableDrawerProps extends Omit<
+  DrawerProps,
+  "variant" | "dragProgress" | "peekSize" | "onClose" | "keepMounted"
+> {
   /**
    * Open.
    *
@@ -360,7 +363,16 @@ export function SwipeableDrawer({
       if (shouldOpen) onOpen();
       else onClose();
     },
-    [axis, hysteresis, minFlingVelocity, onClose, onOpen, openSign, progressFromCoord, stopListening],
+    [
+      axis,
+      hysteresis,
+      minFlingVelocity,
+      onClose,
+      onOpen,
+      openSign,
+      progressFromCoord,
+      stopListening,
+    ],
   );
 
   handleMoveRef.current = handleMove;
@@ -416,7 +428,9 @@ export function SwipeableDrawer({
     else if (!disableSwipeToOpen) beginDrag(event, true);
   };
 
-  const classes = ["okkly-component", "okkly-swipeable-drawer", className].filter(Boolean).join(" ");
+  const classes = ["okkly-component", "okkly-swipeable-drawer", className]
+    .filter(Boolean)
+    .join(" ");
   const edgeStyle = {
     "--okkly-swipeable-drawer-edge-size": `${swipeAreaWidth}px`,
   } as CSSProperties;

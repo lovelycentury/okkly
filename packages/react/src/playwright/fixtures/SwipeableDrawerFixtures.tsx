@@ -9,7 +9,10 @@ type ControlledSwipeableDrawerProps = Omit<
   "open" | "onOpen" | "onClose" | "children"
 >;
 
-export function ControlledSwipeableDrawer({ anchor = "left", ...props }: ControlledSwipeableDrawerProps) {
+export function ControlledSwipeableDrawer({
+  anchor = "left",
+  ...props
+}: ControlledSwipeableDrawerProps) {
   const [open, setOpen] = useState(false);
   const [opens, setOpens] = useState(0);
   const [closes, setCloses] = useState(0);

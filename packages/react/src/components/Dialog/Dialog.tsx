@@ -117,7 +117,14 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
   if (exited && !open && !keepMounted) return null;
 
   return (
-    <Modal ref={forwardedRef} open={open} onClose={onClose} className={classes} keepMounted {...rest}>
+    <Modal
+      ref={forwardedRef}
+      open={open}
+      onClose={onClose}
+      className={classes}
+      keepMounted
+      {...rest}
+    >
       <div className="okkly-dialog__container" onClick={handleContainerClick}>
         <Grow
           in={open}

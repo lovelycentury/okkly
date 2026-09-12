@@ -124,7 +124,10 @@ export const Playground: Story = {};
  */
 export const Anchors: Story = {
   render: () => {
-    const [state, setState] = useState<{ anchor: "left" | "right" | "top" | "bottom"; open: boolean }>({
+    const [state, setState] = useState<{
+      anchor: "left" | "right" | "top" | "bottom";
+      open: boolean;
+    }>({
       anchor: "left",
       open: false,
     });

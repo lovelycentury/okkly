@@ -253,7 +253,12 @@ export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(function Drawer(
 
   if (isPermanent) {
     return (
-      <div ref={handleRef} className={["okkly-component", classes].join(" ")} style={style} {...rest}>
+      <div
+        ref={handleRef}
+        className={["okkly-component", classes].join(" ")}
+        style={style}
+        {...rest}
+      >
         <div className="okkly-drawer__paper">
           <DrawerStateContext.Provider value={drawerState}>{children}</DrawerStateContext.Provider>
         </div>

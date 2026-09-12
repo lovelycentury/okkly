@@ -413,7 +413,11 @@ export const APermanentSidebar: Story = {
   name: "A permanent sidebar",
   render: () => (
     <div style={appShell}>
-      <Drawer variant="permanent" anchor="left" style={{ "--okkly-drawer-width": "14rem" } as CSSProperties}>
+      <Drawer
+        variant="permanent"
+        anchor="left"
+        style={{ "--okkly-drawer-width": "14rem" } as CSSProperties}
+      >
         <nav style={{ ...panel, gap: "4px", width: "100%" }} aria-label="Main">
           <h2 style={{ ...heading, marginBottom: "12px" }}>Okkly</h2>
           {["Library", "Releases", "Analytics", "Settings"].map((item, index) => (
@@ -476,7 +480,8 @@ export const APersistentSidebar: Story = {
                   style={{
                     ...navItem,
                     background: index === 0 ? "var(--okkly-bg-surface-raised)" : "transparent",
-                    color: index === 0 ? "var(--okkly-text-primary)" : "var(--okkly-text-secondary)",
+                    color:
+                      index === 0 ? "var(--okkly-text-primary)" : "var(--okkly-text-secondary)",
                   }}
                 >
                   {item}
@@ -485,7 +490,9 @@ export const APersistentSidebar: Story = {
             </nav>
           </Drawer>
           <main style={appMain}>
-            <p style={{ margin: 0 }}>The content here reflows as the sidebar collapses and expands.</p>
+            <p style={{ margin: 0 }}>
+              The content here reflows as the sidebar collapses and expands.
+            </p>
           </main>
         </div>
       </div>
