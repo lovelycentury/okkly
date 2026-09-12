@@ -222,23 +222,14 @@ test.describe("handle", () => {
       />,
     );
 
-    // ASSERT — no edge strip to catch anything. Also settles the page: the
-    // handle's own box, read below, must reflect final layout, not a
-    // still-in-progress first paint.
+    // ASSERT — no edge strip to catch anything.
     await expect(page.locator(".okkly-swipeable-drawer__edge")).toHaveCount(0);
     const handle = page.locator(".okkly-swipeable-drawer__handle");
-    await expect(handle).toBeVisible();
 
-    // ACT — drag from the sliver, well away from the centred handle, in
-    // several steps rather than one jump so it reads as a real drag rather
-    // than a single synthetic mousemove a busier CI runner could coalesce
-    // away. Paused before release, like the hysteresis tests above: release
-    // logged right after the last move can otherwise read as an implausibly
-    // fast fling.
+    // ACT — drag from the sliver, well away from the centred handle.
     await page.mouse.move(20, 60);
     await page.mouse.down();
-    await page.mouse.move(280, 60, { steps: 10 });
-    await page.waitForTimeout(200);
+    await page.mouse.move(280, 60);
     await page.mouse.up();
 
     // ASSERT
@@ -248,8 +239,7 @@ test.describe("handle", () => {
     const box = await handle.boundingBox();
     await page.mouse.move((box?.x ?? 0) + 2, 200);
     await page.mouse.down();
-    await page.mouse.move(280, 200, { steps: 10 });
-    await page.waitForTimeout(200);
+    await page.mouse.move(280, 200);
     await page.mouse.up();
 
     // ASSERT

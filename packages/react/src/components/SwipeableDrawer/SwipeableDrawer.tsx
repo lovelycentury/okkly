@@ -411,19 +411,33 @@ export function SwipeableDrawer({
     [axis, measureTravel],
   );
 
+  // A mouse-only guard: left unprevented, a press-and-drag over the panel's
+  // own text starts the browser's native text-selection drag. That selection
+  // then swallows this gesture's own `mouseup` — even once it is released —
+  // so a later drag from the same page never sees its release either. Touch
+  // is unaffected; its default (scrolling) is handled by `touch-action` on
+  // the edge/handle elements, and preventing it here on the panel would
+  // block scrolling inside an open drawer's content instead.
+  const suppressNativeDrag = (event: ReactMouseEvent | ReactTouchEvent) => {
+    if ("button" in event) event.preventDefault();
+  };
+
   // Three places can start a drag. The handle always can; the edge strip and
   // the panel (the peeking sliver while closed, all of it while open) step
   // aside when `handleDragOnly` is set.
   const startFromEdge = (event: ReactMouseEvent | ReactTouchEvent) => {
+    suppressNativeDrag(event);
     if (handleDragOnly) return;
     beginDrag(event, true);
   };
   const startFromPanel = (event: ReactMouseEvent | ReactTouchEvent) => {
+    suppressNativeDrag(event);
     if (handleDragOnly) return;
     if (open) beginDrag(event, false);
     else if (!disableSwipeToOpen) beginDrag(event, true);
   };
   const startFromHandle = (event: ReactMouseEvent | ReactTouchEvent) => {
+    suppressNativeDrag(event);
     if (open) beginDrag(event, false);
     else if (!disableSwipeToOpen) beginDrag(event, true);
   };
