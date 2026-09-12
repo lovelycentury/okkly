@@ -5,7 +5,11 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    // A fixed `gap` (not `justify-content: space-between`) so header and body
+    // always keep at least this much air between them — `space-between` gives
+    // that gap away entirely once a taller `__body` (e.g. the tags row) leaves
+    // no free space, letting the two collide.
+    gap: 0.75rem;
     width: 100%;
     aspect-ratio: 476 / 290;
     container-type: inline-size;
@@ -148,6 +152,10 @@
       display: flex;
       flex-direction: column;
       gap: 0.75rem; // 12px
+      // Pins to the bottom when there's spare room, same look
+      // `justify-content: space-between` gave the card — but unlike that,
+      // this can only ever add space beyond the card's own `gap`, never eat it.
+      margin-top: auto;
     }
 
     &__tags {
