@@ -2,9 +2,10 @@
  * okkly Storybook chrome theme — mirrors `@okkly/design-system` tokens.
  *
  * Brand mark: the horizontal lockup — the emblem in its "multi" tone beside the
- * wordmark, matching the `Logo` component's `filled` variant.
- * The mark itself is served from the React workbench's `.storybook/brand`
- * directory (see `staticDirs` in main.ts), so both Storybooks share one file.
+ * wordmark, matching the `Logo` component's `filled` variant, with a
+ * `.svelte` suffix. The mark is this package's own (`./brand/logo.svg`, see
+ * `staticDirs` in main.ts) rather than the shared React one, so the suffix
+ * doesn't leak into the other frameworks' Storybooks.
  */
 import { create } from "storybook/theming";
 
@@ -12,7 +13,7 @@ export const okklyTheme = create({
   base: "dark",
 
   // Brand — the horizontal lockup; brandTitle is the alt text / no-image fallback
-  brandTitle: "okkly",
+  brandTitle: "okkly.svelte",
   brandUrl: "./",
   brandImage: "/brand/logo.svg",
   brandTarget: "_self",
