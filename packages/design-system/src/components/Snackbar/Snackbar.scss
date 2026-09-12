@@ -79,6 +79,12 @@
 
       .okkly-alert {
         --okkly-alert-border-radius: 1.125rem;
+        // `Alert` top-aligns its icon/content/close by default, which reads
+        // right against a title+message stack but leaves a snackbar's single
+        // line of text (and the close button) sitting above the icon's
+        // centre. A snackbar never carries a title, so centring is always
+        // correct here.
+        align-items: center;
         width: 100%;
       }
 
