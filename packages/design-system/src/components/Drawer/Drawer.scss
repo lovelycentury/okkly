@@ -1,10 +1,10 @@
 @use "../../styles/mixins/layers.scss";
 
-// The class sits on the `Modal` root, which already owns `position: fixed`, the
-// inset and the stacking context. Nothing here re-declares those: two classes on
-// one element with equal specificity would be decided by stylesheet order, which
-// is not a thing to depend on. The drawer only styles what Modal leaves alone —
-// the backdrop's timing and the paper.
+// The class sits on the `Modal` root for `temporary` (which already owns
+// `position: fixed`, the inset and the stacking context), or directly on a
+// plain in-flow element for `persistent`/`permanent`. Nothing here re-declares
+// Modal's own rules: two classes on one element with equal specificity would
+// be decided by stylesheet order, which is not a thing to depend on.
 .okkly-drawer {
   @include layers.component() {
     --okkly-drawer-background-color: var(--okkly-bg-surface);
@@ -19,35 +19,46 @@
     --okkly-drawer-duration: var(--okkly-duration-sm);
 
     // Modal paints the backdrop; the drawer only decides when it is opaque, so the
-    // scrim arrives with the paper rather than a frame before it.
+    // scrim arrives with the paper rather than a frame before it. `temporary` only
+    // — `persistent`/`permanent` render with no `Modal`, so there is no backdrop.
+    // Opting back into `visibility: visible` (overriding Modal's own hidden
+    // state) is what lets the opacity transition play at all — but that also
+    // makes the backdrop hit-testable while fully transparent, which would
+    // silently swallow clicks (and `SwipeableDrawer`'s edge-swipe strip)
+    // behind a `keepMounted` closed drawer. `pointer-events` closes that gap.
     > .okkly-modal__backdrop {
       visibility: visible;
       opacity: 0;
       transition: opacity var(--okkly-drawer-duration) ease;
+      pointer-events: none;
     }
 
     &--open > .okkly-modal__backdrop {
       opacity: 1;
+      pointer-events: auto;
     }
 
     &__paper {
-      // Modal turns itself `visibility: hidden` the moment `open` flips false. The
-      // paper opts back in, or the slide-out is replaced by a disappearance.
-      visibility: visible;
-      position: absolute;
       display: flex;
       flex-direction: column;
       overflow: auto;
       background: var(--okkly-drawer-background-color);
-      box-shadow: var(--okkly-drawer-shadow);
-      transition: transform var(--okkly-drawer-duration) ease;
 
       @media (prefers-reduced-motion: reduce) {
         transition-duration: 0.01ms !important;
       }
     }
 
-    &--anchor-left &__paper {
+    // 1. temporary — a fixed overlay sliding fully off-screen when closed.
+    &--variant-temporary &__paper {
+      // Modal turns itself `visibility: hidden` the moment `open` flips false. The
+      // paper opts back in, or the slide-out is replaced by a disappearance.
+      visibility: visible;
+      position: absolute;
+      transition: transform var(--okkly-drawer-duration) ease;
+    }
+
+    &--variant-temporary.okkly-drawer--anchor-left &__paper {
       top: 0;
       bottom: 0;
       left: 0;
@@ -57,16 +68,17 @@
       transform: translateX(-100%);
     }
 
-    &--anchor-right &__paper {
+    &--variant-temporary.okkly-drawer--anchor-right &__paper {
       top: 0;
       bottom: 0;
       right: 0;
       width: var(--okkly-drawer-width);
       border-left: var(--okkly-drawer-border-width) solid var(--okkly-drawer-border-color);
+      box-shadow: var(--okkly-drawer-shadow);
       transform: translateX(100%);
     }
 
-    &--anchor-top &__paper {
+    &--variant-temporary.okkly-drawer--anchor-top &__paper {
       top: 0;
       left: 0;
       right: 0;
@@ -76,7 +88,7 @@
       transform: translateY(-100%);
     }
 
-    &--anchor-bottom &__paper {
+    &--variant-temporary.okkly-drawer--anchor-bottom &__paper {
       bottom: 0;
       left: 0;
       right: 0;
@@ -88,11 +100,98 @@
       transform: translateY(100%);
     }
 
-    &--open.okkly-drawer--anchor-left &__paper,
-    &--open.okkly-drawer--anchor-right &__paper,
-    &--open.okkly-drawer--anchor-top &__paper,
-    &--open.okkly-drawer--anchor-bottom &__paper {
+    &--variant-temporary.okkly-drawer--open.okkly-drawer--anchor-left &__paper,
+    &--variant-temporary.okkly-drawer--open.okkly-drawer--anchor-right &__paper,
+    &--variant-temporary.okkly-drawer--open.okkly-drawer--anchor-top &__paper,
+    &--variant-temporary.okkly-drawer--open.okkly-drawer--anchor-bottom &__paper {
       transform: translate(0, 0);
+    }
+
+    // 2. persistent / permanent — an in-flow panel, no portal and no backdrop.
+    // The root itself is the box that takes up (or gives back) layout space;
+    // the paper inside is always its full, fixed size and simply gets clipped
+    // by the root's `overflow: hidden` as that root's own size collapses.
+    &--variant-persistent,
+    &--variant-permanent {
+      position: relative;
+      overflow: hidden;
+    }
+
+    &--variant-persistent &__paper,
+    &--variant-permanent &__paper {
+      flex-shrink: 0;
+    }
+
+    &--variant-persistent.okkly-drawer--anchor-left,
+    &--variant-persistent.okkly-drawer--anchor-right,
+    &--variant-permanent.okkly-drawer--anchor-left,
+    &--variant-permanent.okkly-drawer--anchor-right {
+      height: 100%;
+    }
+
+    &--variant-persistent.okkly-drawer--anchor-top,
+    &--variant-persistent.okkly-drawer--anchor-bottom,
+    &--variant-permanent.okkly-drawer--anchor-top,
+    &--variant-permanent.okkly-drawer--anchor-bottom {
+      width: 100%;
+    }
+
+    &--variant-persistent.okkly-drawer--anchor-left &__paper,
+    &--variant-permanent.okkly-drawer--anchor-left &__paper {
+      width: var(--okkly-drawer-width);
+      height: 100%;
+      border-right: var(--okkly-drawer-border-width) solid var(--okkly-drawer-border-color);
+    }
+
+    &--variant-persistent.okkly-drawer--anchor-right &__paper,
+    &--variant-permanent.okkly-drawer--anchor-right &__paper {
+      width: var(--okkly-drawer-width);
+      height: 100%;
+      border-left: var(--okkly-drawer-border-width) solid var(--okkly-drawer-border-color);
+    }
+
+    &--variant-persistent.okkly-drawer--anchor-top &__paper,
+    &--variant-permanent.okkly-drawer--anchor-top &__paper {
+      width: 100%;
+      height: var(--okkly-drawer-height);
+      border-bottom: var(--okkly-drawer-border-width) solid var(--okkly-drawer-border-color);
+    }
+
+    &--variant-persistent.okkly-drawer--anchor-bottom &__paper,
+    &--variant-permanent.okkly-drawer--anchor-bottom &__paper {
+      width: 100%;
+      height: var(--okkly-drawer-height);
+      border-top: var(--okkly-drawer-border-width) solid var(--okkly-drawer-border-color);
+    }
+
+    // `permanent` is always at full size — it never carries `--open` at all —
+    // so only `persistent` needs a collapsed/expanded pair to transition between.
+    &--variant-persistent.okkly-drawer--anchor-left,
+    &--variant-persistent.okkly-drawer--anchor-right {
+      width: 0;
+      transition: width var(--okkly-drawer-duration) ease;
+    }
+
+    &--variant-persistent.okkly-drawer--anchor-top,
+    &--variant-persistent.okkly-drawer--anchor-bottom {
+      height: 0;
+      transition: height var(--okkly-drawer-duration) ease;
+    }
+
+    &--variant-persistent.okkly-drawer--open.okkly-drawer--anchor-left,
+    &--variant-persistent.okkly-drawer--open.okkly-drawer--anchor-right {
+      width: var(--okkly-drawer-width);
+    }
+
+    &--variant-persistent.okkly-drawer--open.okkly-drawer--anchor-top,
+    &--variant-persistent.okkly-drawer--open.okkly-drawer--anchor-bottom {
+      height: var(--okkly-drawer-height);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &--variant-persistent {
+        transition-duration: 0.01ms !important;
+      }
     }
   }
 }

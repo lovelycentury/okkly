@@ -20,8 +20,11 @@ import { Drawer, type DrawerAnchor } from "./Drawer";
  * so an override on an ancestor will not reach them.
  *
  * Props follow MUI's Drawer (`anchor`, `variant`, plus the Modal pass-throughs).
- * Deliberate gaps: only the `temporary` variant — `persistent` and `permanent` are
- * absent from the type rather than accepted and ignored — and no `SwipeableDrawer`.
+ * `variant="temporary"` (the default) is what the controls below demo — an
+ * overlay through `Modal`. For an always-on or toggleable in-flow sidebar, see
+ * `variant="permanent"`/`"persistent"` in the stories further down; for a
+ * `temporary` drawer that also opens/closes on an edge swipe, see
+ * `SwipeableDrawer`.
  */
 const meta: Meta<typeof Drawer> = {
   title: "Overlays/Drawer",
@@ -175,17 +178,29 @@ export const ANavigationPanel: Story = {
  */
 export const Anchors: Story = {
   render: () => {
-    const [anchor, setAnchor] = useState<DrawerAnchor | null>(null);
-    const handleClose = useCallback(() => setAnchor(null), []);
+    // `anchor` and `open` are deliberately separate state: closing must not
+    // also clear the anchor, or the drawer would switch edges mid-close —
+    // `anchor` picks where it opens from, `open` alone decides visibility.
+    const [anchor, setAnchor] = useState<DrawerAnchor>("right");
+    const [open, setOpen] = useState(false);
+    const handleClose = useCallback(() => setOpen(false), []);
     const anchors: DrawerAnchor[] = ["left", "right", "top", "bottom"];
     return (
       <div style={surface}>
         {anchors.map((item) => (
-          <Button key={item} size="small" variant="secondary" onClick={() => setAnchor(item)}>
+          <Button
+            key={item}
+            size="small"
+            variant="secondary"
+            onClick={() => {
+              setAnchor(item);
+              setOpen(true);
+            }}
+          >
             {item}
           </Button>
         ))}
-        <Drawer open={anchor !== null} onClose={handleClose} anchor={anchor ?? "right"}>
+        <Drawer open={open} onClose={handleClose} anchor={anchor}>
           <div style={panel}>
             <h2 style={heading}>anchor = {anchor}</h2>
             <Button size="small" variant="secondary" onClick={handleClose}>
@@ -364,6 +379,113 @@ export const FocusHandling: Story = {
           </div>
         </Drawer>
         <p style={caption}>Tab never reaches “A button on the page” while the drawer is open.</p>
+      </div>
+    );
+  },
+};
+
+const appShell: CSSProperties = {
+  display: "flex",
+  height: "20rem",
+  border: "1px solid var(--okkly-border-subtle)",
+  borderRadius: "16px",
+  overflow: "hidden",
+  fontFamily: "var(--okkly-font-family-sans)",
+};
+
+const appMain: CSSProperties = {
+  flex: 1,
+  minWidth: 0,
+  padding: "24px",
+  color: "var(--okkly-text-secondary)",
+};
+
+/**
+ * `variant="permanent"` renders no `Modal` at all — no portal, no backdrop, no
+ * focus trap — just the anchored paper as a normal in-flow element. It is
+ * always shown; `open`/`onClose` do nothing. This is the shape for an app's
+ * own persistent navigation rail, sized by `--okkly-drawer-width` like any
+ * other side anchor.
+ */
+export const APermanentSidebar: Story = {
+  name: "A permanent sidebar",
+  render: () => (
+    <div style={appShell}>
+      <Drawer variant="permanent" anchor="left" style={{ "--okkly-drawer-width": "14rem" } as CSSProperties}>
+        <nav style={{ ...panel, gap: "4px", width: "100%" }} aria-label="Main">
+          <h2 style={{ ...heading, marginBottom: "12px" }}>Okkly</h2>
+          {["Library", "Releases", "Analytics", "Settings"].map((item, index) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase()}`}
+              style={{
+                ...navItem,
+                background: index === 0 ? "var(--okkly-bg-surface-raised)" : "transparent",
+                color: index === 0 ? "var(--okkly-text-primary)" : "var(--okkly-text-secondary)",
+              }}
+            >
+              {item}
+            </a>
+          ))}
+        </nav>
+      </Drawer>
+      <main style={appMain}>
+        <p style={{ margin: 0 }}>
+          The sidebar beside this is always there — there is no state to toggle.
+        </p>
+      </main>
+    </div>
+  ),
+};
+
+/**
+ * `variant="persistent"` toggles through `open`/`onClose` like `temporary`,
+ * but never overlays the page: it collapses its own width to 0 instead of
+ * sliding off-screen, so the content beside it reclaims that space rather
+ * than a backdrop dimming it. No portal, no backdrop, no focus trap here
+ * either — the caller's own toggle (below, the menu button) is both the open
+ * and the close trigger, the same way a real app shell's would be.
+ */
+export const APersistentSidebar: Story = {
+  name: "A persistent sidebar",
+  render: () => {
+    const [open, setOpen] = useState(true);
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        <div style={surface}>
+          <Button size="small" variant="secondary" onClick={() => setOpen((value) => !value)}>
+            {open ? "Collapse" : "Expand"} sidebar
+          </Button>
+        </div>
+        <div style={appShell}>
+          <Drawer
+            variant="persistent"
+            anchor="left"
+            open={open}
+            onClose={() => setOpen(false)}
+            style={{ "--okkly-drawer-width": "14rem" } as CSSProperties}
+          >
+            <nav style={{ ...panel, gap: "4px", width: "100%" }} aria-label="Main">
+              <h2 style={{ ...heading, marginBottom: "12px" }}>Okkly</h2>
+              {["Library", "Releases", "Analytics", "Settings"].map((item, index) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase()}`}
+                  style={{
+                    ...navItem,
+                    background: index === 0 ? "var(--okkly-bg-surface-raised)" : "transparent",
+                    color: index === 0 ? "var(--okkly-text-primary)" : "var(--okkly-text-secondary)",
+                  }}
+                >
+                  {item}
+                </a>
+              ))}
+            </nav>
+          </Drawer>
+          <main style={appMain}>
+            <p style={{ margin: 0 }}>The content here reflows as the sidebar collapses and expands.</p>
+          </main>
+        </div>
       </div>
     );
   },

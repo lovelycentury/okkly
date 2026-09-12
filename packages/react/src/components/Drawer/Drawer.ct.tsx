@@ -114,3 +114,62 @@ test("should stay mounted until the slide-out transition finishes", async ({ mou
   // something jsdom could only fake with a synthetic transitionEnd event.
   await expect(page.getByText("Drawer")).toHaveCount(0);
 });
+
+test.describe("variant", () => {
+  test("permanent renders regardless of open and ignores onClose triggers", async ({
+    mount,
+    page,
+  }) => {
+    // ARRANGE
+    let closes = 0;
+    await mount(
+      <Drawer variant="permanent" open={false} onClose={() => (closes += 1)}>
+        <div>Sidebar</div>
+      </Drawer>,
+    );
+
+    // ASSERT — always in the DOM, no portal, no backdrop.
+    await expect(page.getByText("Sidebar")).toBeVisible();
+    await expect(page.locator(".okkly-drawer")).toHaveClass(/okkly-drawer--open/);
+    await expect(page.locator(".okkly-modal__backdrop")).toHaveCount(0);
+
+    // ACT
+    await page.keyboard.press("Escape");
+
+    // ASSERT — nothing to dismiss.
+    expect(closes).toBe(0);
+    await expect(page.getByText("Sidebar")).toBeVisible();
+  });
+
+  test("persistent stays mounted while closed and collapses instead of sliding off-screen", async ({
+    mount,
+    page,
+  }) => {
+    // ARRANGE
+    const component = await mount(
+      <Drawer variant="persistent" anchor="left" open={false} onClose={() => {}}>
+        <div>Sidebar</div>
+      </Drawer>,
+    );
+    const root = page.locator(".okkly-drawer");
+
+    // ASSERT — present but collapsed, not slid off-screen.
+    await expect(page.getByText("Sidebar")).toBeAttached();
+    await expect(root).not.toHaveClass(/okkly-drawer--open/);
+    expect((await root.boundingBox())?.width).toBe(0);
+    await expect(page.locator(".okkly-modal__backdrop")).toHaveCount(0);
+
+    // ACT
+    await component.update(
+      <Drawer variant="persistent" anchor="left" open onClose={() => {}}>
+        <div>Sidebar</div>
+      </Drawer>,
+    );
+
+    // ASSERT — expands in place; no transitionend-driven unmount to wait on.
+    await expect(root).toHaveClass(/okkly-drawer--open/);
+    await expect(async () => {
+      expect((await root.boundingBox())?.width).toBeGreaterThan(200);
+    }).toPass();
+  });
+});

@@ -1,0 +1,49 @@
+@use "../../styles/mixins/layers.scss";
+
+// The invisible strip that starts an opening swipe. It only exists while the
+// drawer is closed (the React side unmounts it once open), positioned at the
+// same edge the drawer will slide in from.
+.okkly-swipeable-drawer {
+  @include layers.component() {
+    &__edge {
+      position: fixed;
+      // Matches Modal's own z-index tier. A literal, not a variable read off
+      // `.okkly-swipeable-drawer`: that class lives on the `Drawer` this sits
+      // beside, not on a shared ancestor the edge strip could inherit from.
+      z-index: 1300;
+      // The browser's own scroll/refresh gestures would otherwise compete
+      // with the drag on a touch device.
+      touch-action: none;
+    }
+
+    &__edge--left,
+    &__edge--right {
+      top: 0;
+      bottom: 0;
+      width: var(--okkly-swipeable-drawer-edge-size, 1.25rem);
+    }
+
+    &__edge--top,
+    &__edge--bottom {
+      left: 0;
+      right: 0;
+      height: var(--okkly-swipeable-drawer-edge-size, 1.25rem);
+    }
+
+    &__edge--left {
+      left: 0;
+    }
+
+    &__edge--right {
+      right: 0;
+    }
+
+    &__edge--top {
+      top: 0;
+    }
+
+    &__edge--bottom {
+      bottom: 0;
+    }
+  }
+}

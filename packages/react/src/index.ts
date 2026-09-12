@@ -286,6 +286,9 @@ export type {
 export { Drawer } from "./components/Drawer/Drawer";
 export type { DrawerProps, DrawerAnchor, DrawerVariant } from "./components/Drawer/Drawer";
 
+export { SwipeableDrawer } from "./components/SwipeableDrawer/SwipeableDrawer";
+export type { SwipeableDrawerProps } from "./components/SwipeableDrawer/SwipeableDrawer";
+
 export { List, ListItem, ListItemText, ListItemIcon } from "./components/List/List";
 export type {
   ListProps,
