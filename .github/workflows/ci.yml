@@ -35,18 +35,79 @@ jobs:
 
       - run: pnpm run test
 
+  # Which component suites a pull request touches: the framework package, the
+  # workspace packages it depends on (the same lists the storybook deploys
+  # filter on), its Playwright workflow, and the config every suite shares.
+  # `pnpm-lock.yaml` is left out on purpose — adding a dependency to one package
+  # should not run every suite. A push to main runs them all regardless, as the
+  # net for a lockfile-only bump and anything else the filters miss.
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      react: ${{ steps.filter.outputs.react }}
+      angular: ${{ steps.filter.outputs.angular }}
+      vue: ${{ steps.filter.outputs.vue }}
+      svelte: ${{ steps.filter.outputs.svelte }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            shared: &shared
+              - "package.json"
+              - "pnpm-workspace.yaml"
+              - "tsconfig.json"
+              - ".github/workflows/ci.yml"
+            react:
+              - *shared
+              - "packages/react/**"
+              - "packages/design-system/**"
+              - "packages/icons/**"
+              - "packages/helpers/**"
+              - "packages/react-hooks/**"
+              - ".github/workflows/react-playwright.yml"
+            angular:
+              - *shared
+              - "packages/angular/**"
+              - "packages/design-system/**"
+              - ".github/workflows/angular-playwright.yml"
+            vue:
+              - *shared
+              - "packages/vue/**"
+              - "packages/design-system/**"
+              - ".github/workflows/vue-playwright.yml"
+            svelte:
+              - *shared
+              - "packages/svelte/**"
+              - "packages/design-system/**"
+              - ".github/workflows/svelte-playwright.yml"
+
   # Real browsers, so these run on their own image rather than alongside `check`.
-  # Vitest covers only plain helpers; every component is tested here.
+  # Vitest covers only plain helpers; every component is tested here. A job
+  # skipped by its `if` reports as passing, so a required check never hangs.
   react-component-tests:
+    needs: changes
+    if: github.event_name == 'push' || needs.changes.outputs.react == 'true'
     uses: ./.github/workflows/react-playwright.yml
 
   angular-component-tests:
+    needs: changes
+    if: github.event_name == 'push' || needs.changes.outputs.angular == 'true'
     uses: ./.github/workflows/angular-playwright.yml
 
   vue-component-tests:
+    needs: changes
+    if: github.event_name == 'push' || needs.changes.outputs.vue == 'true'
     uses: ./.github/workflows/vue-playwright.yml
 
   # @okkly/svelte's own Playwright toolchain (see its playwright.config.ts) —
   # a separate job because it pins a different Playwright/browser version.
   svelte-component-tests:
+    needs: changes
+    if: github.event_name == 'push' || needs.changes.outputs.svelte == 'true'
     uses: ./.github/workflows/svelte-playwright.yml
