@@ -1,7 +1,8 @@
 import { useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { iconActivity, iconSettings, iconUsers } from "@okkly/icons";
-import { Tabs, type TabsColor } from "./Tabs";
+import { Tabs } from "./Tabs";
+import type { TabsColor } from "./Tabs.types";
 
 const icon = (svg: string) => <span dangerouslySetInnerHTML={{ __html: svg }} />;
 

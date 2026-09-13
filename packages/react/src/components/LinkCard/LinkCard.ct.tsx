@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { useFocusStateHooks } from "../../playwright/matrix";
 import { LinkCard } from "./LinkCard";
-import type { LinkCardColor, LinkCardSize } from "./LinkCard";
+import type { LinkCardColor, LinkCardSize } from "./LinkCard.types";
 
 const COLORS = [
   "primary",

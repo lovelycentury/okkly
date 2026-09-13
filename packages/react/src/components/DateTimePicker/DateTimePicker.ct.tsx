@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { DateTimePicker } from "./DateTimePicker";
 import type { Locator, Page } from "@playwright/test";
-import type { DateTimePickerColor } from "./DateTimePicker";
+import type { DateTimePickerColor } from "./DateTimePicker.types";
 
 const COLORS = [
   "primary",

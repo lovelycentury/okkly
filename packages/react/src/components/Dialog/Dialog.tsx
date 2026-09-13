@@ -1,75 +1,18 @@
 "use client";
 
-import {
-  forwardRef,
-  useState,
-  type ButtonHTMLAttributes,
-  type HTMLAttributes,
-  type MouseEvent as ReactMouseEvent,
-  type ReactNode,
-} from "react";
+import { forwardRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import { iconX } from "@okkly/icons";
 import "@okkly/design-system/components/Dialog/Dialog.scss";
-import { Modal, type ModalProps } from "../Modal/Modal";
+import { Modal } from "../Modal/Modal";
 import { Grow } from "../Grow/Grow";
-import type { TransitionTimeoutWithAuto } from "../../types";
 
-/** `false` removes the cap entirely, as in MUI. */
-export type DialogMaxWidth = "xs" | "sm" | "md" | "lg" | "xl" | false;
-
-/**
- * Built on `Modal`, which owns the portal, backdrop, focus trap and scroll
- * lock — exactly the split MUI draws. Dialog adds only the centred container
- * and the sized paper on top, and opens the paper with Grow (MUI's own
- * Dialog transition, and the same one `Tooltip`/`Popover` use) while the
- * backdrop fades in alongside it.
- *
- * Props follow MUI's Dialog API (https://mui.com/material-ui/api/dialog/) as closely as
- * this design allows: `open`/`onClose`/`fullWidth`/`maxWidth`/`fullScreen`/`children`
- * match name-for-name, the `Modal` pass-throughs (`keepMounted`, `container`,
- * `disableEscapeKeyDown`, …) are forwarded, and `onClose` receives `(event, reason)`
- * so a caller can tell a stray backdrop click from a deliberate Escape. Deliberate
- * gaps: no `sx`/`classes`, composition uses `DialogTitle`/`DialogContent`/
- * `DialogActions`/`DialogClose` subcomponents, simple focus trap (first focusable
- * only wraps Tab).
- */
-export interface DialogProps extends Omit<ModalProps, "children"> {
-  /**
-   * Full Width.
-   *
-   * @default false
-   * @type {boolean}
-   */
-  fullWidth?: boolean;
-  /**
-   * Max Width.
-   *
-   * @default "sm"
-   * @type {DialogMaxWidth}
-   */
-  maxWidth?: DialogMaxWidth;
-  /**
-   * Full Screen.
-   *
-   * @default false
-   * @type {boolean}
-   */
-  fullScreen?: boolean;
-  /**
-   * Grow timeout; `'auto'` like MUI.
-   *
-   * @default "auto"
-   * @type {TransitionTimeoutWithAuto}
-   */
-  transitionDuration?: TransitionTimeoutWithAuto;
-  /**
-   * Children.
-   *
-   * @default undefined
-   * @type {ReactNode}
-   */
-  children: ReactNode;
-}
+import type {
+  DialogProps,
+  DialogTitleProps,
+  DialogContentProps,
+  DialogActionsProps,
+  DialogCloseProps,
+} from "./Dialog.types";
 
 export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
   {
@@ -142,16 +85,6 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(function Dialog(
   );
 });
 
-export interface DialogTitleProps extends HTMLAttributes<HTMLHeadingElement> {
-  /**
-   * Children.
-   *
-   * @default undefined
-   * @type {ReactNode}
-   */
-  children: ReactNode;
-}
-
 export const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitleProps>(function DialogTitle(
   { children, className, ...rest },
   forwardedRef,
@@ -163,16 +96,6 @@ export const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitleProps>(func
     </h2>
   );
 });
-
-export interface DialogContentProps extends HTMLAttributes<HTMLDivElement> {
-  /**
-   * Children.
-   *
-   * @default undefined
-   * @type {ReactNode}
-   */
-  children: ReactNode;
-}
 
 export const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(function DialogContent(
   { children, className, ...rest },
@@ -186,16 +109,6 @@ export const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(func
   );
 });
 
-export interface DialogActionsProps extends HTMLAttributes<HTMLDivElement> {
-  /**
-   * Children.
-   *
-   * @default undefined
-   * @type {ReactNode}
-   */
-  children: ReactNode;
-}
-
 export const DialogActions = forwardRef<HTMLDivElement, DialogActionsProps>(function DialogActions(
   { children, className, ...rest },
   forwardedRef,
@@ -207,8 +120,6 @@ export const DialogActions = forwardRef<HTMLDivElement, DialogActionsProps>(func
     </div>
   );
 });
-
-export interface DialogCloseProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export const DialogClose = forwardRef<HTMLButtonElement, DialogCloseProps>(function DialogClose(
   { className, onClick, "aria-label": ariaLabel = "Close", ...rest },

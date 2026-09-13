@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { CheckboxColor, CheckboxSize } from "../Checkbox/Checkbox";
+import type { CheckboxColor, CheckboxSize } from "../Checkbox/Checkbox.types";
 
 export interface CheckboxGroupContextValue {
   name: string;

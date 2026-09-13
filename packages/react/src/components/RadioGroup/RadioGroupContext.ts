@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { RadioColor, RadioSize } from "../Radio/Radio";
+import type { RadioColor, RadioSize } from "../Radio/Radio.types";
 
 export interface RadioGroupContextValue {
   name: string;

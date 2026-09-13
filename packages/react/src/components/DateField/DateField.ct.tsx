@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { useFocusStateHooks } from "../../playwright/matrix";
 import { DateField } from "./DateField";
-import type { DateFieldColor, DateFieldSize } from "./DateField";
+import type { DateFieldColor, DateFieldSize } from "./DateField.types";
 
 const COLORS = ["primary", "dante"] as const satisfies readonly DateFieldColor[];
 const SIZES = ["small", "medium", "large"] as const satisfies readonly DateFieldSize[];

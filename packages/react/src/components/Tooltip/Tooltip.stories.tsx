@@ -2,7 +2,8 @@ import { useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { iconInfo, iconSettings, iconTrash } from "@okkly/icons";
 import { Button } from "../Button/Button";
-import { Tooltip, type TooltipPlacement } from "./Tooltip";
+import { Tooltip } from "./Tooltip";
+import type { TooltipPlacement } from "./Tooltip.types";
 
 /**
  * A short label that appears on hover or focus and says what a control is. Use it

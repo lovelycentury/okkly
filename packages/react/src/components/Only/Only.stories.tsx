@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Only, type OnlyBreakpoint } from "./Only";
+import { Only } from "./Only";
+import type { OnlyBreakpoint } from "./Only.types";
 
 /**
  * Mounts its children only while the viewport falls within `[from, to)` —

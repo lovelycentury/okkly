@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { useFocusStateHooks } from "../../playwright/matrix";
 import { TextArea } from "./TextArea";
-import type { TextAreaColor, TextAreaSize } from "./TextArea";
+import type { TextAreaColor, TextAreaSize } from "./TextArea.types";
 
 const COLORS = ["primary", "dante"] as const satisfies readonly TextAreaColor[];
 const SIZES = ["small", "medium", "large"] as const satisfies readonly TextAreaSize[];

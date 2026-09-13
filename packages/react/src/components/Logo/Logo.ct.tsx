@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Logo } from "./Logo";
-import type { LogoLayout, LogoTone, LogoVariant } from "./Logo";
+import type { LogoLayout, LogoTone, LogoVariant } from "./Logo.types";
 
 const LAYOUTS = ["compact", "horizontal", "stacked"] as const satisfies readonly LogoLayout[];
 const TONES = [

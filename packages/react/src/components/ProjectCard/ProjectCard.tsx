@@ -1,66 +1,8 @@
 "use client";
 
-import type { HTMLAttributes, ReactNode } from "react";
+import type { HTMLAttributes } from "react";
 import "@okkly/design-system/components/ProjectCard/ProjectCard.scss";
-
-export interface ProjectCardProps extends Omit<HTMLAttributes<HTMLElement>, "title"> {
-  /**
-   * Background image (transparent OK).
-   *
-   * @default undefined
-   * @type {string}
-   */
-  image?: string;
-  /**
-   * Brand mark, top-left.
-   *
-   * @default undefined
-   * @type {ReactNode}
-   */
-  logo?: ReactNode;
-  /**
-   * Project name.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  title: string;
-  /**
-   * One-two line summary.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  description?: string;
-  /**
-   * Category pills.
-   *
-   * @default []
-   * @type {string[]}
-   */
-  tags?: string[];
-  /**
-   * Show device mockup.
-   *
-   * @default false
-   * @type {boolean}
-   */
-  device?: boolean;
-  /**
-   * Opens the case (↗).
-   *
-   * @default undefined
-   * @type {string}
-   */
-  href?: string;
-  /**
-   * Class Name.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  className?: string;
-}
+import type { ProjectCardProps } from "./ProjectCard.types";
 
 /** Portfolio/case-study card. No MUI equivalent — this design has no reference API to mirror. */
 export function ProjectCard({

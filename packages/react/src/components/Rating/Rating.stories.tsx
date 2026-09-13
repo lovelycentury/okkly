@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Rating, type RatingColor } from "./Rating";
+import { Rating } from "./Rating";
+import type { RatingColor } from "./Rating.types";
 
 /**
  * Star (or custom glyph) scale for scores. Support half-steps with `precision` when the data allows it.

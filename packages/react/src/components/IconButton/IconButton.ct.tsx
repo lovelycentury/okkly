@@ -3,7 +3,7 @@ import { executeMatrixScreenshotTest, MOCK_PLAYWRIGHT_ICON } from "../../playwri
 import { useFocusStateHooks } from "../../playwright/matrix";
 import { IconButton } from "./IconButton";
 import { Icon } from "../Icon/Icon";
-import type { IconButtonColor, IconButtonSize, IconButtonVariant } from "./IconButton";
+import type { IconButtonColor, IconButtonSize, IconButtonVariant } from "./IconButton.types";
 
 const VARIANTS = ["ghost", "glass", "solid"] as const satisfies readonly IconButtonVariant[];
 const COLORS = [

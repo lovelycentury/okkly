@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Divider } from "./Divider";
-import type { DividerTextAlign, DividerVariant } from "./Divider";
+import type { DividerTextAlign, DividerVariant } from "./Divider.types";
 
 const VARIANTS = ["fullWidth", "inset", "middle"] as const satisfies readonly DividerVariant[];
 const ALIGNMENTS = ["left", "center", "right"] as const satisfies readonly DividerTextAlign[];

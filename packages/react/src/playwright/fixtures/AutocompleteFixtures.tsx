@@ -1,11 +1,11 @@
 "use client";
 
-import {
-  Autocomplete,
-  type AutocompleteOption,
-  type AutocompleteOptionState,
-  type AutocompleteProps,
-} from "../../components/Autocomplete/Autocomplete";
+import { Autocomplete } from "../../components/Autocomplete/Autocomplete";
+import type {
+  AutocompleteOption,
+  AutocompleteOptionState,
+  AutocompleteProps,
+} from "../../components/Autocomplete/Autocomplete.types";
 import {
   HighlightMatch,
   OptionCheck,

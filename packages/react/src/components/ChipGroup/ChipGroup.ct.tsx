@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { ChipGroup } from "./ChipGroup";
 import { Chip } from "../Chip/Chip";
-import type { ChipGroupColor } from "./ChipGroup";
+import type { ChipGroupColor } from "./ChipGroup.types";
 
 const COLORS = [
   "primary",
