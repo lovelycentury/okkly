@@ -1,6 +1,6 @@
 name: Update Angular Playwright screenshots
 
-# The @okkly/angular counterpart of `playwright-screenshots.yml`. Baselines are
+# The @okkly/angular counterpart of `react-playwright-screenshots.yml`. Baselines are
 # pixel-exact per platform, so they are never generated on a developer's
 # machine — `ignoreSnapshots` skips the comparison there. Run this workflow to
 # (re)generate them on the pinned Linux image and open a PR with the result.
