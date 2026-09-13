@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Dialog, DialogActions, DialogClose, DialogContent, DialogTitle } from "./Dialog";
 import { Button } from "../Button/Button";
-import type { DialogMaxWidth } from "./Dialog";
+import type { DialogMaxWidth } from "./Dialog.types";
 
 const MAX_WIDTHS = ["xs", "sm", "md", "lg", "xl"] as const satisfies readonly DialogMaxWidth[];
 

@@ -1,5 +1,11 @@
 # @okkly/vue
 
+## 0.2.1
+
+### Patch Changes
+
+- [#256](https://github.com/lovelycentury/okkly/pull/256) [`1ebd944`](https://github.com/lovelycentury/okkly/commit/1ebd9448b9daf2a23df9f16f26cbb6dc09737d89) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Stop publishing test files: `dist` no longer ships the type declarations of the `*.ct.ts` component tests and their `src/playwright` helpers.
+
 ## 0.2.0
 
 ### Minor Changes

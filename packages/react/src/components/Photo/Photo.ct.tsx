@@ -6,7 +6,7 @@ import {
   MOCK_PLAYWRIGHT_IMAGE_URL,
 } from "../../playwright/screenshots";
 import { Photo } from "./Photo";
-import type { PhotoRadius, PhotoSize, PhotoVariant } from "./Photo";
+import type { PhotoRadius, PhotoSize, PhotoVariant } from "./Photo.types";
 
 const VARIANTS = [
   "plain",

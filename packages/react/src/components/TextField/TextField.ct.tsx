@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { useFocusStateHooks } from "../../playwright/matrix";
 import { TextField } from "./TextField";
-import type { TextFieldColor, TextFieldSize } from "./TextField";
+import type { TextFieldColor, TextFieldSize } from "./TextField.types";
 
 const COLORS = [
   "primary",
@@ -40,7 +40,12 @@ test.describe("Screenshot tests", () => {
     name: "TextField (sizes)",
     columns: SIZES,
     rows: [...COLORS, "required", "no-label"],
-    fastNoIsolation: true,
+    // Isolated: the accent color only shows on a focused field, and a page can
+    // focus one field at a time.
+    hooks: {
+      beforeEach: async (component, page) =>
+        useFocusStateHooks({ component, page, state: "focus-visible" }),
+    },
     component: (column, row) => (
       <TextField
         label="Email"

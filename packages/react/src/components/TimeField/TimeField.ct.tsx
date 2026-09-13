@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { useFocusStateHooks } from "../../playwright/matrix";
 import { TimeField } from "./TimeField";
-import type { TimeFieldColor, TimeFieldSize } from "./TimeField";
+import type { TimeFieldColor, TimeFieldSize } from "./TimeField.types";
 
 const COLORS = ["primary", "dante"] as const satisfies readonly TimeFieldColor[];
 const SIZES = ["small", "medium", "large"] as const satisfies readonly TimeFieldSize[];

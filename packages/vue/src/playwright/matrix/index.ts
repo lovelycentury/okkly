@@ -1,6 +1,5 @@
 import { test as baseTest, expect } from "@playwright/experimental-ct-vue";
 import type { Locator, Page } from "@playwright/test";
-import { defineComponent, h } from "vue";
 import { getCellId } from "./gridArea";
 import ScreenshotMatrix from "./ScreenshotMatrix.vue";
 import type {
@@ -21,12 +20,6 @@ export const useMatrixScreenshotTest = <TContext extends HookContext = HookConte
   globalOptions: UseMatrixScreenshotTestOptions<TContext> = {},
 ) => {
   const test = globalOptions.test ?? baseTest;
-
-  /** Turns raw slot markup into the render-function slots `h()` expects. */
-  const toSlotFns = (slots?: Record<string, string>) =>
-    slots
-      ? Object.fromEntries(Object.entries(slots).map(([name, markup]) => [name, () => markup]))
-      : undefined;
 
   /**
    * Mounts every combination on its own, so a hook can hover, focus or open it
@@ -78,13 +71,17 @@ export const useMatrixScreenshotTest = <TContext extends HookContext = HookConte
           ...globalOptions.defaults?.screenshotOptions,
           ...options.screenshotOptions,
         };
+        // Photograph the padded mount root rather than the component: a hover or
+        // focus glow spills past the component's own box, and the padding keeps
+        // it in frame — it stands in for the wrapper React and Angular capture.
+        const cellRoot = page.locator("#root");
         const screenshot = capturePage
           ? await page.screenshot(screenshotOptions)
-          : await component.screenshot(screenshotOptions);
+          : await cellRoot.screenshot(screenshotOptions);
 
         // Browsers differ in device pixel ratio, so the raw image can come back
         // at 2x. Read the CSS box and size the <img> with it below.
-        const box = capturePage ? page.viewportSize() : await component.boundingBox();
+        const box = capturePage ? page.viewportSize() : await cellRoot.boundingBox();
 
         await globalOptions.defaults?.hooks?.afterEach?.(
           component,
@@ -155,43 +152,27 @@ export const useMatrixScreenshotTest = <TContext extends HookContext = HookConte
     test(options.name, async ({ mount, browserName }) => {
       const removePadding = options.removePadding ?? globalOptions.defaults?.removePadding;
 
-      // A synthetic wrapper: Vue's mount() needs a single component reference,
-      // so every cell's live component is composed into one tree here via `h()`
-      // rather than passed to `mount()` as separate elements.
-      const Wrapper = defineComponent({
-        render: () =>
-          h(
-            ScreenshotMatrix,
-            { name: options.name, columns: options.columns, rows: options.rows, browserName },
-            {
-              default: () =>
-                options.rows.flatMap((row) =>
-                  options.columns.map((column) => {
-                    // `on` is dropped here: this path renders static visual
-                    // variants only, with no interaction to record, and Vue's
-                    // `h()` needs listener keys (`onClick`) rather than
-                    // Playwright's raw event names (`click`).
-                    const { props, slots } = options.args(column, row);
-                    return h(
-                      "div",
-                      {
-                        key: getCellId(row, column),
-                        style: {
-                          display: "grid",
-                          gridArea: getCellId(row, column),
-                          width: "max-content",
-                          padding: removePadding ? undefined : "1rem",
-                        },
-                      },
-                      [h(options.component, props, toSlotFns(slots))],
-                    );
-                  }),
-                ),
-            },
+      // Vue's mount() takes a single component, and a component defined here
+      // could not reach the browser — the test runs in Node and Playwright
+      // serializes what it mounts. So the matrix renders the cells itself, from
+      // the component reference and plain per-cell data.
+      const matrix = await mount(ScreenshotMatrix, {
+        props: {
+          name: options.name,
+          columns: options.columns,
+          rows: options.rows,
+          browserName,
+          component: options.component,
+          cells: options.rows.flatMap((row) =>
+            options.columns.map((column) => {
+              // `on` is dropped here: this path renders static visual variants
+              // only, with no interaction to record.
+              const { props, slots } = options.args(column, row);
+              return { id: getCellId(row, column), props, slots, padded: !removePadding };
+            }),
           ),
+        },
       });
-
-      const matrix = await mount(Wrapper);
       await expect(() => expect(matrix).toHaveScreenshot(`${options.name}.png`)).toPass();
     });
   };

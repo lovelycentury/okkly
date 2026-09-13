@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Chip } from "../Chip/Chip";
-import { ChipGroup, type ChipGroupColor } from "./ChipGroup";
+import { ChipGroup } from "./ChipGroup";
+import type { ChipGroupColor } from "./ChipGroup.types";
 
 /**
  * Row of chips that manage single or multi selection together.

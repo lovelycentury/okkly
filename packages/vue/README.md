@@ -151,7 +151,6 @@ sit next to it as `*.ct.ts`, one file per component.
 
 ```bash
 pnpm --filter @okkly/vue test:playwright   # component tests
-pnpm --filter @okkly/vue test              # vitest + @vue/test-utils
 ```
 
 `playwright/index.html` is the mount harness; it loads the design tokens once,
@@ -180,7 +179,7 @@ skipped entirely (`ignoreSnapshots`).
 
 ```bash
 pnpm --filter @okkly/vue build   # vite lib build → dist/, types, and style.css
-pnpm --filter @okkly/vue test    # vitest + @vue/test-utils
+pnpm --filter @okkly/vue test:playwright   # component tests — see Tests
 ```
 
 The library build lives in `vite.lib.config.ts` rather than `vite.config.ts`:

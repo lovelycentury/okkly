@@ -6,7 +6,7 @@ import {
 } from "../../playwright/screenshots";
 import { Card, CardActions, CardContent, CardHeader, CardMedia } from "./Card";
 import { Button } from "../Button/Button";
-import type { CardPadding, CardVariant } from "./Card";
+import type { CardPadding, CardVariant } from "./Card.types";
 
 const VARIANTS = [
   "solid",

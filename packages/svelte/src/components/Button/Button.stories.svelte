@@ -7,7 +7,7 @@
     ButtonShape,
     ButtonSize,
     ButtonVariant,
-  } from "./Button.svelte";
+  } from "./Button.types";
 
   const variants: ButtonVariant[] = ["primary", "gradient", "secondary", "soft", "ghost", "glass"];
   const colors: ButtonColor[] = ["primary", "dante", "indigo", "violet", "ember", "ice"];

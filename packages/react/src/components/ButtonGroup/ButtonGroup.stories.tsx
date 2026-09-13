@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { ButtonGroup, type ButtonGroupColor } from "./ButtonGroup";
+import { ButtonGroup } from "./ButtonGroup";
+import type { ButtonGroupColor } from "./ButtonGroup.types";
 
 /**
  * A split button: one main action plus a chevron menu of variants of that

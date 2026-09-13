@@ -1,7 +1,8 @@
 import type { CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { iconTrash, iconUpload } from "@okkly/icons";
-import { SeverityIcon, type SeverityIconSeverity } from "./SeverityIcon";
+import { SeverityIcon } from "./SeverityIcon";
+import type { SeverityIconSeverity } from "./SeverityIcon.types";
 
 /**
  * A tinted chip holding a status glyph. `Alert`, `Snackbar`, and `EmptyState`

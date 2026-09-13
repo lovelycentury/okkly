@@ -3,6 +3,12 @@ name: Deploy Svelte Storybook
 on:
   push:
     branches: [main]
+    paths:
+      - "packages/svelte/**"
+      - "packages/design-system/**"
+      - "ops/Dockerfile.storybook"
+      - "ops/docker-compose.yml"
+      - ".github/workflows/deploy-svelte-storybook.yml"
 
 permissions:
   contents: read

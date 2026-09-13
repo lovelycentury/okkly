@@ -1,6 +1,7 @@
 import { useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Pagination, type PaginationColor, type PaginationSize } from "./Pagination";
+import { Pagination } from "./Pagination";
+import type { PaginationColor, PaginationSize } from "./Pagination.types";
 
 /**
  * Page controls with boundary pages, a sibling window around the current page,

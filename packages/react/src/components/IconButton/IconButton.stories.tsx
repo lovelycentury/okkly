@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { iconPlus, iconX } from "@okkly/icons";
-import { IconButton, type IconButtonColor } from "./IconButton";
+import { IconButton } from "./IconButton";
+import type { IconButtonColor } from "./IconButton.types";
 
 const plusIcon = <span dangerouslySetInnerHTML={{ __html: iconPlus }} />;
 const closeIcon = <span dangerouslySetInnerHTML={{ __html: iconX }} />;

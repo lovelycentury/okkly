@@ -3,6 +3,12 @@ name: Deploy Vue Storybook
 on:
   push:
     branches: [main]
+    paths:
+      - "packages/vue/**"
+      - "packages/design-system/**"
+      - "ops/Dockerfile.storybook"
+      - "ops/docker-compose.yml"
+      - ".github/workflows/deploy-vue-storybook.yml"
 
 permissions:
   contents: read

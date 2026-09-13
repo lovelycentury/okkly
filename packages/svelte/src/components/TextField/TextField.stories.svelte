@@ -1,7 +1,7 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import TextField from "./TextField.svelte";
-  import type { TextFieldColor, TextFieldSize } from "./TextField.svelte";
+  import type { TextFieldColor, TextFieldSize } from "./TextField.types";
 
   const sizes: TextFieldSize[] = ["small", "medium", "large"];
   const colors: TextFieldColor[] = [

@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Typography } from "./Typography";
-import type { TypographyColor, TypographyVariant } from "./Typography";
+import type { TypographyColor, TypographyVariant } from "./Typography.types";
 
 /**
  * Mirrors `TYPOGRAPHY_VARIANTS` in Typography.tsx. It is spelled out again here

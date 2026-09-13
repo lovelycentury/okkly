@@ -3,6 +3,12 @@ name: Deploy Angular Storybook
 on:
   push:
     branches: [main]
+    paths:
+      - "packages/angular/**"
+      - "packages/design-system/**"
+      - "ops/Dockerfile.storybook"
+      - "ops/docker-compose.yml"
+      - ".github/workflows/deploy-angular-storybook.yml"
 
 permissions:
   contents: read

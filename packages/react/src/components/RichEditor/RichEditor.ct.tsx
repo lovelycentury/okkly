@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { RichEditor } from "./RichEditor";
-import type { RichEditorColor, RichEditorToolbar } from "./RichEditor";
+import type { RichEditorColor, RichEditorToolbar } from "./RichEditor.types";
 
 const COLORS = ["primary", "dante"] as const satisfies readonly RichEditorColor[];
 const TOOLBARS = ["full", "compact", "none"] as const satisfies readonly RichEditorToolbar[];
