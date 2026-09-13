@@ -4,9 +4,6 @@ name: Update Vue Playwright screenshots
 # developer's machine — `ignoreSnapshots` skips the comparison there. Run this
 # workflow to (re)generate them on the pinned Linux image and open a PR with
 # the result. It is also how the very first set of baselines is created.
-#
-# Self-contained rather than calling `playwright.yml`, since that workflow is
-# hardcoded to `packages/react` — see it for the @okkly/react equivalent.
 on:
   workflow_dispatch:
 
@@ -15,49 +12,9 @@ permissions:
 
 jobs:
   screenshots:
-    name: Component tests
-    runs-on: ubuntu-latest
-    # Screenshots are pixel-exact per platform, so the baselines belong to this
-    # image. Pin it rather than tracking `ubuntu-latest`'s rendering stack.
-    container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble
-      options: --ipc=host
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
-
-      - name: Run component tests
-        working-directory: packages/vue
-        env:
-          CI: "true"
-          PW_UPDATE_SNAPSHOTS: "true"
-        # The browsers ship with the container image, so skip the download step
-        # `test:playwright` performs locally.
-        run: pnpm exec playwright test
-
-      - name: Upload the report
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: packages/vue/playwright-report
-          retention-days: 7
-
-      - name: Upload the refreshed screenshots
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: screenshots
-          path: packages/vue/playwright/snapshots
-          retention-days: 1
+    uses: ./.github/workflows/vue-playwright.yml
+    with:
+      update-snapshots: true
 
   pull-request:
     name: Create pull request
@@ -72,7 +29,7 @@ jobs:
       - name: Download the refreshed screenshots
         uses: actions/download-artifact@v4
         with:
-          name: screenshots
+          name: vue-screenshots
           path: packages/vue/playwright/snapshots
 
       - name: Create pull request

@@ -1,4 +1,5 @@
-name: deploy
+name: Deploy Svelte Storybook
+
 on:
   push:
     branches: [main]
@@ -7,8 +8,8 @@ permissions:
   contents: read
   packages: write
 
-# The apps (profile / iam / resume) live in their own repos and deploy
-# themselves. This workflow only ships the Storybook static site.
+# @okkly/svelte's Storybook, at svelte-storybook.okkly.dev. The apps
+# (profile / iam / resume) live in their own repos and deploy themselves.
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,12 +24,18 @@ jobs:
         with:
           context: .
           file: ops/Dockerfile.storybook
+          build-args: PACKAGE=svelte
           push: true
-          tags: ghcr.io/lovelycentury/okkly/storybook:latest
+          tags: ghcr.io/lovelycentury/okkly/storybook-svelte:latest
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    # The compose file is shared across all four storybook deploys; only one
+    # `docker compose up` on the VPS at a time.
+    concurrency:
+      group: storybook-vps-deploy
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
       - uses: appleboy/scp-action@v0.1.7
@@ -46,7 +53,5 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd ${{ secrets.DEPLOY_PATH }}
-            docker compose pull
-            # --remove-orphans also reaps the retired `caddy` service the first
-            # time this runs after the inner proxy was dropped.
-            docker compose up -d --remove-orphans
+            docker compose pull storybook-svelte
+            docker compose up -d --remove-orphans storybook-svelte

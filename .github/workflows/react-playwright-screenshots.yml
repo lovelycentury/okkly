@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   screenshots:
-    uses: ./.github/workflows/playwright.yml
+    uses: ./.github/workflows/react-playwright.yml
     with:
       update-snapshots: true
 
