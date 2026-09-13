@@ -71,13 +71,17 @@ export const useMatrixScreenshotTest = <TContext extends HookContext = HookConte
           ...globalOptions.defaults?.screenshotOptions,
           ...options.screenshotOptions,
         };
+        // Photograph the padded mount root rather than the component: a hover or
+        // focus glow spills past the component's own box, and the padding keeps
+        // it in frame — it stands in for the wrapper React and Angular capture.
+        const cellRoot = page.locator("#root");
         const screenshot = capturePage
           ? await page.screenshot(screenshotOptions)
-          : await component.screenshot(screenshotOptions);
+          : await cellRoot.screenshot(screenshotOptions);
 
         // Browsers differ in device pixel ratio, so the raw image can come back
         // at 2x. Read the CSS box and size the <img> with it below.
-        const box = capturePage ? page.viewportSize() : await component.boundingBox();
+        const box = capturePage ? page.viewportSize() : await cellRoot.boundingBox();
 
         await globalOptions.defaults?.hooks?.afterEach?.(
           component,

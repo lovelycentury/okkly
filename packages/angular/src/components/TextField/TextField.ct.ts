@@ -35,7 +35,12 @@ test.describe("Screenshot tests", () => {
     name: "TextField (sizes)",
     columns: SIZES,
     rows: [...COLORS, "required", "no-label"],
-    fastNoIsolation: true,
+    // Isolated: the accent color only shows on a focused field, and a page can
+    // focus one field at a time.
+    hooks: {
+      beforeEach: async (component, page) =>
+        useFocusStateHooks({ component, page, state: "focus-visible" }),
+    },
     component: (column, row) => {
       const color = (COLORS as readonly string[]).includes(row) ? row : "primary";
       return `<okkly-text-field label="Email" size="${column}" color="${color}"${
