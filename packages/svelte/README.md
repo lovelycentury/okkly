@@ -133,11 +133,11 @@ pnpm --filter @okkly/svelte storybook:build    # static build → storybook-stat
 
 ```bash
 pnpm --filter @okkly/svelte build   # svelte-package → dist/, then style.css
-pnpm --filter @okkly/svelte test    # vitest + @testing-library/svelte
+pnpm --filter @okkly/svelte test:playwright   # component tests, in a real Chromium
 ```
 
 `svelte-package` copies every file under `src` into `dist`, and its old
 `package.files` filter was removed in v2 — so the `files` field in
-`package.json` is what keeps tests, harnesses, and stories out of the published
-tarball. `styles.scss` sits outside `src` for the same reason: the compiled CSS
+`package.json` is what keeps tests, test helpers, and stories out of the
+published tarball. `styles.scss` sits outside `src` for the same reason: the compiled CSS
 is what ships.

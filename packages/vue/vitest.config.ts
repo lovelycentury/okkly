@@ -7,5 +7,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: [fileURLToPath(new URL("./vitest.setup.ts", import.meta.url))],
+    // Components are tested in `*.ct.ts` — don't fail CI while no plain spec exists.
+    passWithNoTests: true,
   },
 });

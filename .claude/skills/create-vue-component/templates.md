@@ -156,48 +156,81 @@ export const CustomStyling: Story = {
 };
 ```
 
-## `packages/vue/src/components/Example/Example.spec.ts`
+## `packages/vue/src/components/Example/Example.ct.ts`
 
 ```ts
-import { mount } from "@vue/test-utils";
-import { describe, expect, it } from "vitest";
+import { expect, test } from "../../playwright/a11y";
+import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import Example from "./Example.vue";
+import type { ExampleSize, ExampleVariant } from "./Example.vue";
+
+const VARIANTS = ["filled", "outlined"] as const satisfies readonly ExampleVariant[];
+const SIZES = ["small", "medium", "large"] as const satisfies readonly ExampleSize[];
 
 const slots = { default: "Hello" };
 
-describe("Example", () => {
-  it("renders its content", () => {
-    const wrapper = mount(Example, { slots });
-    expect(wrapper.text()).toBe("Hello");
+test.describe("Screenshot tests", () => {
+  executeMatrixScreenshotTest({
+    name: "Example (variants)",
+    columns: VARIANTS,
+    rows: SIZES,
+    fastNoIsolation: true,
+    component: Example,
+    args: (column, row) => ({
+      props: { variant: column, size: row },
+      slots: { default: "Example" },
+    }),
   });
+});
 
-  it("applies the default classes", () => {
-    const wrapper = mount(Example, { slots });
-    expect(wrapper.classes()).toEqual(expect.arrayContaining(["okkly-component", "okkly-example"]));
-    expect(wrapper.attributes("class")).not.toMatch(/okkly-example--(outlined|small|large)/);
-  });
+test("should render its content", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(Example, { slots });
 
-  it("applies the variant modifier", () => {
-    const wrapper = mount(Example, { props: { variant: "outlined" as const }, slots });
-    expect(wrapper.classes()).toContain("okkly-example--outlined");
-  });
+  // ASSERT
+  await expect(component).toHaveText("Hello");
+});
 
-  it("applies a size modifier only for non-medium sizes", async () => {
-    const wrapper = mount(Example, { props: { size: "small" as const }, slots });
-    expect(wrapper.classes()).toContain("okkly-example--small");
+test("should apply the default classes", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(Example, { slots });
 
-    await wrapper.setProps({ size: "medium" });
-    expect(wrapper.attributes("class")).not.toMatch(/okkly-example--(small|large)/);
-  });
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-component/);
+  await expect(component).toHaveClass(/okkly-example/);
+  await expect(component).not.toHaveClass(/okkly-example--(outlined|small|large)/);
+});
 
-  it("merges a consumer's class and falls native attributes through", () => {
-    const wrapper = mount(Example, {
-      slots,
-      attrs: { class: "custom", "data-testid": "example" },
-    });
-    expect(wrapper.classes()).toEqual(expect.arrayContaining(["okkly-example", "custom"]));
-    expect(wrapper.attributes("data-testid")).toBe("example");
-  });
+test("should apply the variant modifier", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(Example, { props: { variant: "outlined" }, slots });
+
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-example--outlined/);
+});
+
+test("should apply a size modifier only for non-medium sizes", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(Example, { props: { size: "small" }, slots });
+
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-example--small/);
+
+  // ACT
+  await component.update({ props: { size: "medium" } });
+
+  // ASSERT
+  await expect(component).not.toHaveClass(/okkly-example--(small|large)/);
+});
+
+test("should merge a consumer's class and fall native attributes through", async ({ mount }) => {
+  // ARRANGE — not declared props, so Vue treats them as fall-through attributes
+  const attrs = { class: "custom", "data-testid": "example" };
+  const component = await mount(Example, { props: attrs, slots });
+
+  // ASSERT
+  await expect(component).toHaveClass(/custom/);
+  await expect(component).toHaveAttribute("data-testid", "example");
 });
 ```
 

@@ -1,8 +1,4 @@
-import "@testing-library/jest-dom/vitest";
-import { cleanup } from "@testing-library/svelte";
-import { afterEach } from "vitest";
-
-// `globals: false` means Testing Library can't auto-detect `afterEach` off
-// globalThis — register cleanup explicitly so the DOM doesn't leak between
-// tests in the same file.
-afterEach(() => cleanup());
+// The component suite runs in a real browser through Playwright
+// (`src/**/*.ct.ts`), so nothing is rendered here. Vitest stays for plain
+// helpers that need no component, should the package grow any.
+export {};

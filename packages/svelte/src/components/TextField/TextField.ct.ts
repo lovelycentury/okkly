@@ -198,3 +198,62 @@ test("should fire oninput as the user types", async ({ mount }) => {
   expect(changes).toBe(3);
   await expect(component.getByRole("textbox")).toHaveValue("abc");
 });
+
+test("should apply the default classes", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(TextField, { slots: { label: "Email" } });
+
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-component/);
+  await expect(component).toHaveClass(/okkly-text-field/);
+  await expect(component).not.toHaveClass(/okkly-text-field--color-/);
+  await expect(component).not.toHaveClass(/okkly-text-field--(small|large)/);
+});
+
+for (const color of COLORS.filter((c) => c !== "primary")) {
+  test(`should apply the ${color} color modifier`, async ({ mount }) => {
+    // ARRANGE
+    const component = await mount(TextField, { props: { color }, slots: { label: "Email" } });
+
+    // ASSERT
+    await expect(component).toHaveClass(new RegExp(`okkly-text-field--color-${color}`));
+  });
+}
+
+test("should keep a consumer's own class alongside the modifiers", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(TextField, {
+    props: { class: "my-field" },
+    slots: { label: "Email" },
+  });
+
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-text-field/);
+  await expect(component).toHaveClass(/my-field/);
+});
+
+test.describe("adornments", () => {
+  test("should not render the adornment slots without snippets", async ({ mount }) => {
+    // ARRANGE
+    const component = await mount(TextField, { slots: { label: "Email" } });
+
+    // ASSERT
+    await expect(component.locator(".okkly-text-field__adornment")).toHaveCount(0);
+  });
+
+  test("should render the adornment slots when snippets are passed", async ({ mount }) => {
+    // ARRANGE
+    const component = await mount(TextField, {
+      slots: {
+        label: "Email",
+        startAdornment: '<span data-testid="start-adornment"></span>',
+        endAdornment: '<span data-testid="end-adornment"></span>',
+      },
+    });
+
+    // ASSERT
+    await expect(component.getByTestId("start-adornment")).toBeAttached();
+    await expect(component.getByTestId("end-adornment")).toBeAttached();
+    await expect(component.locator(".okkly-text-field__adornment")).toHaveCount(2);
+  });
+});

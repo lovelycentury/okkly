@@ -13,5 +13,7 @@ export default defineConfig({
     // included — without this the same suite runs twice, from two roots.
     include: ["src/**/*.spec.ts"],
     setupFiles: [fileURLToPath(new URL("./vitest.setup.ts", import.meta.url))],
+    // Components are tested in `*.ct.ts` — don't fail CI while no plain spec exists.
+    passWithNoTests: true,
   },
 });

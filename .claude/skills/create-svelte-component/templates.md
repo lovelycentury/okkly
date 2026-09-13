@@ -71,19 +71,6 @@ The stylesheet — `packages/design-system/src/components/Example/Example.scss` 
 </div>
 ```
 
-## `packages/svelte/src/components/Example/Example.harness.svelte`
-
-```svelte
-<script lang="ts">
-  import Example from "./Example.svelte";
-  import type { ExampleProps } from "./Example.svelte";
-
-  let { label, ...rest }: ExampleProps & { label: string } = $props();
-</script>
-
-<Example {...rest}>{label}</Example>
-```
-
 ## `packages/svelte/src/components/Example/Example.stories.svelte`
 
 ```svelte
@@ -150,44 +137,84 @@ The stylesheet — `packages/design-system/src/components/Example/Example.scss` 
 </Story>
 ```
 
-## `packages/svelte/src/components/Example/Example.spec.ts`
+## `packages/svelte/src/components/Example/Example.ct.ts`
 
 ```ts
-import { render, screen } from "@testing-library/svelte";
-import { describe, expect, it } from "vitest";
-import ExampleHarness from "./Example.harness.svelte";
+import { expect, test } from "../../playwright/a11y";
+import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
+import Example from "./Example.svelte";
+import type { ExampleSize, ExampleVariant } from "./Example.svelte";
 
-const root = (container: HTMLElement) => container.querySelector<HTMLElement>(".okkly-example")!;
+const VARIANTS = ["filled", "outlined"] as const satisfies readonly ExampleVariant[];
+const SIZES = ["small", "medium", "large"] as const satisfies readonly ExampleSize[];
 
-describe("Example", () => {
-  it("renders its content", () => {
-    render(ExampleHarness, { label: "Hello" });
-    expect(screen.getByText("Hello")).toBeInTheDocument();
+// Snippet props are passed as raw markup: a single element or a single text node.
+const slots = { children: "Hello" };
+
+test.describe("Screenshot tests", () => {
+  executeMatrixScreenshotTest({
+    name: "Example (variants)",
+    columns: VARIANTS,
+    rows: SIZES,
+    fastNoIsolation: true,
+    component: Example,
+    args: (column, row) => ({
+      props: { variant: column, size: row },
+      slots: { children: "Example" },
+    }),
+  });
+});
+
+test("should render its content", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(Example, { slots });
+
+  // ASSERT
+  await expect(component).toHaveText("Hello");
+});
+
+test("should apply the default classes", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(Example, { slots });
+
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-component/);
+  await expect(component).toHaveClass(/okkly-example/);
+  await expect(component).not.toHaveClass(/okkly-example--(outlined|small|large)/);
+});
+
+test("should apply the variant modifier", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(Example, { props: { variant: "outlined" }, slots });
+
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-example--outlined/);
+});
+
+test("should apply a size modifier only for non-medium sizes", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(Example, { props: { size: "small" }, slots });
+
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-example--small/);
+
+  // ACT
+  await component.update({ props: { size: "medium" } });
+
+  // ASSERT
+  await expect(component).not.toHaveClass(/okkly-example--(small|large)/);
+});
+
+test("should keep a consumer's own class and spread native attributes", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(Example, {
+    props: { class: "custom", "data-testid": "example" },
+    slots,
   });
 
-  it("applies the default classes", () => {
-    const { container } = render(ExampleHarness, { label: "Hello" });
-    expect(root(container)).toHaveClass("okkly-component", "okkly-example");
-    expect(root(container).className).not.toMatch(/okkly-example--(outlined|small|large)/);
-  });
-
-  it("applies the variant modifier", () => {
-    const { container } = render(ExampleHarness, { label: "Hello", variant: "outlined" });
-    expect(root(container)).toHaveClass("okkly-example--outlined");
-  });
-
-  it("applies a size modifier only for non-medium sizes", async () => {
-    const { container, rerender } = render(ExampleHarness, { label: "Hello", size: "small" });
-    expect(root(container)).toHaveClass("okkly-example--small");
-
-    await rerender({ label: "Hello", size: "medium" });
-    expect(root(container).className).not.toMatch(/okkly-example--(small|large)/);
-  });
-
-  it("keeps a consumer's own class and spreads native attributes", () => {
-    render(ExampleHarness, { label: "Hello", class: "custom", "data-testid": "example" });
-    expect(screen.getByTestId("example")).toHaveClass("okkly-example", "custom");
-  });
+  // ASSERT
+  await expect(component).toHaveClass(/custom/);
+  await expect(component).toHaveAttribute("data-testid", "example");
 });
 ```
 
