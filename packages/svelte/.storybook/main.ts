@@ -10,10 +10,7 @@ const config: StorybookConfig = {
    * it carries a `.svelte` suffix so the sidebar doesn't read as the plain,
    * shared `okkly` mark. Paths are relative to this directory.
    */
-  staticDirs: [
-    "../../react/.storybook/favicon",
-    { from: "./brand", to: "/brand" },
-  ],
+  staticDirs: ["../../react/.storybook/favicon", { from: "./brand", to: "/brand" }],
   framework: {
     name: "@storybook/svelte-vite",
     options: {},
