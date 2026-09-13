@@ -28,7 +28,7 @@ test.describe("Screenshot tests", () => {
     args: (column) => ({
       props: {
         placeholder: "you@example.com",
-        modelValue: column === "filled" ? "hello@okryshto.dev" : undefined,
+        modelValue: column === "filled" ? "hello@okkly.dev" : undefined,
         error: column === "error",
         disabled: column === "disabled",
       },
@@ -43,7 +43,12 @@ test.describe("Screenshot tests", () => {
     name: "TextField (sizes)",
     columns: SIZES,
     rows: [...COLORS, "required", "no-label"],
-    fastNoIsolation: true,
+    // Isolated: the accent color only shows on a focused field, and a page can
+    // focus one field at a time.
+    hooks: {
+      beforeEach: async (component, page) =>
+        useFocusStateHooks({ component, page, state: "focus-visible" }),
+    },
     component: TextField,
     args: (column, row) => ({
       props: {
@@ -205,4 +210,64 @@ test("should update the model as the user types", async ({ mount }) => {
   expect(changes).toBe(3);
   expect(lastValue).toBe("abc");
   await expect(component.getByRole("textbox")).toHaveValue("abc");
+});
+
+test("should apply the default classes", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(TextField, { slots: { label: "Email" } });
+
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-component/);
+  await expect(component).toHaveClass(/okkly-text-field/);
+  await expect(component).not.toHaveClass(/okkly-text-field--(small|large|error|disabled)/);
+});
+
+test("should not render helper text when the slot is empty", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(TextField, { slots: { label: "Email" } });
+
+  // ASSERT
+  await expect(component.locator(".okkly-text-field__helper")).toHaveCount(0);
+});
+
+test.describe("adornments", () => {
+  test("should not render the adornment slots when they are empty", async ({ mount }) => {
+    // ARRANGE
+    const component = await mount(TextField, { slots: { label: "Email" } });
+
+    // ASSERT
+    await expect(component.locator(".okkly-text-field__adornment")).toHaveCount(0);
+  });
+
+  test("should render the adornment slots once they are filled", async ({ mount }) => {
+    // ARRANGE
+    const component = await mount(TextField, {
+      slots: {
+        label: "Email",
+        "start-adornment": '<span data-testid="start" />',
+        "end-adornment": '<span data-testid="end" />',
+      },
+    });
+
+    // ASSERT
+    await expect(component.locator(".okkly-text-field__adornment")).toHaveCount(2);
+  });
+});
+
+test("should merge a consumer's class onto the field and fall other attributes through to the input", async ({
+  mount,
+}) => {
+  // ARRANGE — none of these are declared props, so Vue treats them as
+  // fall-through attributes: `class` merges onto the root, the rest reach the
+  // <input> because TextField binds `$attrs` there.
+  const attrs = { class: "custom", "data-testid": "email-input", placeholder: "you@example.com" };
+  const component = await mount(TextField, { props: attrs, slots: { label: "Email" } });
+
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-text-field/);
+  await expect(component).toHaveClass(/custom/);
+  await expect(component).not.toHaveAttribute("data-testid");
+  const input = component.locator("input");
+  await expect(input).toHaveAttribute("data-testid", "email-input");
+  await expect(input).toHaveAttribute("placeholder", "you@example.com");
 });

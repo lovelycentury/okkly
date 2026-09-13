@@ -40,19 +40,39 @@ jobs:
       # No workspace build step, unlike `react-playwright.yml`: the only
       # workspace package @okkly/angular depends on, @okkly/design-system,
       # exports its SCSS sources rather than a `dist`.
-      - name: Run component tests
+      # Behaviour tests gate the job. The screenshot matrices — everything under
+      # `test.describe("Screenshot tests")` — run as their own step that reports
+      # without failing the job, so a pixel diff never blocks a PR on its own.
+      # Each run writes to its own folders: Playwright empties its output
+      # directories when it starts. The browsers ship with the container image,
+      # so both skip the download step `test:playwright` performs locally.
+      - name: Run behaviour tests
+        working-directory: packages/angular
+        env:
+          CI: "true"
+          PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/behaviour
+        run: pnpm exec playwright test --grep-invert "Screenshot tests" --output test-results/behaviour
+
+      - name: Run screenshot tests
+        id: screenshots
+        if: ${{ !cancelled() }}
+        # Refreshing the baselines must not swallow a failure.
+        continue-on-error: ${{ !inputs.update-snapshots }}
         working-directory: packages/angular
         env:
           CI: "true"
           PW_UPDATE_SNAPSHOTS: ${{ inputs.update-snapshots && 'true' || '' }}
-        # The browsers ship with the container image, so skip the download step
-        # `test:playwright` performs locally.
-        run: pnpm exec playwright test
+          PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/screenshots
+        run: pnpm exec playwright test --grep "Screenshot tests" --output test-results/screenshots
+
+      - name: Flag failed screenshots
+        if: ${{ steps.screenshots.outcome == 'failure' }}
+        run: echo "::warning title=Screenshot tests failed::A matrix no longer matches its baseline — see the angular-playwright-results artifact for the diffs."
 
       # Under CI the config reports as `dot` + `blob`, so there is no HTML report
       # to upload. `test-results` holds the expected/actual/diff images of a
-      # failed test; `npx playwright merge-reports --reporter html blob-report`
-      # turns the blob into an HTML report.
+      # failed test; `npx playwright merge-reports --reporter html <blob dir>`
+      # turns a blob into an HTML report.
       - name: Upload the results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
