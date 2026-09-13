@@ -35,11 +35,19 @@ jobs:
 
       - run: pnpm run test
 
-  # Real browsers, so this runs on its own image rather than alongside `check`.
+  # Real browsers, so these run on their own image rather than alongside `check`.
   # component-tests:
   #  uses: ./.github/workflows/react-playwright.yml
 
+  # The only tests @okkly/angular and @okkly/vue have — no Vitest suite
+  # covers their components any more.
+  angular-component-tests:
+    uses: ./.github/workflows/angular-playwright.yml
+
+  vue-component-tests:
+    uses: ./.github/workflows/vue-playwright.yml
+
   # @okkly/svelte's own Playwright toolchain (see its playwright.config.ts) —
   # a separate job because it pins a different Playwright/browser version.
-  # svelte-component-tests:
-  #  uses: ./.github/workflows/svelte-playwright.yml
+  svelte-component-tests:
+    uses: ./.github/workflows/svelte-playwright.yml
