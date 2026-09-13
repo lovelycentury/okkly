@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Collapse } from "./Collapse";
-import type { CollapseOrientation } from "./Collapse";
+import type { CollapseOrientation } from "./Collapse.types";
 
 const ORIENTATIONS = ["vertical", "horizontal"] as const satisfies readonly CollapseOrientation[];
 

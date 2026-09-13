@@ -4,10 +4,9 @@ Skeletons for a component called `Example` (`okkly-example`). Replace the placeh
 
 The stylesheet imported below — `packages/design-system/src/components/Example/Example.scss` — comes from the `create-design-component` skill. The class names and `--okkly-example-*` variables assume its template.
 
-## `packages/vue/src/components/Example/Example.vue`
+## `packages/vue/src/components/Example/Example.types.ts`
 
-```vue
-<script lang="ts">
+```ts
 export type ExampleVariant = "filled" | "outlined";
 export type ExampleSize = "small" | "medium" | "large";
 
@@ -32,11 +31,15 @@ export interface ExampleProps {
    */
   size?: ExampleSize;
 }
-</script>
+```
 
+## `packages/vue/src/components/Example/Example.vue`
+
+```vue
 <script setup lang="ts">
 import { computed } from "vue";
 import "@okkly/design-system/components/Example/Example.scss";
+import type { ExampleProps } from "./Example.types";
 
 const props = withDefaults(defineProps<ExampleProps>(), {
   variant: "filled",
@@ -72,7 +75,7 @@ const classes = computed(() =>
 ```ts
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import Example from "./Example.vue";
-import type { ExampleProps } from "./Example.vue";
+import type { ExampleProps } from "./Example.types";
 
 /** `label` fills the default slot; everything else is a prop. */
 type ExampleArgs = ExampleProps & { label: string };
@@ -162,7 +165,7 @@ export const CustomStyling: Story = {
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import Example from "./Example.vue";
-import type { ExampleSize, ExampleVariant } from "./Example.vue";
+import type { ExampleSize, ExampleVariant } from "./Example.types";
 
 const VARIANTS = ["filled", "outlined"] as const satisfies readonly ExampleVariant[];
 const SIZES = ["small", "medium", "large"] as const satisfies readonly ExampleSize[];
@@ -238,5 +241,5 @@ test("should merge a consumer's class and fall native attributes through", async
 
 ```ts
 export { default as Example } from "./components/Example/Example.vue";
-export type { ExampleProps, ExampleVariant, ExampleSize } from "./components/Example/Example.vue";
+export type { ExampleProps, ExampleVariant, ExampleSize } from "./components/Example/Example.types";
 ```

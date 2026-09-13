@@ -2,7 +2,8 @@ import { useCallback, useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "../Button/Button";
 import { Alert } from "../Alert/Alert";
-import { Snackbar, type SnackbarAnchorOrigin } from "./Snackbar";
+import { Snackbar } from "./Snackbar";
+import type { SnackbarAnchorOrigin } from "./Snackbar.types";
 
 /**
  * A brief message that floats over the page and takes itself away. Use it to

@@ -4,7 +4,8 @@ import { iconBell, iconMail, iconShoppingCart } from "@okkly/icons";
 import { Avatar } from "../Avatar/Avatar";
 import { Button } from "../Button/Button";
 import { IconButton } from "../IconButton/IconButton";
-import { Badge, type BadgeColor } from "./Badge";
+import { Badge } from "./Badge";
+import type { BadgeColor } from "./Badge.types";
 
 /**
  * A count or status dot pinned to the corner of another element. Wrap the thing

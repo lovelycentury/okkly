@@ -1,7 +1,8 @@
 import type { CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "../Button/Button";
-import { Spinner, type SpinnerColor } from "./Spinner";
+import { Spinner } from "./Spinner";
+import type { SpinnerColor } from "./Spinner.types";
 
 /**
  * An indeterminate loading ring for waits too short or too unpredictable to

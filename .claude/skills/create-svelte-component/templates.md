@@ -4,47 +4,51 @@ Skeletons for a component called `Example` (`okkly-example`). Replace the placeh
 
 The stylesheet — `packages/design-system/src/components/Example/Example.scss` — comes from the `create-design-component` skill, and is registered in `styles.scss` and `.storybook/preview.ts` rather than imported here (see SKILL.md). The class names and `--okkly-example-*` variables assume its template.
 
+## `packages/svelte/src/components/Example/Example.types.ts`
+
+```ts
+import type { HTMLAttributes } from "svelte/elements";
+import type { Snippet } from "svelte";
+
+export type ExampleVariant = "filled" | "outlined";
+export type ExampleSize = "small" | "medium" | "large";
+
+type SharedProps = {
+  /**
+   * Visual style. Can be `filled` or `outlined`.
+   *
+   * @default "filled"
+   */
+  variant?: ExampleVariant;
+  /**
+   * Size of the component. Can be `small`, `medium`, or `large`.
+   *
+   * @default "medium"
+   */
+  size?: ExampleSize;
+  /**
+   * Content of the component.
+   *
+   * @default undefined
+   */
+  children?: Snippet;
+};
+
+/**
+ * Props mirror `@okkly/react`'s `<Example>` name-for-name, which in turn
+ * follows MUI's Example API. `children` is a snippet rather than a
+ * `ReactNode`, and everything the element itself understands — `class`,
+ * `onclick`, `aria-*` — spreads through to the rendered `<div>`.
+ */
+export type ExampleProps = SharedProps & Omit<HTMLAttributes<HTMLDivElement>, keyof SharedProps>;
+```
+
 ## `packages/svelte/src/components/Example/Example.svelte`
 
 ```svelte
-<script lang="ts" module>
-  import type { HTMLAttributes } from "svelte/elements";
-  import type { Snippet } from "svelte";
-
-  export type ExampleVariant = "filled" | "outlined";
-  export type ExampleSize = "small" | "medium" | "large";
-
-  type SharedProps = {
-    /**
-     * Visual style. Can be `filled` or `outlined`.
-     *
-     * @default "filled"
-     */
-    variant?: ExampleVariant;
-    /**
-     * Size of the component. Can be `small`, `medium`, or `large`.
-     *
-     * @default "medium"
-     */
-    size?: ExampleSize;
-    /**
-     * Content of the component.
-     *
-     * @default undefined
-     */
-    children?: Snippet;
-  };
-
-  /**
-   * Props mirror `@okkly/react`'s `<Example>` name-for-name, which in turn
-   * follows MUI's Example API. `children` is a snippet rather than a
-   * `ReactNode`, and everything the element itself understands — `class`,
-   * `onclick`, `aria-*` — spreads through to the rendered `<div>`.
-   */
-  export type ExampleProps = SharedProps & Omit<HTMLAttributes<HTMLDivElement>, keyof SharedProps>;
-</script>
-
 <script lang="ts">
+  import type { ExampleProps } from "./Example.types";
+
   let {
     variant = "filled",
     size = "medium",
@@ -77,7 +81,7 @@ The stylesheet — `packages/design-system/src/components/Example/Example.scss` 
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import Example from "./Example.svelte";
-  import type { ExampleSize, ExampleVariant } from "./Example.svelte";
+  import type { ExampleSize, ExampleVariant } from "./Example.types";
 
   const variants: ExampleVariant[] = ["filled", "outlined"];
   const sizes: ExampleSize[] = ["small", "medium", "large"];
@@ -143,7 +147,7 @@ The stylesheet — `packages/design-system/src/components/Example/Example.scss` 
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import Example from "./Example.svelte";
-import type { ExampleSize, ExampleVariant } from "./Example.svelte";
+import type { ExampleSize, ExampleVariant } from "./Example.types";
 
 const VARIANTS = ["filled", "outlined"] as const satisfies readonly ExampleVariant[];
 const SIZES = ["small", "medium", "large"] as const satisfies readonly ExampleSize[];
@@ -222,9 +226,5 @@ test("should keep a consumer's own class and spread native attributes", async ({
 
 ```ts
 export { default as Example } from "./components/Example/Example.svelte";
-export type {
-  ExampleProps,
-  ExampleVariant,
-  ExampleSize,
-} from "./components/Example/Example.svelte";
+export type { ExampleProps, ExampleVariant, ExampleSize } from "./components/Example/Example.types";
 ```

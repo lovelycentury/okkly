@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { useFocusStateHooks } from "../../playwright/matrix";
 import TextField from "./TextField.svelte";
-import type { TextFieldColor, TextFieldSize } from "./TextField.svelte";
+import type { TextFieldColor, TextFieldSize } from "./TextField.types";
 
 const COLORS = [
   "primary",

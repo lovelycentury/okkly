@@ -3,7 +3,7 @@ import { executeMatrixScreenshotTest, MOCK_PLAYWRIGHT_ICON } from "../../playwri
 import { adjustSizeToAbsolutePosition } from "../../playwright/matrix";
 import { ButtonGroup } from "./ButtonGroup";
 import { Icon } from "../Icon/Icon";
-import type { ButtonGroupColor, ButtonGroupVariant } from "./ButtonGroup";
+import type { ButtonGroupColor, ButtonGroupVariant } from "./ButtonGroup.types";
 
 const COLORS = [
   "primary",

@@ -3,7 +3,7 @@ import { executeMatrixScreenshotTest, MOCK_PLAYWRIGHT_ICON } from "../../playwri
 import { EmptyState } from "./EmptyState";
 import { Button } from "../Button/Button";
 import { Icon } from "../Icon/Icon";
-import type { EmptyStateColor, EmptyStateSize } from "./EmptyState";
+import type { EmptyStateColor, EmptyStateSize } from "./EmptyState.types";
 
 const COLORS = [
   "primary",

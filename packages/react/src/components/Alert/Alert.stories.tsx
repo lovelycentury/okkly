@@ -1,7 +1,8 @@
 import { useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "../Button/Button";
-import { Alert, type AlertSeverity } from "./Alert";
+import { Alert } from "./Alert";
+import type { AlertSeverity } from "./Alert.types";
 
 /**
  * An inline banner that reports the outcome of something the user just did, or a

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import TextField from "./TextField.vue";
-import type { TextFieldProps } from "./TextField.vue";
+import type { TextFieldProps } from "./TextField.types";
 
 /** `label`/`helperText` fill the matching slots, `modelValue` is the `v-model`; everything else is a prop. */
 type TextFieldArgs = TextFieldProps & {

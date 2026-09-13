@@ -3,7 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { iconFolder, iconHome, iconSearch, iconStar } from "@okkly/icons";
 import { Button } from "../Button/Button";
 import { Icon } from "../Icon/Icon";
-import { Drawer, useDrawerState, type DrawerAnchor } from "./Drawer";
+import { Drawer, useDrawerState } from "./Drawer";
+import type { DrawerAnchor } from "./Drawer.types";
 
 /**
  * A panel that slides in from an edge and takes the page with it. Use it for

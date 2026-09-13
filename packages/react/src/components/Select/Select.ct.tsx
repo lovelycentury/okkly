@@ -7,7 +7,7 @@ import {
   RenderValueSelect,
 } from "../../playwright/fixtures/SelectFixtures";
 import { Select } from "./Select";
-import type { SelectOption, SelectOptionState, SelectSize } from "./Select";
+import type { SelectOption, SelectOptionState, SelectSize } from "./Select.types";
 
 const SIZES = ["small", "medium", "large"] as const satisfies readonly SelectSize[];
 

@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest, MOCK_PLAYWRIGHT_ICON } from "../../playwright/screenshots";
 import { useFocusStateHooks } from "../../playwright/matrix";
 import Button from "./Button.vue";
-import type { ButtonColor, ButtonSize, ButtonVariant } from "./Button.vue";
+import type { ButtonColor, ButtonSize, ButtonVariant } from "./Button.types";
 
 const VARIANTS = [
   "primary",

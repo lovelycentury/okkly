@@ -3,7 +3,7 @@ import { executeMatrixScreenshotTest, MOCK_PLAYWRIGHT_ICON } from "../../playwri
 import { useFocusStateHooks } from "../../playwright/matrix";
 import { Chip } from "./Chip";
 import { Icon } from "../Icon/Icon";
-import type { ChipSize, ChipVariant } from "./Chip";
+import type { ChipSize, ChipVariant } from "./Chip.types";
 
 const VARIANTS = [
   "glass",

@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { useFocusStateHooks } from "../../playwright/matrix";
 import { NumberInput } from "./NumberInput";
-import type { NumberInputColor, NumberInputControls, NumberInputSize } from "./NumberInput";
+import type { NumberInputColor, NumberInputControls, NumberInputSize } from "./NumberInput.types";
 
 const COLORS = ["primary", "dante"] as const satisfies readonly NumberInputColor[];
 const SIZES = ["small", "medium", "large"] as const satisfies readonly NumberInputSize[];

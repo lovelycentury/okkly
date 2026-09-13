@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Badge } from "./Badge";
 import { Avatar } from "../Avatar/Avatar";
-import type { BadgeColor } from "./Badge";
+import type { BadgeColor } from "./Badge.types";
 
 const COLORS = [
   "primary",

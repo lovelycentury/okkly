@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { StaticBackground } from "./StaticBackground";
-import type { StaticBackgroundPreset, StaticBackgroundQuality } from "./StaticBackground";
+import type { StaticBackgroundPreset, StaticBackgroundQuality } from "./StaticBackground.types";
 
 const PRESETS = [
   "aurora",

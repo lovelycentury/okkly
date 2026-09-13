@@ -2,7 +2,8 @@ import { useRef, useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "../Button/Button";
 import { Fade } from "../Fade/Fade";
-import { Popper, type PopperPlacement } from "./Popper";
+import { Popper } from "./Popper";
+import type { PopperPlacement } from "./Popper.types";
 
 /**
  * Positioning and nothing else. Popper puts an element next to another element and

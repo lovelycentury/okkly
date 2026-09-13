@@ -1,6 +1,6 @@
 ---
 name: create-svelte-component
-description: Scaffold a new component in @okkly/svelte (Svelte 5, runes) following the package's structure — the component (.svelte), a Svelte CSF story that doubles as the docs page, Playwright component tests with matrix screenshots, the stylesheet registration, the public export, a README section, and a changeset. Styles come from @okkly/design-system via the create-design-component skill. Use when asked to create, add, scaffold, or port (from @okkly/react) a Svelte component in packages/svelte.
+description: Scaffold a new component in @okkly/svelte (Svelte 5, runes) following the package's structure — the component (.svelte) and its types (.types.ts), a Svelte CSF story that doubles as the docs page, Playwright component tests with matrix screenshots, the stylesheet registration, the public export, a README section, and a changeset. Styles come from @okkly/design-system via the create-design-component skill. Use when asked to create, add, scaffold, or port (from @okkly/react) a Svelte component in packages/svelte.
 argument-hint: <ComponentName> [what it does / which @okkly/react component it ports]
 ---
 
@@ -25,7 +25,7 @@ The component's look lives in `@okkly/design-system`, not in this package. If `p
 ## Read before writing
 
 1. Confirm the name is free: `packages/svelte/src/components/<Name>/` must not exist.
-2. Read `packages/svelte/src/components/Button/` — `Button.svelte`, `Button.stories.svelte`, `Button.ct.ts` — the reference for every convention below. [templates.md](templates.md) is a starting point, not a substitute; where they differ, follow the existing code.
+2. Read `packages/svelte/src/components/Button/` — `Button.svelte`, `Button.types.ts`, `Button.stories.svelte`, `Button.ct.ts` — the reference for every convention below. [templates.md](templates.md) is a starting point, not a substitute; where they differ, follow the existing code.
 3. Read the component's stylesheet to learn its block, element and modifier classes and its `--okkly-<kebab>-*` variables.
 4. If porting, read the React component, its stories and its `.ct.tsx`.
 5. Reuse before inventing: `src/actions/` (e.g. `ripple`), existing components, and `@okkly/helpers`. Behaviour React attaches through a hook + element (`useRipple` + `<Ripple>`) becomes a Svelte **action** in `src/actions/<name>.ts`, exported from `src/index.ts`.
@@ -35,6 +35,7 @@ The component's look lives in `@okkly/design-system`, not in this package. If `p
 | File                                                          | Purpose                                         |
 | ------------------------------------------------------------- | ----------------------------------------------- |
 | `packages/svelte/src/components/<Name>/<Name>.svelte`         | The component                                   |
+| `packages/svelte/src/components/<Name>/<Name>.types.ts`       | Every type the component declares               |
 | `packages/svelte/src/components/<Name>/<Name>.stories.svelte` | Svelte CSF stories = the component's docs page  |
 | `packages/svelte/src/components/<Name>/<Name>.ct.ts`          | Playwright component tests + matrix screenshots |
 | `packages/svelte/styles.scss`                                 | `@use` the component's stylesheet               |
@@ -65,12 +66,19 @@ Also add the stylesheet of every design-system component this one renders (e.g. 
 
 ## Conventions
 
-### Component (`<Name>.svelte`)
+### Types (`<Name>.types.ts`)
 
-- **Two script blocks**, as in `Button.svelte`: `<script lang="ts" module>` exports the union types and `<Name>Props`; the instance `<script lang="ts">` destructures `$props()`.
+Every type the component declares lives in this file next to `<Name>.svelte`, as in `Button.types.ts`; the component declares none.
+
+- The union types (`<Name>Variant`, `<Name>Size`…), a local `SharedProps`, and `<Name>Props`, with only `import type` statements at the top (`svelte/elements`, `Snippet` from `svelte`) — no runtime code.
 - `<Name>Props = SharedProps & Omit<HTMLAttributes<HTMLDivElement>, keyof SharedProps>` — the component's own props, plus the native attributes of the root element (`svelte/elements`), minus any key the component redefines.
 - Put a doc comment on `<Name>Props` saying it mirrors `@okkly/react`'s `<<Name>>` (and through it MUI) and listing the Svelte-forced differences — `ReactNode` props become snippets.
 - Every prop gets a JSDoc block with a one-line description and `@default`.
+- A sibling component's types come from its own `.types` module (`import type { FieldSize } from "../Field/Field.types"`), and stories, tests and `src/index.ts` import from `./<Name>.types` — never from a `.svelte` file.
+
+### Component (`<Name>.svelte`)
+
+- One instance `<script lang="ts">` that imports its props with `import type { <Name>Props } from "./<Name>.types";` and destructures `$props()`. A `<script lang="ts" module>` block appears only for a runtime value the component exports, never for types.
 - Destructure every prop with its default in `$props()`, pull `class: className` out, and spread `...rest` onto the root so `onclick`, `aria-*`, `data-*` land on the element.
 - Mapping React's API:
   - `children` and every other `ReactNode` prop (`startIcon`, `action`…) → a `Snippet` prop with the same name, rendered with `{@render x?.()}` and only when passed.
@@ -100,7 +108,7 @@ Tests run in a real Chromium through Playwright (`@playwright/experimental-ct-sv
   - snippet props (`children`, `label`, `startIcon`…) go in `slots` as raw markup. Each must be a single element or a single text node — `createRawSnippet` keeps only the first node;
   - callback props (`onclick`, `oninput`) and a consumer's `class` go in `props`;
   - flip props with `component.update({ props })`.
-- Declare option arrays with `as const satisfies readonly <Name>Variant[]` so a new union member is a type error until the tests cover it.
+- Import the union types from `./<Name>.types` and declare option arrays with `as const satisfies readonly <Name>Variant[]` so a new union member is a type error until the tests cover it.
 - A `test.describe("Screenshot tests", …)` block with one matrix per visual axis (variants, colors, sizes, states), as in `Button.ct.ts`; each cell is `args: (column, row) => ({ props, slots })` and is scanned by axe. A matrix that shows hover/focus/active uses `hooks.beforeEach` with `useFocusStateHooks` and stays isolated; a purely static one may set `fastNoIsolation: true`.
 - Behaviour tests named `should …`, each body marked with `// ARRANGE`, `// ACT`, `// ASSERT` comments. Cover: role and accessible name, default classes, each modifier, a consumer's `class` merged in, snippets rendered only when passed, callbacks, keyboard interaction, disabled/edge states. Group related cases with `test.describe("<prop>", …)`.
 - Drive the component the way a user does — `click()`, `page.mouse`, `pressSequentially()` — rather than dispatching synthetic events.
@@ -109,7 +117,7 @@ Tests run in a real Chromium through Playwright (`@playwright/experimental-ct-sv
 
 ```ts
 export { default as <Name> } from "./components/<Name>/<Name>.svelte";
-export type { <Name>Props, <Name>Variant } from "./components/<Name>/<Name>.svelte";
+export type { <Name>Props, <Name>Variant } from "./components/<Name>/<Name>.types";
 ```
 
 ### Changeset

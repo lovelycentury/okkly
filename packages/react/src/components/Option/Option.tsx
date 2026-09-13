@@ -1,13 +1,14 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  type HTMLAttributes,
-  type LiHTMLAttributes,
-  type ReactNode,
-} from "react";
+import { createContext, useContext } from "react";
 import { iconCheck } from "@okkly/icons";
+import type {
+  OptionScopeProps,
+  OptionRowProps,
+  OptionPartProps,
+  OptionCheckProps,
+  HighlightMatchProps,
+} from "./Option.types";
 
 /**
  * BEM block the option parts namespace themselves under — `"okkly-select"` or
@@ -20,23 +21,6 @@ import { iconCheck } from "@okkly/icons";
  * their own.
  */
 const OptionBlockContext = createContext<string | null>(null);
-
-export interface OptionScopeProps {
-  /**
-   * BEM block the option parts inside this scope use, e.g. `"okkly-select"`.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  block: string;
-  /**
-   * Children.
-   *
-   * @default undefined
-   * @type {ReactNode}
-   */
-  children: ReactNode;
-}
 
 /**
  * Names the BEM block for every option part rendered below it. Select and
@@ -56,16 +40,6 @@ function element(block: string | null, part: string, className?: string) {
   return [block && `${block}__${part}`, className].filter(Boolean).join(" ") || undefined;
 }
 
-export interface OptionRowProps extends LiHTMLAttributes<HTMLLIElement> {
-  /**
-   * Children.
-   *
-   * @default undefined
-   * @type {ReactNode}
-   */
-  children?: ReactNode;
-}
-
 /**
  * The `<li>` an option row lives in. Spread `renderOption`'s `props` on it and
  * the row keeps its listbox role, its highlight/selected modifiers and the
@@ -77,16 +51,6 @@ export interface OptionRowProps extends LiHTMLAttributes<HTMLLIElement> {
  */
 export function OptionRow({ children, ...rest }: OptionRowProps) {
   return <li {...rest}>{children}</li>;
-}
-
-export interface OptionPartProps extends HTMLAttributes<HTMLSpanElement> {
-  /**
-   * Children.
-   *
-   * @default undefined
-   * @type {ReactNode}
-   */
-  children?: ReactNode;
 }
 
 /** The row's primary text: takes the free space and truncates with an ellipsis. */
@@ -123,17 +87,6 @@ export function OptionBody({ className, children, ...rest }: OptionPartProps) {
   );
 }
 
-export interface OptionCheckProps extends OptionPartProps {
-  /**
-   * Whether the tick is drawn. `false` still reserves nothing — the element is
-   * simply not rendered — so pass the row's `selected` state straight through.
-   *
-   * @default true
-   * @type {boolean}
-   */
-  checked?: boolean;
-}
-
 /** The selected tick, in the accent colour the default rows use. */
 export function OptionCheck({ checked = true, className, ...rest }: OptionCheckProps) {
   const block = useOptionBlock();
@@ -146,31 +99,6 @@ export function OptionCheck({ checked = true, className, ...rest }: OptionCheckP
       {...rest}
     />
   );
-}
-
-export interface HighlightMatchProps {
-  /**
-   * The full option text.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  text: string;
-  /**
-   * What the user typed — usually Autocomplete's `inputValue`, handed to
-   * `renderOption` in its `state`.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  query?: string;
-  /**
-   * Class Name. Applied to the emphasised run.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  className?: string;
 }
 
 /**

@@ -4,7 +4,7 @@ import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Drawer } from "./Drawer";
 import { Button } from "../Button/Button";
 import { DrawerStateProbe } from "../../playwright/fixtures/DrawerFixtures";
-import type { DrawerAnchor } from "./Drawer";
+import type { DrawerAnchor } from "./Drawer.types";
 
 const ANCHORS = ["left", "right", "top", "bottom"] as const satisfies readonly DrawerAnchor[];
 

@@ -1,20 +1,14 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { iconArrowRight, iconGlobe } from "@okkly/icons";
 import "@okkly/design-system/components/DateTimePicker/DateTimePicker.scss";
-import {
-  Calendar,
-  calendarToneStyle,
-  type CalendarTone,
-  type CalendarWeekStart,
-} from "../Calendar/Calendar";
-import { TimePicker, type TimePickerFormat, type TimePickerValue } from "../TimePicker/TimePicker";
+import { Calendar, calendarToneStyle } from "../Calendar/Calendar";
+import { TimePicker } from "../TimePicker/TimePicker";
+import type { TimePickerFormat, TimePickerValue } from "../TimePicker/TimePicker.types";
 import { Chip } from "../Chip/Chip";
 import { Button } from "../Button/Button";
-
-/** Tints the calendar, the time wheels, and the Confirm button's glow. */
-export type DateTimePickerColor = CalendarTone;
+import type { DateTimePickerProps } from "./DateTimePicker.types";
 
 function startOfDay(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -44,142 +38,6 @@ function formatSummary(date: Date, locale: string, format: TimePickerFormat): st
 
 const globeIcon = <span dangerouslySetInnerHTML={{ __html: iconGlobe }} />;
 const arrowRightIcon = <span dangerouslySetInnerHTML={{ __html: iconArrowRight }} />;
-
-/**
- * No MUI equivalent as a fixed inline card — MUI X's `DateTimePicker` is a
- * masked text input with a popover. Composed from `Calendar` + `TimePicker`.
- * Deliberate gaps: only a date → use `Calendar`; only a time → use
- * `TimePicker`; and there is no shortcut-preset sidebar (MUI's
- * `slotProps.shortcuts`) — a preset is one line of caller code against `value`.
- */
-export interface DateTimePickerProps {
-  /**
-   * Selected date & time. Controlled if provided; otherwise driven by `defaultValue`.
-   *
-   * @default undefined
-   * @type {Date | null}
-   */
-  value?: Date | null;
-  /**
-   * Initial date & time when uncontrolled.
-   *
-   * @default null
-   * @type {Date | null}
-   */
-  defaultValue?: Date | null;
-  /**
-   * Earliest selectable date (inclusive).
-   *
-   * @default undefined
-   * @type {Date}
-   */
-  min?: Date;
-  /**
-   * Latest selectable date (inclusive).
-   *
-   * @default undefined
-   * @type {Date}
-   */
-  max?: Date;
-  /**
-   * Minute wheel step.
-   *
-   * @default 1
-   * @type {number}
-   */
-  timeStep?: number;
-  /**
-   * Hour wheel label format — the underlying value stays 24-hour either way.
-   *
-   * @default "24h"
-   * @type {TimePickerFormat}
-   */
-  format?: TimePickerFormat;
-  /**
-   * First day of the week.
-   *
-   * @default "mon"
-   * @type {CalendarWeekStart}
-   */
-  weekStart?: CalendarWeekStart;
-  /**
-   * Accent tone shared by the calendar, the time wheels, and the Confirm button's glow.
-   *
-   * @default "primary"
-   * @type {DateTimePickerColor}
-   */
-  color?: DateTimePickerColor;
-  /**
-   * Locale for the month title, weekday labels, and the summary text.
-   *
-   * @default "en-US"
-   * @type {string}
-   */
-  locale?: string;
-  /**
-   * Trailing chip next to the summary text (e.g. a timezone, "GMT+2"). Omitted when not set.
-   *
-   * @default undefined
-   * @type {ReactNode}
-   */
-  timezoneLabel?: ReactNode;
-  /**
-   * Label shown above the summary text.
-   *
-   * @default "Selected time"
-   * @type {ReactNode}
-   */
-  summaryLabel?: ReactNode;
-  /**
-   * Summary text shown before any date has been picked.
-   *
-   * @default "No date selected"
-   * @type {ReactNode}
-   */
-  emptyLabel?: ReactNode;
-  /**
-   * Confirm button label.
-   *
-   * @default "Confirm"
-   * @type {ReactNode}
-   */
-  confirmLabel?: ReactNode;
-  /**
-   * Fires whenever the calendar day or either time wheel changes.
-   *
-   * @default undefined
-   * @type {(value: Date) => void}
-   */
-  onChange?: (value: Date) => void;
-  /**
-   * Fires when the Confirm button is clicked.
-   *
-   * @default undefined
-   * @type {(value: Date) => void}
-   */
-  onConfirm?: (value: Date) => void;
-  /**
-   * Accessible name for the calendar's "previous month" button.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  previousMonthLabel?: string;
-  /**
-   * Accessible name for the calendar's "next month" button.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  nextMonthLabel?: string;
-  /**
-   * Class Name.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  className?: string;
-}
 
 export function DateTimePicker({
   value,

@@ -3,7 +3,7 @@ import { executeMatrixScreenshotTest, MOCK_PLAYWRIGHT_ICON } from "../../playwri
 import { useFocusStateHooks } from "../../playwright/matrix";
 import { Fab } from "./FAB";
 import { Icon } from "../Icon/Icon";
-import type { FabColor, FabSize, FabVariant } from "./FAB";
+import type { FabColor, FabSize, FabVariant } from "./FAB.types";
 
 const VARIANTS = ["standard", "soft"] as const satisfies readonly FabVariant[];
 const COLORS = [

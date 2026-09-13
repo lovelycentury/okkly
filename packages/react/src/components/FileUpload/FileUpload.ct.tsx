@@ -6,7 +6,7 @@ import {
 } from "../../playwright/fixtures/FileUploadFixtures";
 import { FileUpload } from "./FileUpload";
 import type { Locator } from "@playwright/test";
-import type { FileUploadSize } from "./FileUpload";
+import type { FileUploadSize } from "./FileUpload.types";
 
 const SIZES = ["large", "medium", "small"] as const satisfies readonly FileUploadSize[];
 

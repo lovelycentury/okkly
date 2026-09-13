@@ -1,7 +1,8 @@
 import { useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "../Button/Button";
-import { Stepper, type StepperColor } from "./Stepper";
+import { Stepper } from "./Stepper";
+import type { StepperColor } from "./Stepper.types";
 
 /**
  * Progress through an ordered flow. `activeStep` is a plain index: everything

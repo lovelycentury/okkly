@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { AnchoredPopper } from "../../playwright/fixtures/AnchoredOverlay";
 import { Popper } from "./Popper";
-import type { PopperPlacement } from "./Popper";
+import type { PopperPlacement } from "./Popper.types";
 
 const PLACEMENTS = ["top", "bottom", "left", "right"] as const satisfies readonly PopperPlacement[];
 

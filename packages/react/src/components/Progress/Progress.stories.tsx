@@ -1,7 +1,8 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "../Button/Button";
-import { Progress, type ProgressColor } from "./Progress";
+import { Progress } from "./Progress";
+import type { ProgressColor } from "./Progress.types";
 
 /**
  * Reports how far along a task is. Use `determinate` whenever you can compute a
