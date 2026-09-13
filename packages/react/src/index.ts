@@ -517,3 +517,15 @@ export type {
   TypographyColor,
   TypographyAlign,
 } from "./components/Typography/Typography.types";
+
+export { Box } from "./components/Box/Box";
+export type {
+  BoxProps,
+  BoxOwnProps,
+  BoxSystemProps,
+  BoxResponsive,
+  BoxSpacing,
+  BoxSize,
+  BoxColor,
+  BoxColorToken,
+} from "./components/Box/Box.types";
