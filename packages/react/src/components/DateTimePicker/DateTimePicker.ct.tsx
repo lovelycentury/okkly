@@ -265,11 +265,7 @@ test("should format the summary to match the format prop", async ({ mount, page 
 
   // ARRANGE
   const component = await mount(
-    <DateTimePicker
-      defaultValue={new Date(2024, 10, 8, 13, 0)}
-      format="24h"
-      onChange={onChange}
-    />,
+    <DateTimePicker defaultValue={new Date(2024, 10, 8, 13, 0)} format="24h" onChange={onChange} />,
   );
 
   // ASSERT
@@ -279,11 +275,7 @@ test("should format the summary to match the format prop", async ({ mount, page 
   // settle before reading the summary, same as elsewhere in this file, or the
   // assertion can catch an intermediate scroll position.
   await component.update(
-    <DateTimePicker
-      defaultValue={new Date(2024, 10, 8, 13, 0)}
-      format="12h"
-      onChange={onChange}
-    />,
+    <DateTimePicker defaultValue={new Date(2024, 10, 8, 13, 0)} format="12h" onChange={onChange} />,
   );
   const hours = component.getByRole("spinbutton", { name: "Hours" });
   const amPm = component.getByRole("spinbutton", { name: "AM/PM" });
