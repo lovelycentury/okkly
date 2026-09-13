@@ -1,7 +1,7 @@
-import { test as baseTest, expect } from "@playwright/experimental-ct-vue";
+import { test as baseTest, expect } from "@playwright/experimental-ct-svelte";
 import type { Locator, Page } from "@playwright/test";
 import { getCellId } from "./gridArea";
-import ScreenshotMatrix from "./ScreenshotMatrix.vue";
+import ScreenshotMatrix from "./ScreenshotMatrix.svelte";
 import type {
   HookContext,
   MatrixScreenshotTestOptions,
@@ -41,7 +41,7 @@ export const useMatrixScreenshotTest = <TContext extends HookContext = HookConte
         await page.getByRole("document").hover({ position: { x: 0, y: 0 }, force: true });
         await page.mouse.up();
 
-        // Vue's mount API has no wrapping-element option, so the padding cell
+        // Svelte's mount API has no wrapping-element option, so the padding cell
         // React gets from a wrapping `<div>` is applied to the mount root instead.
         await page.evaluate((padded) => {
           const root = document.getElementById("root");
@@ -51,8 +51,8 @@ export const useMatrixScreenshotTest = <TContext extends HookContext = HookConte
           root.style.padding = padded ? "1rem" : "";
         }, !removePadding);
 
-        const { props, slots, on } = options.args(column, row);
-        const component = await mount(options.component, { props, slots, on } as never);
+        const { props, slots } = options.args(column, row);
+        const component = await mount(options.component as never, { props, slots } as never);
 
         await globalOptions.defaults?.hooks?.beforeEach?.(
           component,
@@ -114,16 +114,21 @@ export const useMatrixScreenshotTest = <TContext extends HookContext = HookConte
         });
       });
 
-      const imagesMarkup = Array.from(cells.values())
-        .map(
-          ({ box, id }) =>
-            `<img width="${box?.width ?? ""}" height="${box?.height ?? ""}" style="grid-area: ${id}" src="${SCREENSHOT_ROUTE}?id=${id}" alt="${id}" />`,
-        )
-        .join("");
-
+      // Passed as a prop rather than as slot markup: a raw snippet renders only
+      // its first node, so it cannot carry one <img> per cell.
       const matrix = await mount(ScreenshotMatrix, {
-        props: { columns: options.columns, rows: options.rows, name: options.name, browserName },
-        slots: { default: imagesMarkup },
+        props: {
+          name: options.name,
+          columns: options.columns,
+          rows: options.rows,
+          browserName,
+          images: Array.from(cells.values(), ({ box, id }) => ({
+            id,
+            src: `${SCREENSHOT_ROUTE}?id=${id}`,
+            width: box?.width,
+            height: box?.height,
+          })),
+        },
       });
 
       await matrix.locator("img").evaluateAll((images) =>
@@ -148,10 +153,9 @@ export const useMatrixScreenshotTest = <TContext extends HookContext = HookConte
     test(options.name, async ({ mount, browserName }) => {
       const removePadding = options.removePadding ?? globalOptions.defaults?.removePadding;
 
-      // Vue's mount() takes a single component, and a component defined here
-      // could not reach the browser — the test runs in Node and Playwright
-      // serializes what it mounts. So the matrix renders the cells itself, from
-      // the component reference and plain per-cell data.
+      // Svelte's mount() takes a single component, so the matrix renders the
+      // cells itself, from the component reference and plain per-cell data —
+      // the only things Playwright can hand from the Node test to the browser.
       const matrix = await mount(ScreenshotMatrix, {
         props: {
           name: options.name,
@@ -161,14 +165,13 @@ export const useMatrixScreenshotTest = <TContext extends HookContext = HookConte
           component: options.component,
           cells: options.rows.flatMap((row) =>
             options.columns.map((column) => {
-              // `on` is dropped here: this path renders static visual variants
-              // only, with no interaction to record.
               const { props, slots } = options.args(column, row);
               return { id: getCellId(row, column), props, slots, padded: !removePadding };
             }),
           ),
         },
-      });
+      } as never);
+
       await expect(() => expect(matrix).toHaveScreenshot(`${options.name}.png`)).toPass();
     });
   };

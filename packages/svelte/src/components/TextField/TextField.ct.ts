@@ -1,37 +1,60 @@
-import { test, expect } from "@playwright/experimental-ct-svelte";
+import { expect, test } from "../../playwright/a11y";
+import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
+import { useFocusStateHooks } from "../../playwright/matrix";
 import TextField from "./TextField.svelte";
+import type { TextFieldColor, TextFieldSize } from "./TextField.svelte";
+
+const COLORS = [
+  "primary",
+  "secondary",
+  "dante",
+  "violet",
+  "ember",
+  "ice",
+  "contrast",
+] as const satisfies readonly TextFieldColor[];
+const SIZES = ["small", "medium", "large"] as const satisfies readonly TextFieldSize[];
 
 test.describe("Screenshot tests", () => {
-  test("TextField default state", async ({ mount }) => {
-    const component = await mount(TextField, {
-      props: { placeholder: "you@example.com" },
-      slots: { label: "Email" },
-    });
-    await expect(component).toHaveScreenshot();
+  executeMatrixScreenshotTest({
+    name: "TextField (states)",
+    columns: ["default", "filled", "error", "disabled"],
+    rows: ["default", "hover", "focus-visible"],
+    hooks: {
+      beforeEach: async (component, page, _column, row) =>
+        useFocusStateHooks({ component, page, state: row }),
+    },
+    component: TextField,
+    args: (column) => ({
+      props: {
+        placeholder: "you@example.com",
+        value: column === "filled" ? "hello@okkly.dev" : undefined,
+        error: column === "error",
+        disabled: column === "disabled",
+      },
+      slots: {
+        label: "Email",
+        ...(column === "error" ? { helperText: "That address looks wrong" } : {}),
+      },
+    }),
   });
 
-  test("TextField filled", async ({ mount }) => {
-    const component = await mount(TextField, {
-      props: { placeholder: "you@example.com", value: "hello@okryshto.dev" },
+  executeMatrixScreenshotTest({
+    name: "TextField (sizes)",
+    columns: SIZES,
+    rows: [...COLORS, "required", "no-label"],
+    fastNoIsolation: true,
+    component: TextField,
+    args: (column, row) => ({
+      props: {
+        placeholder: "you@example.com",
+        size: column,
+        color: (COLORS as readonly string[]).includes(row) ? (row as TextFieldColor) : "primary",
+        required: row === "required",
+        hideLabel: row === "no-label",
+      },
       slots: { label: "Email" },
-    });
-    await expect(component).toHaveScreenshot();
-  });
-
-  test("TextField error", async ({ mount }) => {
-    const component = await mount(TextField, {
-      props: { placeholder: "you@example.com", value: "hello@okryshto.dev", error: true },
-      slots: { label: "Email", helperText: "That address looks wrong" },
-    });
-    await expect(component).toHaveScreenshot();
-  });
-
-  test("TextField disabled", async ({ mount }) => {
-    const component = await mount(TextField, {
-      props: { placeholder: "you@example.com", disabled: true },
-      slots: { label: "Email" },
-    });
-    await expect(component).toHaveScreenshot();
+    }),
   });
 });
 

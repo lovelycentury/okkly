@@ -28,7 +28,7 @@ test.describe("Screenshot tests", () => {
     args: (column) => ({
       props: {
         placeholder: "you@example.com",
-        modelValue: column === "filled" ? "hello@okryshto.dev" : undefined,
+        modelValue: column === "filled" ? "hello@okkly.dev" : undefined,
         error: column === "error",
         disabled: column === "disabled",
       },

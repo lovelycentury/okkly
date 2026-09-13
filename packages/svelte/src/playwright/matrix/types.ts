@@ -1,25 +1,25 @@
-import type { test } from "@playwright/experimental-ct-vue";
+import type { test } from "@playwright/experimental-ct-svelte";
 import type { LocatorScreenshotOptions } from "playwright-core";
-import type { Component } from "vue";
+import type { Component } from "svelte";
 
 export type HookContext = Record<PropertyKey, unknown>;
 
 export type TestArgs = Parameters<Parameters<typeof test>[2]>[0];
 
 /**
- * What to mount for one column/row combination. Vue's `mount()` takes the
- * component reference and its props/slots/listeners separately — there is no
- * single "element" the way React's `component(column, row)` returns one, so
- * the builder returns this bag instead.
+ * What to mount for one column/row combination. Svelte's `mount()` takes the
+ * component reference and its props separately — there is no single "element"
+ * the way React's `component(column, row)` returns one, so the builder returns
+ * this bag instead.
  */
 export type MatrixCellArgs = {
   props?: Record<string, unknown>;
   /**
-   * Slot content, as the raw markup Playwright's Vue mount compiles — so an
-   * `<svg>` renders as an element, not as text.
+   * Snippet props (`children`, `label`, `startIcon`, …), as raw markup — what
+   * Playwright's Svelte mount accepts as `slots`. Each must be a single element
+   * or a single text node: `createRawSnippet` keeps only the first node.
    */
   slots?: Record<string, string>;
-  on?: Record<string, (...args: unknown[]) => void>;
 };
 
 export type UseMatrixScreenshotTestOptions<TContext extends HookContext = HookContext> = {
@@ -51,8 +51,8 @@ export type MatrixScreenshotTestOptions<
   columns: readonly TColumn[];
   rows: readonly TRow[];
   /** The component under test. */
-  component: Component;
-  /** Builds the props/slots/listeners for one column/row combination. */
+  component: Component<never>;
+  /** Builds the props/snippets for one column/row combination. */
   args: (column: TColumn, row: TRow) => MatrixCellArgs;
   /**
    * Mount every combination at once instead of one at a time. Much faster, but

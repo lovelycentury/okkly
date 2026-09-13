@@ -73,7 +73,8 @@ const getDefaultConfig = (options?: DefineOkklyPlaywrightConfigOptions) => {
       video: process.env.CI ? "retain-on-failure" : "off",
       locale: "en-US",
       timezoneId: "Europe/Berlin",
-      ctPort: 3101,
+      // React takes 3100 and Angular 3101, so every package's suite can run at once.
+      ctPort: 3102,
       ctViteConfig: {
         plugins: [vue()],
         resolve: {
