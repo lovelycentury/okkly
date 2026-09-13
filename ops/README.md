@@ -31,14 +31,15 @@ One hop. There used to be a second proxy (`okkly-caddy`) between the two;
 it was removed along with `ops/Caddyfile`, and the security headers it added
 moved into `~/vps-infra/Caddyfile`'s `(common)` snippet.
 
-| File                   | Role                                                            |
-| ---------------------- | ---------------------------------------------------------------- |
-| `docker-compose.yml`   | stack: `storybook-react`, `-vue`, `-svelte`, `-angular`           |
+| File                   | Role                                                                                      |
+| ---------------------- | ----------------------------------------------------------------------------------------- |
+| `docker-compose.yml`   | stack: `storybook-react`, `-vue`, `-svelte`, `-angular`                                   |
 | `Dockerfile.storybook` | Vite Storybook (picked by `--build-arg PACKAGE=...`) → static files inside `caddy:alpine` |
-| `spa.Caddyfile`        | Caddy inside each storybook image: SPA fallback, caching          |
+| `spa.Caddyfile`        | Caddy inside each storybook image: SPA fallback, caching                                  |
 
 Edge TLS is Caddy from `~/vps-infra`. This stack joins the same Docker network
-`vps-infra_default` and listens only inside it, as `storybook:80`.
+`vps-infra_default` and listens only inside it, as `storybook-react:80` (and
+`-vue`/`-svelte`/`-angular`).
 
 ## First-time VPS setup
 
