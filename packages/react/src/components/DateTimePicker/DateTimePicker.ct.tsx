@@ -42,17 +42,27 @@ test.describe("Screenshot tests", () => {
     ),
   });
 
-  executeMatrixScreenshotTest({
-    name: "DateTimePicker (states)",
-    columns: ["empty", "selected", "with-timezone"],
-    rows: ["default"],
-    fastNoIsolation: true,
-    component: (column) => (
-      <DateTimePicker
-        defaultValue={column === "empty" ? null : NOV_8_2024}
-        timezoneLabel={column === "with-timezone" ? "GMT+2" : undefined}
-      />
-    ),
+  // With no value the calendar opens on the current month and marks today, so
+  // this matrix freezes the clock — otherwise the baseline is stale the next
+  // day. "Now" is a different day from NOV_8_2024, so the selected cells show
+  // the today marker and the selection side by side.
+  test.describe("frozen clock", () => {
+    test.beforeEach(async ({ page }) => {
+      await page.clock.setFixedTime(new Date(2024, 10, 15, 9, 0));
+    });
+
+    executeMatrixScreenshotTest({
+      name: "DateTimePicker (states)",
+      columns: ["empty", "selected", "with-timezone"],
+      rows: ["default"],
+      fastNoIsolation: true,
+      component: (column) => (
+        <DateTimePicker
+          defaultValue={column === "empty" ? null : NOV_8_2024}
+          timezoneLabel={column === "with-timezone" ? "GMT+2" : undefined}
+        />
+      ),
+    });
   });
 });
 
