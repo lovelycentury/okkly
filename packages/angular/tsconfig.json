@@ -15,5 +15,11 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true
   },
-  "include": ["src/**/*.ts", "env.d.ts", ".storybook/**/*.ts", "vitest.setup.ts"]
+  "include": [
+    "src/**/*.ts",
+    "env.d.ts",
+    ".storybook/**/*.ts",
+    "vitest.setup.ts",
+    "playwright/**/*.ts"
+  ]
 }

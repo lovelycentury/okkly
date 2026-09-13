@@ -1,0 +1,38 @@
+<div
+  okklyField
+  block="okkly-text-field"
+  [id]="inputId()"
+  [label]="label()"
+  [hideLabel]="hideLabel()"
+  [required]="required()"
+  [size]="size()"
+  [color]="color()"
+  [error]="error()"
+  [helperText]="helperText()"
+  [disabled]="disabled()"
+  [fullWidth]="fullWidth()"
+  [hasStartAdornment]="hasStartAdornment()"
+  [hasEndAdornment]="hasEndAdornment()"
+>
+  <ng-content
+    select="[okklyTextFieldStartAdornment]"
+    ngProjectAs="[okklyFieldStartAdornment]"
+  ></ng-content>
+  <input
+    [id]="inputId()"
+    class="okkly-text-field__input"
+    [type]="type()"
+    [attr.placeholder]="placeholder() ?? null"
+    [disabled]="disabled()"
+    [readOnly]="readOnly()"
+    [required]="required()"
+    [attr.aria-invalid]="error() ? true : null"
+    [attr.aria-describedby]="helperId() ?? null"
+    [value]="value()"
+    (input)="onInput($event)"
+  />
+  <ng-content
+    select="[okklyTextFieldEndAdornment]"
+    ngProjectAs="[okklyFieldEndAdornment]"
+  ></ng-content>
+</div>

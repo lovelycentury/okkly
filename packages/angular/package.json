@@ -39,10 +39,12 @@
     "dev": "ng-packagr -p ng-package.json -c tsconfig.build.json --watch",
     "typecheck": "pnpm run docs:json && tsc --noEmit",
     "test": "vitest run",
-    "lint": "oxlint --config ../oxlint-config/index.json .",
+    "lint": "oxlint --config ../oxlint-config/index.json --ignore-pattern \"playwright/.cache/**\" --ignore-pattern \"playwright-report/**\" --ignore-pattern \"test-results/**\" --ignore-pattern \"blob-report/**\" .",
     "storybook": "pnpm run docs:json && storybook dev -p 6007 --no-open",
     "storybook:build": "pnpm run docs:json && storybook build",
-    "docs:json": "compodoc -p tsconfig.build.json -e json -d . --disablePrivate --disableProtected --disableInternal --disableLifeCycleHooks"
+    "docs:json": "compodoc -p tsconfig.build.json -e json -d . --disablePrivate --disableProtected --disableInternal --disableLifeCycleHooks",
+    "test:playwright": "playwright install --with-deps chromium && playwright test",
+    "test:playwright:update": "PW_UPDATE_SNAPSHOTS=true CI=true playwright test"
   },
   "dependencies": {
     "@okkly/design-system": "workspace:*",
@@ -62,14 +64,17 @@
     "@angular/platform-browser": "^21.0.0",
     "@angular/platform-browser-dynamic": "^21.0.0",
     "@compodoc/compodoc": "^1.1.26",
+    "@playwright/test": "catalog:",
     "@storybook/addon-docs": "^10.6.0",
     "@storybook/angular": "^10.6.0",
     "jsdom": "^25.0.1",
     "ng-packagr": "^21.0.0",
+    "playwright-core": "catalog:",
     "rxjs": "^7.8.1",
     "sass-embedded": "catalog:",
     "storybook": "^10.6.0",
     "typescript": "catalog:",
+    "vite": "^8.1.5",
     "vitest": "catalog:"
   },
   "peerDependencies": {
