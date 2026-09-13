@@ -44,7 +44,7 @@ The component's look lives in `@okkly/design-system`, not in this package. If `p
 | `packages/svelte/README.md`                                   | A `## <Name>` section, like `## Button`           |
 | `.changeset/svelte-<kebab-name>.md`                           | `minor` bump for `@okkly/svelte`                  |
 
-Specs, harnesses, and stories never ship — `files` in `package.json` excludes them from the tarball — so nothing else needs registering. Internal sub-parts (like `Button/Spinner.svelte`) sit in the same folder and are not exported.
+Specs, harnesses, and stories never ship — `files` in `package.json` excludes them from the tarball — so nothing else needs registering. A component that also has a Playwright CT test (`<Name>.ct.ts`, see `packages/svelte/playwright.config.ts`) is covered by the same `!dist/**/*.ct.*` exclusion; add it to `files` if it's missing. Internal sub-parts (like `Button/Spinner.svelte`) sit in the same folder and are not exported.
 
 ### Registering the stylesheet (both places, always)
 

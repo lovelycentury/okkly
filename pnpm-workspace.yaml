@@ -56,13 +56,15 @@ allowBuilds:
 # All are dev-only and never reach a runtime image, but a compromised dev dep
 # still runs on a laptop and in CI. Drop an entry once the parent resolves it.
 overrides:
-  # Keep one Playwright version across the tree, so a single browser download
-  # serves every package and the CT runner never drifts from the test runner.
+  # Keep one Playwright version per CT toolchain. @okkly/react and
+  # @okkly/vue pin themselves via their own "catalog:" specifiers below, so
+  # this only needs to hold that steady against transitive drift.
+  # @okkly/svelte pins its own (older) @playwright/test + playwright-core
+  # directly in its package.json instead — @playwright/experimental-ct-svelte
+  # trails the catalog version, so its CT toolchain is intentionally a
+  # second, independent Playwright/browser pair.
   "@playwright/experimental-ct-react": "catalog:"
   "@playwright/experimental-ct-vue": "catalog:"
-  "@playwright/test": "catalog:"
-  playwright: "catalog:"
-  playwright-core: "catalog:"
   # GHSA-2v37-7h3g-55p8 — infinite loop in customAlphabet/customRandom(size: 0).
   "nanoid@<3.3.17": "^3.3.17"
   # GHSA-w5hq-g745-h8pq — v3/v5/v6 skip bounds checks on a caller-supplied buf.

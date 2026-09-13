@@ -38,3 +38,8 @@ jobs:
   # Real browsers, so this runs on its own image rather than alongside `check`.
   # component-tests:
   #  uses: ./.github/workflows/playwright.yml
+
+  # @okkly/svelte's own Playwright toolchain (see its playwright.config.ts) —
+  # a separate job because it pins a different Playwright/browser version.
+  # svelte-component-tests:
+  #  uses: ./.github/workflows/svelte-playwright.yml

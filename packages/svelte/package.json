@@ -20,7 +20,8 @@
     "dist",
     "!dist/**/*.spec.*",
     "!dist/**/*.harness.*",
-    "!dist/**/*.stories.*"
+    "!dist/**/*.stories.*",
+    "!dist/**/*.ct.*"
   ],
   "svelte": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -39,14 +40,18 @@
     "dev": "svelte-package -i src -o dist --watch",
     "typecheck": "svelte-check --tsconfig ./tsconfig.json --threshold error",
     "test": "vitest run",
-    "lint": "oxlint --config ../oxlint-config/index.json .",
+    "lint": "oxlint --config ../oxlint-config/index.json --ignore-pattern \"playwright/.cache/**\" --ignore-pattern \"playwright-report/**\" --ignore-pattern \"test-results/**\" --ignore-pattern \"blob-report/**\" .",
     "storybook": "storybook dev -p 6009 --no-open",
-    "storybook:build": "storybook build"
+    "storybook:build": "storybook build",
+    "test:playwright": "playwright install --with-deps chromium && playwright test",
+    "test:playwright:update": "PW_UPDATE_SNAPSHOTS=true CI=true playwright test"
   },
   "dependencies": {
     "@okkly/design-system": "workspace:*"
   },
   "devDependencies": {
+    "@playwright/experimental-ct-svelte": "1.58.2",
+    "@playwright/test": "1.58.2",
     "@storybook/addon-docs": "^10.6.0",
     "@storybook/addon-svelte-csf": "^5.1.3",
     "@storybook/svelte": "^10.6.0",
@@ -56,6 +61,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/svelte": "^5.4.2",
     "jsdom": "^25.0.1",
+    "playwright-core": "1.58.2",
     "sass-embedded": "catalog:",
     "storybook": "^10.6.0",
     "svelte": "^5.57.0",

@@ -1,0 +1,72 @@
+name: Svelte Playwright component tests
+
+# Reusable: `ci.yml` calls it to verify, `svelte-playwright-screenshots.yml`
+# calls it with `update-snapshots` to refresh the committed baselines.
+#
+# @okkly/svelte pins its own Playwright toolchain (see its package.json and
+# playwright.config.ts): @playwright/experimental-ct-svelte trails the
+# version pinned everywhere else in the workspace, so this runs on its own
+# container image rather than reusing playwright.yml's.
+on:
+  workflow_call:
+    inputs:
+      update-snapshots:
+        type: boolean
+        required: false
+        default: false
+        description: Rewrite the screenshot baselines instead of comparing against them.
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Component tests
+    runs-on: ubuntu-latest
+    # Screenshots are pixel-exact per platform, so the baselines belong to this
+    # image. Pin it to the same version as packages/svelte's own
+    # @playwright/test + playwright-core, not the workspace catalog's.
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.2-noble
+      options: --ipc=host
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # @okkly/svelte's tests alias the package to its own sources, so only
+      # the workspace deps it imports (design-system) need a real build.
+      - name: Build the workspace dependencies
+        run: pnpm --filter "@okkly/svelte^..." --if-present run build
+
+      - name: Run component tests
+        working-directory: packages/svelte
+        env:
+          CI: "true"
+          PW_UPDATE_SNAPSHOTS: ${{ inputs.update-snapshots && 'true' || '' }}
+        # The browsers ship with the container image, so skip the download step
+        # `test:playwright` performs locally.
+        run: pnpm exec playwright test
+
+      - name: Upload the report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: svelte-playwright-report
+          path: packages/svelte/playwright-report
+          retention-days: 7
+
+      - name: Upload the refreshed screenshots
+        if: ${{ inputs.update-snapshots && !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: svelte-screenshots
+          path: packages/svelte/playwright/snapshots
+          retention-days: 1
