@@ -3,6 +3,15 @@ name: Deploy React Storybook
 on:
   push:
     branches: [main]
+    paths:
+      - "packages/react/**"
+      - "packages/design-system/**"
+      - "packages/icons/**"
+      - "packages/helpers/**"
+      - "packages/react-hooks/**"
+      - "ops/Dockerfile.storybook"
+      - "ops/docker-compose.yml"
+      - ".github/workflows/deploy-react-storybook.yml"
 
 permissions:
   contents: read
