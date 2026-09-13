@@ -1,5 +1,13 @@
 # @okkly/vue
 
+## 0.2.0
+
+### Minor Changes
+
+- [#233](https://github.com/lovelycentury/okkly/pull/233) [`6113acc`](https://github.com/lovelycentury/okkly/commit/6113acc4fe408cb90b26f1ccdbdf63ef75687c3e) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add the internal `Field` shell (label, control box, adornments, helper text), mirroring `@okkly/react`'s `<Field>`. Not exported — it is the wrapper `TextField` renders inside.
+
+- [#233](https://github.com/lovelycentury/okkly/pull/233) [`6113acc`](https://github.com/lovelycentury/okkly/commit/6113acc4fe408cb90b26f1ccdbdf63ef75687c3e) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `TextField`, a single-line text input with label, helper text, and error state, mirroring `@okkly/react`'s `TextField`. Its `color` prop accepts any accent color (`primary`, `secondary`, `dante`, `violet`, `ember`, `ice`, `contrast`), matching `@okkly/react`'s `TextFieldColor`/`FieldAccentColor`.
+
 ## 0.1.2
 
 ### Patch Changes
