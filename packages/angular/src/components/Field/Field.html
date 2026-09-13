@@ -1,14 +1,11 @@
 @if (label()) {
-  <label
-    [id]="labelId()"
-    [attr.for]="computedFor()"
-    class="{{ block() }}__label{{ hideLabel() ? ' ' + block() + '__label--hidden' : '' }}"
-  >
-    {{ label() }}
-    @if (required()) {
-      <span class="{{ block() }}__required" aria-hidden="true">*</span>
-    }
-  </label>
+  <!--
+    No whitespace between the label text and the asterisk: React renders
+    `{label}{asterisk}`, and a line break here shows as a space before it.
+    Prettier would put the `@if` back on its own line, hence the ignore.
+  -->
+  <!-- prettier-ignore -->
+  <label [id]="labelId()" [attr.for]="computedFor()" class="{{ block() }}__label{{ hideLabel() ? ' ' + block() + '__label--hidden' : '' }}">{{ label() }}@if (required()) {<span class="{{ block() }}__required" aria-hidden="true">*</span>}</label>
 }
 
 <div class="{{ block() }}__control">
