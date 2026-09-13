@@ -1,6 +1,6 @@
 ---
 name: create-react-component
-description: Scaffold a new component in @okkly/react following the package's structure — the component (.tsx), a Storybook story that doubles as the docs page, Playwright component tests with matrix screenshots, the public export, and a changeset. Styles come from @okkly/design-system via the create-design-component skill. Use when asked to create, add, or scaffold a React component in packages/react.
+description: Scaffold a new component in @okkly/react following the package's structure — the component (.tsx) and its types (.types.ts), a Storybook story that doubles as the docs page, Playwright component tests with matrix screenshots, the public export, and a changeset. Styles come from @okkly/design-system via the create-design-component skill. Use when asked to create, add, or scaffold a React component in packages/react.
 argument-hint: <ComponentName> [what it does / which MUI API it mirrors]
 ---
 
@@ -17,7 +17,7 @@ The component's look lives in `@okkly/design-system`, not in this package. If `p
 The existing components are the source of truth; the templates in [templates.md](templates.md) are a starting point, not a substitute. Before writing anything:
 
 1. Confirm the name is free: `packages/react/src/components/<Name>/` must not exist.
-2. Read the reference component closest in shape to the new one — its component, `.stories.tsx` and `.ct.tsx`:
+2. Read the reference component closest in shape to the new one — its component, `.types.ts`, `.stories.tsx` and `.ct.tsx`:
    - **Static / presentational** → `Divider`
    - **Interactive control** (hover/focus/active, ripple, disabled, loading, `href`) → `Button`
    - **Overlay / portalled** (renders into `document.body`) → `Tooltip`, `Popover`, `Dialog`
@@ -32,6 +32,7 @@ The existing components are the source of truth; the templates in [templates.md]
 | File                                                      | Purpose                                         |
 | --------------------------------------------------------- | ----------------------------------------------- |
 | `packages/react/src/components/<Name>/<Name>.tsx`         | The component                                   |
+| `packages/react/src/components/<Name>/<Name>.types.ts`    | Every type the component declares               |
 | `packages/react/src/components/<Name>/<Name>.stories.tsx` | Storybook stories = the component's docs page   |
 | `packages/react/src/components/<Name>/<Name>.ct.tsx`      | Playwright component tests + matrix screenshots |
 | `packages/react/src/index.ts`                             | Append the export block                         |
@@ -41,13 +42,21 @@ Only add a test fixture under `packages/react/src/playwright/fixtures/` when a p
 
 ## Conventions
 
-### Component (`<Name>.tsx`)
+### Types (`<Name>.types.ts`)
 
-- First line `"use client";`, then React imports, then the side-effect stylesheet import `import "@okkly/design-system/components/<Name>/<Name>.scss";`.
+Every type the component declares lives in this file next to `<Name>.tsx`; the component file declares none. That covers the public API and the internal helpers alike (`SharedProps`, a context value, a sub-part's props).
+
+- Only `import type` statements at the top — the file has no runtime code.
 - Export every union type used by a prop as its own named type (`<Name>Variant`, `<Name>Size`, `<Name>Color`…) so the tests and consumers can reference it.
 - `export interface <Name>Props extends Omit<HTMLAttributes<…>, …>` — extend the native attributes of the root element, omitting any key the component redefines.
 - Put a doc comment on the props type saying which MUI API it follows and listing the **deliberate gaps** (no `sx`, no `classes`, etc.), like `Divider`/`Button` do.
-- Every prop gets a JSDoc block with a one-line description, `@default`, and `@type {…}`. Storybook reads these for the Controls table, so they are the prop documentation.
+- Every prop gets a JSDoc block with a one-line description, `@default`, and `@type {…}`. Storybook's docgen follows the import into this file and reads these for the Controls table, so they are the prop documentation.
+- A type derived from a runtime value keeps the value in `<Name>.tsx`, exported, and reads it here through `import type` — see `TypographyVariant` (`keyof typeof TYPOGRAPHY_VARIANTS`) in `Typography.types.ts`.
+- Stories, tests, fixtures, other components and `src/index.ts` import these types from `./<Name>.types`, never from the component.
+
+### Component (`<Name>.tsx`)
+
+- First line `"use client";`, then React imports, then the side-effect stylesheet import `import "@okkly/design-system/components/<Name>/<Name>.scss";`, then `import type { <Name>Props } from "./<Name>.types";`.
 - `export const <Name> = forwardRef<HTMLElement, <Name>Props>(function <Name>(…) {…})` — named function inside `forwardRef`, defaults destructured in the parameter list, `className` and `...rest` forwarded to the root.
 - Classes are built as an array filtered with `Boolean` and joined: `"okkly-component"`, `"okkly-<kebab>"`, then modifiers. Emit a modifier only for **non-default** values (`size !== "medium" && \`okkly-<kebab>--${size}\``), then `className` last. Use only class names the stylesheet defines.
 - Accessibility is part of the component: correct native element or role, `aria-*` wiring, keyboard support, and `useId` for generated ids.
@@ -67,7 +76,7 @@ The global docs template renders Title → Description → Primary → Controls 
 ### Tests (`<Name>.ct.tsx`)
 
 - Import `test`/`expect` from `../../playwright/a11y` (never directly from Playwright) and `executeMatrixScreenshotTest` from `../../playwright/screenshots`.
-- Declare option arrays with `as const satisfies readonly <Name>Variant[]` so a new union member is a type error until the tests cover it.
+- Import the union types from `./<Name>.types` and declare option arrays with `as const satisfies readonly <Name>Variant[]` so a new union member is a type error until the tests cover it.
 - A `test.describe("Screenshot tests", …)` block with one matrix per visual axis (variants, colors, sizes, states). Each matrix is one committed image and every cell is scanned by axe.
   - `fastNoIsolation: true` for static matrices.
   - Interaction rows (`"default" | "hover" | "active" | "focus-visible"`) need isolation plus `hooks.beforeEach` calling `useFocusStateHooks` from `../../playwright/matrix`.
@@ -84,7 +93,7 @@ Append at the end, matching the existing blocks:
 
 ```ts
 export { <Name> } from "./components/<Name>/<Name>";
-export type { <Name>Props, <Name>Variant } from "./components/<Name>/<Name>";
+export type { <Name>Props, <Name>Variant } from "./components/<Name>/<Name>.types";
 ```
 
 ### Changeset

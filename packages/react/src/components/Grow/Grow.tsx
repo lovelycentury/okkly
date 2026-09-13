@@ -3,11 +3,7 @@
 import { cloneElement, forwardRef, useRef, type CSSProperties } from "react";
 import { Transition } from "react-transition-group";
 import "@okkly/design-system/components/Grow/Grow.scss";
-import type {
-  SharedTransitionProps,
-  TransitionChildren,
-  TransitionTimeoutWithAuto,
-} from "../../types";
+
 import { useForkRef } from "@okkly/react-hooks";
 import {
   createCssTransition,
@@ -18,32 +14,7 @@ import {
   normalizedTransitionCallback,
   reflow,
 } from "../../helpers";
-
-export type GrowTimeout = TransitionTimeoutWithAuto;
-
-export interface GrowProps extends SharedTransitionProps {
-  /**
-   * Timeout.
-   *
-   * @default "auto"
-   * @type {GrowTimeout}
-   */
-  timeout?: GrowTimeout;
-  /**
-   * Class Name.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  className?: string;
-  /**
-   * Children.
-   *
-   * @default undefined
-   * @type {TransitionChildren}
-   */
-  children: TransitionChildren;
-}
+import type { GrowProps } from "./Grow.types";
 
 function getScale(value: number): string {
   return `scale(${value}, ${value ** 2})`;

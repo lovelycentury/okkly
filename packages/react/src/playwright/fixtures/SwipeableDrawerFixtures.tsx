@@ -1,8 +1,6 @@
 import { useState } from "react";
-import {
-  SwipeableDrawer,
-  type SwipeableDrawerProps,
-} from "../../components/SwipeableDrawer/SwipeableDrawer";
+import { SwipeableDrawer } from "../../components/SwipeableDrawer/SwipeableDrawer";
+import type { SwipeableDrawerProps } from "../../components/SwipeableDrawer/SwipeableDrawer.types";
 
 type ControlledSwipeableDrawerProps = Omit<
   SwipeableDrawerProps,

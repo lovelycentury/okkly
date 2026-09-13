@@ -1,12 +1,12 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import {
-  Calendar,
-  type CalendarBaseProps,
-  type CalendarMode,
-  type CalendarProps,
-  type CalendarValue,
-} from "./Calendar";
+import { Calendar } from "./Calendar";
+import type {
+  CalendarBaseProps,
+  CalendarMode,
+  CalendarProps,
+  CalendarValue,
+} from "./Calendar.types";
 
 const TONES = ["primary", "dante", "indigo", "violet", "ember", "ice"] as const;
 

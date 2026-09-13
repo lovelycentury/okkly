@@ -2,7 +2,11 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest, MOCK_PLAYWRIGHT_ICON } from "../../playwright/screenshots";
 import { SeverityIcon } from "./SeverityIcon";
 import { Icon } from "../Icon/Icon";
-import type { SeverityIconSeverity, SeverityIconShape, SeverityIconSize } from "./SeverityIcon";
+import type {
+  SeverityIconSeverity,
+  SeverityIconShape,
+  SeverityIconSize,
+} from "./SeverityIcon.types";
 
 const SEVERITIES = [
   "success",

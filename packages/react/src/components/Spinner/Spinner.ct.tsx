@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Spinner } from "./Spinner";
-import type { SpinnerColor, SpinnerSize } from "./Spinner";
+import type { SpinnerColor, SpinnerSize } from "./Spinner.types";
 
 const COLORS = [
   "primary",

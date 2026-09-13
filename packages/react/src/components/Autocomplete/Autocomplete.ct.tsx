@@ -7,7 +7,11 @@ import {
   RenderTagsAutocomplete,
 } from "../../playwright/fixtures/AutocompleteFixtures";
 import { Autocomplete } from "./Autocomplete";
-import type { AutocompleteOption, AutocompleteOptionState, AutocompleteSize } from "./Autocomplete";
+import type {
+  AutocompleteOption,
+  AutocompleteOptionState,
+  AutocompleteSize,
+} from "./Autocomplete.types";
 
 const SIZES = ["small", "medium", "large"] as const satisfies readonly AutocompleteSize[];
 

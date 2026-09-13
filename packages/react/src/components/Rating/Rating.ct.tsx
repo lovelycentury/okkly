@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Rating } from "./Rating";
-import type { RatingColor, RatingIcon, RatingSize } from "./Rating";
+import type { RatingColor, RatingIcon, RatingSize } from "./Rating.types";
 
 const COLORS = [
   "warning",

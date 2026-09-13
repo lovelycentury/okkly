@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { RichEditor, type RichEditorValue } from "./RichEditor";
+import { RichEditor } from "./RichEditor";
+import type { RichEditorValue } from "./RichEditor.types";
 
 const SAMPLE_HTML = `
 <h2>Design review</h2>

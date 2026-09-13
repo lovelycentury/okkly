@@ -1,11 +1,8 @@
 "use client";
 
-import { forwardRef, useId, type HTMLAttributes, type CSSProperties } from "react";
+import { forwardRef, useId, type CSSProperties } from "react";
 import "@okkly/design-system/components/Logo/Logo.scss";
-
-export type LogoLayout = "compact" | "horizontal" | "stacked";
-export type LogoTone = "multi" | "mint" | "indigo" | "dante" | "violet" | "ember";
-export type LogoVariant = "filled" | "outlined" | "pure";
+import type { LogoProps } from "./Logo.types";
 
 /**
  * The mark is authored at 72×72 in Figma; every number below is in that space,
@@ -39,62 +36,6 @@ const Glyph = () => (
     <path d="M46.125 41.0625L47.8125 46.125L52.875 47.8125L47.8125 49.5L46.125 54.5625L44.4375 49.5L39.375 47.8125L44.4375 46.125L46.125 41.0625Z" />
   </>
 );
-
-/**
- * Brand logo — the disc mark in three treatments.
- *
- * `filled` is the identity mark: a tone disc with the glyph knocked out in ink.
- * `outlined` reduces the disc to a ring and strokes the glyph in the tone, for
- * one-ink use — stamps, engraving, watermarks. `pure` drops the container
- * altogether and crops to the glyph, for favicons and dense chrome.
- *
- * `layout` controls arrangement: `compact` (nav bars), `horizontal` (headers),
- * `stacked` (mobile, centered emblem with the label below).
- */
-export interface LogoProps extends HTMLAttributes<HTMLDivElement> {
-  /**
-   * Lockup arrangement. Default: "horizontal"
-   *
-   * @default "horizontal"
-   * @type {LogoLayout}
-   */
-  layout?: LogoLayout;
-  /**
-   * Container treatment. Default: "filled"
-   *
-   * @default "filled"
-   * @type {LogoVariant}
-   */
-  variant?: LogoVariant;
-  /**
-   * Emblem colorway. Default: "multi" (the brand gradient)
-   *
-   * @default "multi"
-   * @type {LogoTone}
-   */
-  tone?: LogoTone;
-  /**
-   * Wordmark text. Default: "okkly"
-   *
-   * @default "okkly"
-   * @type {string}
-   */
-  label?: string;
-  /**
-   * Hide the wordmark. Default: true
-   *
-   * @default true
-   * @type {boolean}
-   */
-  showLabel?: boolean;
-  /**
-   * Overrides emblem size. Defaults: compact 24px, others 48px
-   *
-   * @default undefined
-   * @type {number | string}
-   */
-  size?: number | string;
-}
 
 export const Logo = forwardRef<HTMLDivElement, LogoProps>(function Logo(
   {

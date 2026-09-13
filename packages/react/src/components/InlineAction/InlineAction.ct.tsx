@@ -6,7 +6,7 @@ import type {
   InlineActionFill,
   InlineActionSize,
   InlineActionState,
-} from "./InlineAction";
+} from "./InlineAction.types";
 
 const COLORS = [
   "primary",

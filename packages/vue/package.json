@@ -1,6 +1,6 @@
 {
   "name": "@okkly/vue",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Okryshto design system — Vue component library",
   "license": "MIT",
   "type": "module",
@@ -50,7 +50,6 @@
     "@storybook/vue3-vite": "^10.6.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/compiler-dom": "^3.5.42",
-    "@vue/test-utils": "^2.5.0",
     "axe-core": "^4.13.0",
     "jsdom": "^25.0.1",
     "playwright-core": "catalog:",

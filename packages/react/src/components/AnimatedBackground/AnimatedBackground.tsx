@@ -1,90 +1,17 @@
 "use client";
 
-import {
-  forwardRef,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type CSSProperties,
-  type HTMLAttributes,
-  type ReactNode,
-} from "react";
+import { forwardRef, useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import "@okkly/design-system/components/AnimatedBackground/AnimatedBackground.scss";
-
-/**
- * Layered deep-space background — nebulae, twinkling stars, a falling dante
- * spark, a distant flaring beacon, micro-fireworks and film grain.
- *
- * The look is a straight descendant of the PixiJS scene in
- * packages/figma-plugin/docs/bg-lab, rebuilt as one SVG driven by CSS
- * keyframes: no canvas, no render loop, no runtime dependency. Filamented
- * nebulae come from feTurbulence + feDisplacementMap warping a soft ellipse,
- * which is what the generated noise textures were doing by hand.
- *
- * Fills its nearest positioned ancestor, so size it with a wrapper: a
- * `position: fixed; inset: 0` div for a full-page background, or a
- * `position: relative` hero section for an embedded one.
- *
- * Everything animates `transform` and `opacity` only, so the scene stays on
- * the compositor and never forces layout. `prefers-reduced-motion` settles it
- * on a calm still frame unless `respectReducedMotion` is off.
- */
-
-export type BackgroundPreset = "aurora" | "midnight" | "neon" | "void";
-export type BackgroundQuality = "low" | "medium" | "high";
-
-export interface AnimatedBackgroundProps extends HTMLAttributes<HTMLDivElement> {
-  /**
-   * Which palette to render. Defaults to `"aurora"`.
-   *
-   * @default "aurora"
-   * @type {BackgroundPreset}
-   */
-  preset?: BackgroundPreset;
-  /**
-   * How many stars, beacons and bursts to draw. Defaults to `"medium"`.
-   *
-   * @default "medium"
-   * @type {BackgroundQuality}
-   */
-  quality?: BackgroundQuality;
-  /**
-   * Drift the scene against pointer movement. Defaults to `true`.
-   *
-   * @default true
-   * @type {boolean}
-   */
-  parallax?: boolean;
-  /**
-   * The rare micro-firework bursts. Defaults to `true`.
-   *
-   * @default true
-   * @type {boolean}
-   */
-  fireworks?: boolean;
-  /**
-   * Settle on a still frame under `prefers-reduced-motion`. Defaults to `true`.
-   *
-   * @default true
-   * @type {boolean}
-   */
-  respectReducedMotion?: boolean;
-  /**
-   * The content-legibility gradient wash over the scene. Defaults to `false`.
-   *
-   * @default false
-   * @type {boolean}
-   */
-  scrim?: boolean;
-  /**
-   * Rendered above the scene — e.g. a hero section's headline.
-   *
-   * @default undefined
-   * @type {ReactNode}
-   */
-  children?: ReactNode;
-}
+import type {
+  BackgroundQuality,
+  AnimatedBackgroundProps,
+  Star,
+  Nebula,
+  Beacon,
+  Sparkle,
+  Spark,
+  Burst,
+} from "./AnimatedBackground.types";
 
 /**
  * Element budget per quality tier: [far stars, near stars, beacons, bursts].
@@ -122,14 +49,6 @@ function mulberry32(seed: number) {
 
 const round = (n: number) => Math.round(n * 100) / 100;
 
-interface Star {
-  cx: number;
-  cy: number;
-  r: number;
-  dur: number;
-  delay: number;
-}
-
 function makeStars(count: number, seed: number, minR: number, maxR: number): Star[] {
   const rng = mulberry32(seed);
   return Array.from({ length: count }, () => ({
@@ -151,22 +70,6 @@ function makeStars(count: number, seed: number, minR: number, maxR: number): Sta
 // and the sky starts to look like confetti.
 const FAR_STARS = makeStars(BUDGET.high[0], 0x5eed, 0.5, 1.1);
 const NEAR_STARS = makeStars(BUDGET.high[1], 0xd00d, 1.2, 1.36);
-
-interface Nebula {
-  /** Centre, as a percentage of the container box. */
-  x: number;
-  y: number;
-  /** Width as a percentage of container width; height follows from `ar`. */
-  w: number;
-  ar: number;
-  hue: 1 | 2 | 3 | 4 | 5;
-  /** Iridescent dante veil — rides a second, faster opacity cycle. */
-  veil?: boolean;
-  dur: number;
-  delay: number;
-  driftX: number;
-  driftY: number;
-}
 
 // Hand-placed so the composition reads deliberately rather than scattered.
 //
@@ -219,13 +122,6 @@ const NEBULAE: Nebula[] = [
   { x: -2, y: -2, w: 64, ar: 1.1, hue: 3, veil: true, dur: 43, delay: -24, driftX: 30, driftY: 24 },
 ];
 
-interface Beacon {
-  cx: number;
-  cy: number;
-  dur: number;
-  delay: number;
-}
-
 // Long cycles with staggered negative delays: each flare occupies ~18% of its
 // own period, so with four of them the sky lights up every few seconds
 // without any two ever igniting together.
@@ -237,14 +133,6 @@ const BEACONS: Beacon[] = [
   { cx: 140, cy: 820, dur: 29, delay: -6 },
   { cx: 640, cy: 60, dur: 36, delay: -30 },
 ];
-
-interface Sparkle {
-  cx: number;
-  cy: number;
-  size: number;
-  dur: number;
-  delay: number;
-}
 
 // A handful of little suns — the four-point diffraction sparkle you get off
 // a bright point through a lens. Placed away from the copy column so they
@@ -265,15 +153,6 @@ const SPARKLES: Sparkle[] = [
 const sparklePath = (r: number) =>
   `M 0 ${-r} Q 0 0 ${r} 0 Q 0 0 0 ${r} Q 0 0 ${-r} 0 Q 0 0 0 ${-r} Z`;
 
-interface Spark {
-  x: number;
-  y: number;
-  angle: number;
-  len: number;
-  dur: number;
-  delay: number;
-}
-
 // Steep and slow: a full crossing takes ~22% of a ~90s cycle, so a streak is
 // something you catch rather than something you watch on a timer.
 const SPARKS: Spark[] = [
@@ -281,15 +160,6 @@ const SPARKS: Spark[] = [
   { x: 620, y: -120, angle: 74, len: 260, dur: 96, delay: -38 },
   { x: 380, y: -60, angle: 62, len: 330, dur: 104, delay: -71 },
 ];
-
-interface Burst {
-  cx: number;
-  cy: number;
-  radius: number;
-  dur: number;
-  delay: number;
-  seed: number;
-}
 
 // Deliberately tiny: these are meant to read as a distant sparkle catching
 // your eye, not as a display going off in the foreground.

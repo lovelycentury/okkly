@@ -1,6 +1,7 @@
 "use client";
 
-import { FileUpload, type FileUploadListType } from "../../components/FileUpload/FileUpload";
+import { FileUpload } from "../../components/FileUpload/FileUpload";
+import type { FileUploadListType } from "../../components/FileUpload/FileUpload.types";
 
 /**
  * Test fixtures for `FileUpload`.

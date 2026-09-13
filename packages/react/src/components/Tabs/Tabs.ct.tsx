@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest, MOCK_PLAYWRIGHT_ICON } from "../../playwright/screenshots";
 import { Tabs } from "./Tabs";
 import { Icon } from "../Icon/Icon";
-import type { TabsColor, TabsOrientation } from "./Tabs";
+import type { TabsColor, TabsOrientation } from "./Tabs.types";
 
 const COLORS = [
   "primary",

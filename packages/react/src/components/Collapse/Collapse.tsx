@@ -1,9 +1,9 @@
 "use client";
 
-import { forwardRef, useRef, type CSSProperties, type ReactNode } from "react";
+import { forwardRef, useRef, type CSSProperties } from "react";
 import { Transition } from "react-transition-group";
 import "@okkly/design-system/components/Collapse/Collapse.scss";
-import type { SharedTransitionProps, TransitionTimeoutWithAuto } from "../../types";
+
 import { useForkRef } from "@okkly/react-hooks";
 import {
   DURATION_STANDARD,
@@ -13,47 +13,7 @@ import {
   normalizedTransitionCallback,
   reflow,
 } from "../../helpers";
-
-export type CollapseTimeout = TransitionTimeoutWithAuto;
-export type CollapseOrientation = "vertical" | "horizontal";
-
-export interface CollapseProps extends SharedTransitionProps {
-  /**
-   * Timeout.
-   *
-   * @default DURATION_STANDARD
-   * @type {CollapseTimeout}
-   */
-  timeout?: CollapseTimeout;
-  /**
-   * Orientation.
-   *
-   * @default "vertical"
-   * @type {CollapseOrientation}
-   */
-  orientation?: CollapseOrientation;
-  /**
-   * Width (horizontal) or height (vertical) when collapsed.
-   *
-   * @default "0px"
-   * @type {number | string}
-   */
-  collapsedSize?: number | string;
-  /**
-   * Class Name.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  className?: string;
-  /**
-   * Children.
-   *
-   * @default undefined
-   * @type {ReactNode}
-   */
-  children?: ReactNode;
-}
+import type { CollapseProps } from "./Collapse.types";
 
 export const Collapse = forwardRef<HTMLDivElement, CollapseProps>(function Collapse(
   {

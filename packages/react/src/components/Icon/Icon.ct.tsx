@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest, MOCK_PLAYWRIGHT_ICON } from "../../playwright/screenshots";
 import { Icon } from "./Icon";
-import type { IconColor, IconSize } from "./Icon";
+import type { IconColor, IconSize } from "./Icon.types";
 
 const COLORS = [
   "inherit",

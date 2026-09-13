@@ -3,12 +3,7 @@
 import { cloneElement, forwardRef, useCallback, useEffect, useRef } from "react";
 import { Transition } from "react-transition-group";
 import "@okkly/design-system/components/Slide/Slide.scss";
-import type {
-  SharedTransitionProps,
-  TransitionChildren,
-  TransitionEasing,
-  TransitionTimeout,
-} from "../../types";
+import type { TransitionEasing } from "../../types";
 import { useForkRef } from "@okkly/react-hooks";
 import {
   createCssTransition,
@@ -20,47 +15,7 @@ import {
   mergeClassNames,
   reflow,
 } from "../../helpers";
-
-export type SlideTimeout = TransitionTimeout;
-export type SlideDirection = "left" | "right" | "up" | "down";
-
-export interface SlideProps extends SharedTransitionProps {
-  /**
-   * Timeout.
-   *
-   * @default DEFAULT_TIMEOUT
-   * @type {SlideTimeout}
-   */
-  timeout?: SlideTimeout;
-  /**
-   * Direction.
-   *
-   * @default "down"
-   * @type {SlideDirection}
-   */
-  direction?: SlideDirection;
-  /**
-   * Element (or factory) that bounds the slide offset. Defaults to the viewport.
-   *
-   * @default undefined
-   * @type {HTMLElement | (() => HTMLElement | null) | null}
-   */
-  container?: HTMLElement | (() => HTMLElement | null) | null;
-  /**
-   * Class Name.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  className?: string;
-  /**
-   * Children.
-   *
-   * @default undefined
-   * @type {TransitionChildren}
-   */
-  children: TransitionChildren;
-}
+import type { SlideDirection, SlideProps } from "./Slide.types";
 
 const DEFAULT_EASING: TransitionEasing = {
   enter: EASING_EASE_OUT,
