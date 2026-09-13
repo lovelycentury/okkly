@@ -125,6 +125,12 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
   // sync effect below. Comparing against it there is what tells a render
   // apart as self-inflicted vs. genuinely external — see that effect.
   const lastReportedRef = useRef(value);
+  // The scrollTop a smooth scroll *we* started is heading for. While set, the
+  // scroll listener ignores every intermediate position — otherwise the rows
+  // crossed on the way get committed as values (e.g. switching `format` from
+  // 13:00 re-dials the hour from row 13 to row 0 and emitted 12, 11, 10…, and a
+  // ResizeObserver re-centre mid-animation could strand it on one of them).
+  const programmaticTargetRef = useRef<number | null>(null);
 
   const valuesRef = useRef(values);
   valuesRef.current = values;
@@ -138,6 +144,12 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
   // `__column-container` in the SCSS), so centring row `i` is exactly
   // `i * rowHeight` — every value can reach the middle, ends included.
   const targetScrollTop = (index: number) => index * rowHeightRef.current;
+
+  const smoothScrollToIndex = (el: HTMLElement, index: number) => {
+    const top = targetScrollTop(index);
+    programmaticTargetRef.current = top;
+    scrollElementTo(el, top, "smooth");
+  };
 
   // Land on the initial value with no animation, and measure the real rendered
   // row height before the first paint (CSS sizes it in `rem`, so a hardcoded
@@ -158,6 +170,8 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
     if (typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver(() => {
       measure();
+      // A hard jump supersedes any smooth scroll still in flight.
+      programmaticTargetRef.current = null;
       el.scrollTop = targetScrollTop(indexOf(valueRef.current));
     });
     observer.observe(el);
@@ -172,6 +186,11 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
     const el = viewportRef.current;
     if (!el) return;
     const update = () => {
+      const target = programmaticTargetRef.current;
+      if (target !== null) {
+        if (Math.abs(el.scrollTop - target) > 1) return;
+        programmaticTargetRef.current = null;
+      }
       const vals = valuesRef.current;
       const centered = el.scrollTop / rowHeightRef.current;
       const nearestIndex = Math.min(Math.max(Math.round(centered), 0), vals.length - 1);
@@ -181,8 +200,17 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
         onValueChangeRef.current(nearest);
       }
     };
+    // Any real gesture hands control back to the user mid-animation.
+    const releaseToUser = () => {
+      programmaticTargetRef.current = null;
+    };
+    const userEvents = ["wheel", "touchstart", "pointerdown"] as const;
     el.addEventListener("scroll", update, { passive: true });
-    return () => el.removeEventListener("scroll", update);
+    for (const type of userEvents) el.addEventListener(type, releaseToUser, { passive: true });
+    return () => {
+      el.removeEventListener("scroll", update);
+      for (const type of userEvents) el.removeEventListener(type, releaseToUser);
+    };
   }, []);
 
   // Reacts to *externally*-driven value changes only. A render whose `value`
@@ -192,14 +220,16 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
   // gesture is still in progress and must not be interrupted. Force-scrolling
   // on every one of those self-inflicted renders is what made scrolling feel
   // robotic: it fought the browser's own momentum on every row crossed mid-drag.
-  useEffect(() => {
+  // A layout effect so the programmatic-scroll guard is in place before the
+  // browser fires the scroll event from clamping `scrollTop` when `values` shrinks.
+  useLayoutEffect(() => {
     const isSelfInflicted = value === lastReportedRef.current;
     lastReportedRef.current = value;
     if (isSelfInflicted) return;
     const el = viewportRef.current;
     if (!el) return;
-    const target = targetScrollTop(indexOf(value));
-    if (Math.abs(el.scrollTop - target) > 1) scrollElementTo(el, target, "smooth");
+    const index = indexOf(value);
+    if (Math.abs(el.scrollTop - targetScrollTop(index)) > 1) smoothScrollToIndex(el, index);
   }, [value, values]);
 
   // Click/keyboard commit the value directly instead of only nudging the
@@ -211,7 +241,7 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
     lastReportedRef.current = next;
     onValueChangeRef.current(next);
     const el = viewportRef.current;
-    if (el) scrollElementTo(el, targetScrollTop(index), "smooth");
+    if (el) smoothScrollToIndex(el, index);
   };
 
   const step = (delta: number) =>
