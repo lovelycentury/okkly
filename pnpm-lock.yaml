@@ -6,9 +6,15 @@ settings:
 
 catalogs:
   default:
+    '@playwright/test':
+      specifier: 1.62.1
+      version: 1.62.1
     '@types/node':
       specifier: ^22.10.2
       version: 22.20.1
+    playwright-core:
+      specifier: 1.62.1
+      version: 1.62.1
     sass-embedded:
       specifier: ^1.83.0
       version: 1.100.0
@@ -27,9 +33,6 @@ catalogs:
 
 overrides:
   '@playwright/experimental-ct-react': 1.62.1
-  '@playwright/test': 1.62.1
-  playwright: 1.62.1
-  playwright-core: 1.62.1
   nanoid@<3.3.17: ^3.3.17
   uuid@<11.1.1: ^11.1.1
   esbuild@<0.25.0: ^0.25.0
@@ -291,7 +294,7 @@ importers:
         specifier: 1.62.1
         version: 1.62.1(@types/node@22.20.1)(esbuild@0.25.12)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.100.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))(yaml@2.9.0)
       '@playwright/test':
-        specifier: 1.62.1
+        specifier: 'catalog:'
         version: 1.62.1
       '@storybook/addon-designs':
         specifier: ^8.2.1
@@ -327,7 +330,7 @@ importers:
         specifier: ^25.0.1
         version: 25.0.1(supports-color@8.1.1)
       playwright-core:
-        specifier: 1.62.1
+        specifier: 'catalog:'
         version: 1.62.1
       react:
         specifier: ^19.0.0
@@ -387,6 +390,12 @@ importers:
         specifier: workspace:*
         version: link:../design-system
     devDependencies:
+      '@playwright/experimental-ct-svelte':
+        specifier: 1.58.2
+        version: 1.58.2(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(supports-color@8.1.1)(svelte@5.57.0)(terser@5.51.2)(tsx@4.23.11)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))(yaml@2.9.0)
+      '@playwright/test':
+        specifier: 1.58.2
+        version: 1.58.2
       '@storybook/addon-docs':
         specifier: ^10.6.0
         version: 10.6.0(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(storybook@10.6.0(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8))
@@ -414,6 +423,9 @@ importers:
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1(supports-color@8.1.1)
+      playwright-core:
+        specifier: 1.58.2
+        version: 1.58.2
       sass-embedded:
         specifier: 'catalog:'
         version: 1.100.0
@@ -755,7 +767,7 @@ packages:
   '@axe-core/playwright@4.13.0':
     resolution: {integrity: sha512-6YLx+kxXu5GJceG4ozFg+33a2EMTdjYwWGloJ3sb9Kta5pp+ZNS53uxGVog5JetIY8s++P5UrtX+cri+u0VAVg==}
     peerDependencies:
-      playwright-core: 1.62.1
+      playwright-core: '>= 1.0.0'
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -3084,6 +3096,10 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
+  '@playwright/experimental-ct-core@1.58.2':
+    resolution: {integrity: sha512-Imif9ggQp6YIblHAX6MvJuqDFrCGHYspoibxLP3+1soXp+1wBNuuSRajv0VWXzFbh//4l29I+xy2tpTgej0vEA==}
+    engines: {node: '>=18'}
+
   '@playwright/experimental-ct-core@1.62.1':
     resolution: {integrity: sha512-GvaAlFMG6kZ+/00QyGOemjBkyDTk7OC1wGcVmO27i4Ek+x51ACjIBMyyyZrTGXHtQ1QvTFhaQrBhrXIrXEjn5g==}
     engines: {node: '>=20'}
@@ -3091,6 +3107,16 @@ packages:
   '@playwright/experimental-ct-react@1.62.1':
     resolution: {integrity: sha512-J1mI20nCPIBHh2htGIXaLHwva5a5lhlX0yJo5Z8fTX9eMEd1wMhgvuUr0EzpGI6oVg6opOFGgb+URUqhSyQd3w==}
     engines: {node: '>=20'}
+    hasBin: true
+
+  '@playwright/experimental-ct-svelte@1.58.2':
+    resolution: {integrity: sha512-75hpAyYIRIJPYJ8lU5SzjzFJWax6FIUESJ6hJqke2QejuFkYg1gKspBQ9pBLSs3JTs0h/CVe22ilIy696hTEjA==}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  '@playwright/test@1.58.2':
+    resolution: {integrity: sha512-akea+6bHYBBfA9uQqSYmlJXn61cTa+jbO87xVLCWbTqbWadRVmhxlXATaOjOgcBaWU4ePo0wB41KMFv3o35IXA==}
+    engines: {node: '>=18'}
     hasBin: true
 
   '@playwright/test@1.62.1':
@@ -3820,6 +3846,14 @@ packages:
     peerDependencies:
       svelte: ^3.44.0 || ^4.0.0 || ^5.0.0-next.1
 
+  '@sveltejs/vite-plugin-svelte-inspector@4.0.1':
+    resolution: {integrity: sha512-J/Nmb2Q2y7mck2hyCX4ckVHcR5tu2J+MtBEQqpDrrgELZ2uvraQcK/ioCV61AqkdXFgriksOKIceDcQmqnGhVw==}
+    engines: {node: ^18.0.0 || ^20.0.0 || >=22}
+    peerDependencies:
+      '@sveltejs/vite-plugin-svelte': ^5.0.0
+      svelte: ^5.0.0
+      vite: ^6.0.0
+
   '@sveltejs/vite-plugin-svelte-inspector@5.0.2':
     resolution: {integrity: sha512-TZzRTcEtZffICSAoZGkPSl6Etsj2torOVrx6Uw0KpXxrec9Gg6jFWQ60Q3+LmNGfZSxHRCZL7vXVZIWmuV50Ig==}
     engines: {node: ^20.19 || ^22.12 || >=24}
@@ -3827,6 +3861,13 @@ packages:
       '@sveltejs/vite-plugin-svelte': ^6.0.0-next.0
       svelte: ^5.0.0
       vite: ^6.3.0 || ^7.0.0
+
+  '@sveltejs/vite-plugin-svelte@5.1.1':
+    resolution: {integrity: sha512-Y1Cs7hhTc+a5E9Va/xwKlAJoariQyHY+5zBgCZg4PFWNYQ1nMN9sjK1zhw1gK69DuqVP++sht/1GZg1aRwmAXQ==}
+    engines: {node: ^18.0.0 || ^20.0.0 || >=22}
+    peerDependencies:
+      svelte: ^5.0.0
+      vite: ^6.0.0
 
   '@sveltejs/vite-plugin-svelte@6.2.4':
     resolution: {integrity: sha512-ou/d51QSdTyN26D7h6dSpusAKaZkAiGM55/AKYi+9AGZw7q85hElbjK3kEyzXHhLSnRISHOYzVge6x0jRZ7DXA==}
@@ -6947,9 +6988,19 @@ packages:
     resolution: {integrity: sha512-emEcLuomt2j03vxD54giVB4SxTjnsqkU692xZOZXHDVoYyypEm+b3jpiTcc+Cf+myooc+/Ly0z01jqeNHVgJGw==}
     engines: {node: '>=16.0.0'}
 
+  playwright-core@1.58.2:
+    resolution: {integrity: sha512-yZkEtftgwS8CsfYo7nm0KE8jsvm6i/PTgVtB8DL726wNf6H2IMsDuxCpJj59KDaxCtSnrWan2AeDqM7JBaultg==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   playwright-core@1.62.1:
     resolution: {integrity: sha512-wPYSwEBJY9GHraISXqyqtx0na0LpO3XEX7jNDhntbex7tzUS7kLnZsOlFruFJB4Hi/rhDMjXGqHewDZ68nYZVw==}
     engines: {node: '>=20'}
+    hasBin: true
+
+  playwright@1.58.2:
+    resolution: {integrity: sha512-vA30H8Nvkq/cPBnNw4Q8TWz1EJyqgpuinBcHET0YVJVFldr8JDNiU9LaWAE1KqSkRYazuaBhTpB5ZzShOezQ6A==}
+    engines: {node: '>=18'}
     hasBin: true
 
   playwright@1.62.1:
@@ -11852,6 +11903,24 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
+  '@playwright/experimental-ct-core@1.58.2(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)':
+    dependencies:
+      playwright: 1.58.2
+      playwright-core: 1.58.2
+      vite: 6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)
+    transitivePeerDependencies:
+      - '@types/node'
+      - jiti
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - yaml
+
   '@playwright/experimental-ct-core@1.62.1(@types/node@22.20.1)(esbuild@0.25.12)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)':
     dependencies:
       playwright: 1.62.1
@@ -11892,6 +11961,30 @@ snapshots:
       - tsx
       - vite
       - yaml
+
+  '@playwright/experimental-ct-svelte@1.58.2(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(supports-color@8.1.1)(svelte@5.57.0)(terser@5.51.2)(tsx@4.23.11)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))(yaml@2.9.0)':
+    dependencies:
+      '@playwright/experimental-ct-core': 1.58.2(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)
+      '@sveltejs/vite-plugin-svelte': 5.1.1(supports-color@8.1.1)(svelte@5.57.0)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))
+    transitivePeerDependencies:
+      - '@types/node'
+      - jiti
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - svelte
+      - terser
+      - tsx
+      - vite
+      - yaml
+
+  '@playwright/test@1.58.2':
+    dependencies:
+      playwright: 1.58.2
 
   '@playwright/test@1.62.1':
     dependencies:
@@ -12579,12 +12672,34 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
+  '@sveltejs/vite-plugin-svelte-inspector@4.0.1(@sveltejs/vite-plugin-svelte@5.1.1(supports-color@8.1.1)(svelte@5.57.0)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)))(supports-color@8.1.1)(svelte@5.57.0)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))':
+    dependencies:
+      '@sveltejs/vite-plugin-svelte': 5.1.1(supports-color@8.1.1)(svelte@5.57.0)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))
+      debug: 4.4.3(supports-color@8.1.1)
+      svelte: 5.57.0
+      vite: 6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)
+    transitivePeerDependencies:
+      - supports-color
+
   '@sveltejs/vite-plugin-svelte-inspector@5.0.2(@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.57.0)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)))(svelte@5.57.0)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))':
     dependencies:
       '@sveltejs/vite-plugin-svelte': 6.2.4(svelte@5.57.0)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))
       obug: 2.1.4
       svelte: 5.57.0
       vite: 6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)
+
+  '@sveltejs/vite-plugin-svelte@5.1.1(supports-color@8.1.1)(svelte@5.57.0)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))':
+    dependencies:
+      '@sveltejs/vite-plugin-svelte-inspector': 4.0.1(@sveltejs/vite-plugin-svelte@5.1.1(supports-color@8.1.1)(svelte@5.57.0)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)))(supports-color@8.1.1)(svelte@5.57.0)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))
+      debug: 4.4.3(supports-color@8.1.1)
+      deepmerge: 4.3.1
+      kleur: 4.1.5
+      magic-string: 0.30.21
+      svelte: 5.57.0
+      vite: 6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0)
+      vitefu: 1.1.3(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))
+    transitivePeerDependencies:
+      - supports-color
 
   '@sveltejs/vite-plugin-svelte@6.2.4(svelte@5.57.0)(vite@6.4.3(@types/node@22.20.1)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(lightningcss@1.33.0)(sass-embedded@1.100.0)(sass@1.101.0)(terser@5.51.2)(tsx@4.23.11)(yaml@2.9.0))':
     dependencies:
@@ -16079,7 +16194,15 @@ snapshots:
       pvutils: 1.2.0
       tslib: 2.8.1
 
+  playwright-core@1.58.2: {}
+
   playwright-core@1.62.1: {}
+
+  playwright@1.58.2:
+    dependencies:
+      playwright-core: 1.58.2
+    optionalDependencies:
+      fsevents: 2.3.2
 
   playwright@1.62.1:
     dependencies:
