@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { useFocusStateHooks } from "../../playwright/matrix";
 import { Checkbox } from "./Checkbox";
-import type { CheckboxColor, CheckboxSize } from "./Checkbox";
+import type { CheckboxColor, CheckboxSize } from "./Checkbox.types";
 
 const COLORS = [
   "primary",

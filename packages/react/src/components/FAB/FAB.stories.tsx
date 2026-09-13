@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { iconMic, iconMusic, iconPencil, iconPlus, iconUpload, iconX } from "@okkly/icons";
-import { Fab, type FabColor } from "./FAB";
+import { Fab } from "./FAB";
+import type { FabColor } from "./FAB.types";
 
 const plusIcon = <span dangerouslySetInnerHTML={{ __html: iconPlus }} />;
 const musicIcon = <span dangerouslySetInnerHTML={{ __html: iconMusic }} />;

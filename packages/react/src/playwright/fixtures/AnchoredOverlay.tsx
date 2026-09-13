@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Popover, type PopoverProps } from "../../components/Popover/Popover";
-import { Popper, type PopperProps } from "../../components/Popper/Popper";
+import { Popover } from "../../components/Popover/Popover";
+import type { PopoverProps } from "../../components/Popover/Popover.types";
+import { Popper } from "../../components/Popper/Popper";
+import type { PopperProps } from "../../components/Popper/Popper.types";
 
 /**
  * Test fixtures for the anchored overlays.

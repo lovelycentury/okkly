@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { AvatarGroup } from "./AvatarGroup";
 import { Avatar } from "../Avatar/Avatar";
-import type { AvatarGroupSize, AvatarGroupSpacing } from "./AvatarGroup";
+import type { AvatarGroupSize, AvatarGroupSpacing } from "./AvatarGroup.types";
 
 const SIZES = ["sm", "md", "lg"] as const satisfies readonly AvatarGroupSize[];
 const SPACINGS = ["dense", "default", "loose"] as const satisfies readonly AvatarGroupSpacing[];

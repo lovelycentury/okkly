@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { SegmentedToggle } from "./SegmentedToggle";
-import type { SegmentedToggleColor } from "./SegmentedToggle";
+import type { SegmentedToggleColor } from "./SegmentedToggle.types";
 
 const COLORS = [
   "primary",

@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { useFocusStateHooks } from "../../playwright/matrix";
 import { Radio } from "./Radio";
-import type { RadioColor, RadioSize } from "./Radio";
+import type { RadioColor, RadioSize } from "./Radio.types";
 
 const COLORS = [
   "primary",

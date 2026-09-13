@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Progress } from "./Progress";
-import type { ProgressColor, ProgressSize } from "./Progress";
+import type { ProgressColor, ProgressSize } from "./Progress.types";
 
 const COLORS = [
   "primary",

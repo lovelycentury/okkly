@@ -3,7 +3,7 @@
 import { cloneElement, forwardRef, useRef, type CSSProperties } from "react";
 import { Transition } from "react-transition-group";
 import "@okkly/design-system/components/Zoom/Zoom.scss";
-import type { SharedTransitionProps, TransitionChildren, TransitionTimeout } from "../../types";
+
 import { useForkRef } from "@okkly/react-hooks";
 import {
   createCssTransition,
@@ -14,32 +14,7 @@ import {
   normalizedTransitionCallback,
   reflow,
 } from "../../helpers";
-
-export type ZoomTimeout = TransitionTimeout;
-
-export interface ZoomProps extends SharedTransitionProps {
-  /**
-   * Timeout.
-   *
-   * @default DEFAULT_TIMEOUT
-   * @type {ZoomTimeout}
-   */
-  timeout?: ZoomTimeout;
-  /**
-   * Class Name.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  className?: string;
-  /**
-   * Children.
-   *
-   * @default undefined
-   * @type {TransitionChildren}
-   */
-  children: TransitionChildren;
-}
+import type { ZoomProps } from "./Zoom.types";
 
 const styles: Record<string, CSSProperties> = {
   entering: { transform: "none" },

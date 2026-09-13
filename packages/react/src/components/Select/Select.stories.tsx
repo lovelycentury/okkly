@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Select, type SelectOption } from "./Select";
+import { Select } from "./Select";
+import type { SelectOption } from "./Select.types";
 import {
   OptionBody,
   OptionCheck,

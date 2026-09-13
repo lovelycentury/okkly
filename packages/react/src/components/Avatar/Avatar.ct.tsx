@@ -6,7 +6,7 @@ import {
   MOCK_PLAYWRIGHT_IMAGE_URL,
 } from "../../playwright/screenshots";
 import { Avatar } from "./Avatar";
-import type { AvatarColor, AvatarSize } from "./Avatar";
+import type { AvatarColor, AvatarSize } from "./Avatar.types";
 
 const SIZES = ["sm", "md", "lg"] as const satisfies readonly AvatarSize[];
 const COLORS = ["mint", "dante", "indigo"] as const satisfies readonly AvatarColor[];

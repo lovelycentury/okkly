@@ -161,5 +161,5 @@ excludes `*.stories.ts`.
 
 ```bash
 pnpm --filter @okkly/angular build   # ng-packagr → dist/, then style.css
-pnpm --filter @okkly/angular test    # vitest + Angular TestBed (zoneless)
+pnpm --filter @okkly/angular test:playwright   # component tests, in a real Chromium
 ```

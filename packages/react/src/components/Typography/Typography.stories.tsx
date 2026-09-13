@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Typography, TYPOGRAPHY_VARIANTS, type TypographyVariant } from "./Typography";
+import { Typography, TYPOGRAPHY_VARIANTS } from "./Typography";
+import type { TypographyVariant } from "./Typography.types";
 
 /**
  * Every step of the editorial type scale, from `display-2xl` down to `mono-sm`. Each

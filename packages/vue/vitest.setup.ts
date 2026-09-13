@@ -1,7 +1,4 @@
-import { enableAutoUnmount } from "@vue/test-utils";
-import { afterEach } from "vitest";
-
-// `globals: false` means Test Utils can't auto-detect `afterEach` off
-// globalThis — register the unmount hook explicitly so mounted components
-// don't leak between tests in the same file.
-enableAutoUnmount(afterEach);
+// The component suite runs in a real browser through Playwright
+// (`src/**/*.ct.ts`), so nothing is rendered here. Vitest stays for plain
+// helpers that need no component, should the package grow any.
+export {};

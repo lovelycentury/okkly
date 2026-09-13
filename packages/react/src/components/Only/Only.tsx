@@ -1,9 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useMediaQuery } from "@okkly/react-hooks";
-
-export type OnlyBreakpoint = "2xs" | "xs" | "sm" | "md" | "lg" | "xl";
+import type { OnlyBreakpoint, OnlyProps } from "./Only.types";
 
 // Mirrors $breakpoints in packages/design-system/src/styles/breakpoints.scss —
 // keep the two in sync when a breakpoint value changes.
@@ -15,14 +13,6 @@ const BREAKPOINT_PX: Record<OnlyBreakpoint, number> = {
   lg: 1441,
   xl: 1921,
 };
-
-export interface OnlyProps {
-  /** Render children from this breakpoint upward (inclusive). */
-  from?: OnlyBreakpoint;
-  /** Render children up to this breakpoint (exclusive). */
-  to?: OnlyBreakpoint;
-  children?: ReactNode;
-}
 
 function buildQuery(from: OnlyBreakpoint | undefined, to: OnlyBreakpoint | undefined): string {
   const conditions: string[] = [];

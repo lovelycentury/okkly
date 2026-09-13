@@ -4,13 +4,10 @@ Skeletons for a component called `Example` (`okkly-example`). Replace the placeh
 
 The stylesheet these files import — `packages/design-system/src/components/Example/Example.scss` — comes from the `create-design-component` skill. The class names and `--okkly-example-*` variables below assume its template.
 
-## `packages/react/src/components/Example/Example.tsx`
+## `packages/react/src/components/Example/Example.types.ts`
 
-```tsx
-"use client";
-
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
-import "@okkly/design-system/components/Example/Example.scss";
+```ts
+import type { HTMLAttributes, ReactNode } from "react";
 
 export type ExampleVariant = "filled" | "outlined";
 export type ExampleSize = "small" | "medium" | "large";
@@ -43,6 +40,16 @@ export interface ExampleProps extends Omit<HTMLAttributes<HTMLDivElement>, "chil
    */
   children?: ReactNode;
 }
+```
+
+## `packages/react/src/components/Example/Example.tsx`
+
+```tsx
+"use client";
+
+import { forwardRef } from "react";
+import "@okkly/design-system/components/Example/Example.scss";
+import type { ExampleProps } from "./Example.types";
 
 export const Example = forwardRef<HTMLDivElement, ExampleProps>(function Example(
   { variant = "filled", size = "medium", children, className, ...rest },
@@ -149,7 +156,7 @@ export const CustomStyling: Story = {
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Example } from "./Example";
-import type { ExampleSize, ExampleVariant } from "./Example";
+import type { ExampleSize, ExampleVariant } from "./Example.types";
 
 const VARIANTS = ["filled", "outlined"] as const satisfies readonly ExampleVariant[];
 const SIZES = ["small", "medium", "large"] as const satisfies readonly ExampleSize[];

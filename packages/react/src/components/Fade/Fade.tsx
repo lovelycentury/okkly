@@ -3,7 +3,7 @@
 import { cloneElement, forwardRef, useRef, type CSSProperties } from "react";
 import { Transition } from "react-transition-group";
 import "@okkly/design-system/components/Fade/Fade.scss";
-import type { SharedTransitionProps, TransitionChildren, TransitionTimeout } from "../../types";
+
 import { useForkRef } from "@okkly/react-hooks";
 import {
   createCssTransition,
@@ -14,32 +14,7 @@ import {
   normalizedTransitionCallback,
   reflow,
 } from "../../helpers";
-
-export type FadeTimeout = TransitionTimeout;
-
-export interface FadeProps extends SharedTransitionProps {
-  /**
-   * Timeout.
-   *
-   * @default DEFAULT_TIMEOUT
-   * @type {FadeTimeout}
-   */
-  timeout?: FadeTimeout;
-  /**
-   * Class Name.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  className?: string;
-  /**
-   * Children.
-   *
-   * @default undefined
-   * @type {TransitionChildren}
-   */
-  children: TransitionChildren;
-}
+import type { FadeProps } from "./Fade.types";
 
 const styles: Record<string, CSSProperties> = {
   entering: { opacity: 1 },

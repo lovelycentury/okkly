@@ -1,11 +1,11 @@
 "use client";
 
-import {
-  Select,
-  type SelectOption,
-  type SelectOptionState,
-  type SelectProps,
-} from "../../components/Select/Select";
+import { Select } from "../../components/Select/Select";
+import type {
+  SelectOption,
+  SelectOptionState,
+  SelectProps,
+} from "../../components/Select/Select.types";
 import {
   OptionBody,
   OptionCheck,

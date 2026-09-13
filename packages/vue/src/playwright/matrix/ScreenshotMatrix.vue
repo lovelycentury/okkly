@@ -1,4 +1,17 @@
 <script lang="ts">
+import type { Component } from "vue";
+
+/** One live cell of a matrix rendered without isolation. */
+export interface ScreenshotMatrixCell {
+  /** The cell's `grid-area`, `{row}-{column}`. */
+  id: string;
+  props?: Record<string, unknown>;
+  /** Slot content, as raw markup. */
+  slots?: Record<string, string>;
+  /** Whether to draw the `1rem` padding around the cell. */
+  padded: boolean;
+}
+
 export interface ScreenshotMatrixProps {
   /** Shown above the matrix and used as the snapshot filename. */
   name: string;
@@ -6,11 +19,20 @@ export interface ScreenshotMatrixProps {
   rows: readonly string[];
   /** The browser the matrix was captured in, printed into the image. */
   browserName: string;
+  /** The component every entry of `cells` renders. */
+  component?: Component;
+  /**
+   * Cells rendered live, in one pass. Built here rather than passed in as a
+   * render function: Playwright can only hand the browser serializable props,
+   * and a component reference among them.
+   */
+  cells?: readonly ScreenshotMatrixCell[];
 }
 </script>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, h } from "vue";
+import { compileSlot } from "./compileSlot";
 import { escapeGridAreaName, getCellId } from "./gridArea";
 
 const props = defineProps<ScreenshotMatrixProps>();
@@ -19,6 +41,15 @@ defineSlots<{
   /** One cell per column/row combination, each placed by its `grid-area`. */
   default?: () => unknown;
 }>();
+
+const renderCell = (cell: ScreenshotMatrixCell) => () =>
+  h(
+    props.component!,
+    cell.props,
+    Object.fromEntries(
+      Object.entries(cell.slots ?? {}).map(([name, markup]) => [name, compileSlot(markup)]),
+    ),
+  );
 
 /**
  * Every cell sets `grid-area` to `{row}-{column}`, so the template places it
@@ -61,6 +92,18 @@ const gridStyle = computed(() => ({
     <div :style="gridStyle">
       <div style="grid-area: blank" />
       <slot />
+      <div
+        v-for="cell in cells"
+        :key="cell.id"
+        :style="{
+          display: 'grid',
+          gridArea: cell.id,
+          width: 'max-content',
+          padding: cell.padded ? '1rem' : undefined,
+        }"
+      >
+        <component :is="renderCell(cell)" />
+      </div>
       <div
         v-for="row in rows"
         :key="`row-${row}`"

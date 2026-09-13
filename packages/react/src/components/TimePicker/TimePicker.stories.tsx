@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { TimePicker, type TimePickerColor, type TimePickerValue } from "./TimePicker";
+import { TimePicker } from "./TimePicker";
+import type { TimePickerColor, TimePickerValue } from "./TimePicker.types";
 
 function formatTime(value: TimePickerValue): string {
   return `${String(value.h).padStart(2, "0")}:${String(value.m).padStart(2, "0")}`;

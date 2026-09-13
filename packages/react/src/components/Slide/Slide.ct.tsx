@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Slide } from "./Slide";
-import type { SlideDirection } from "./Slide";
+import type { SlideDirection } from "./Slide.types";
 
 const DIRECTIONS = ["left", "right", "up", "down"] as const satisfies readonly SlideDirection[];
 

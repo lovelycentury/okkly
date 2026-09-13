@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { AnimatedBackground } from "./AnimatedBackground";
-import type { BackgroundPreset } from "./AnimatedBackground";
+import type { BackgroundPreset } from "./AnimatedBackground.types";
 
 const PRESETS = [
   "aurora",
