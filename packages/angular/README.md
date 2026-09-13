@@ -72,6 +72,60 @@ Anchors cannot be disabled natively, so `<a okklyButton disabled>` gets
 `aria-disabled="true"`, `tabindex="-1"`, and swallowed clicks; its `href` is
 left untouched.
 
+## TextField
+
+`OkklyTextField` (`okkly-text-field`) is a single-line text input with label,
+helper, and error — the foundation for most form fields.
+
+| Input         | Type                                                                  | Default   |
+| ------------- | --------------------------------------------------------------------- | --------- |
+| `label`       | `string`                                                              | —         |
+| `hideLabel`   | `boolean`                                                             | `false`   |
+| `size`        | `small \| medium \| large`                                            | `medium`  |
+| `color`       | `primary \| secondary \| dante \| violet \| ember \| ice \| contrast` | `primary` |
+| `error`       | `boolean`                                                             | `false`   |
+| `helperText`  | `string`                                                              | —         |
+| `fullWidth`   | `boolean`                                                             | `false`   |
+| `disabled`    | `boolean`                                                             | `false`   |
+| `readOnly`    | `boolean`                                                             | `false`   |
+| `required`    | `boolean`                                                             | `false`   |
+| `type`        | `string`                                                              | `"text"`  |
+| `placeholder` | `string`                                                              | —         |
+| `id`          | `string`                                                              | generated |
+| `value`       | `string` (`model`, two-way)                                           | `""`      |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyTextField } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyTextField],
+  template: `<okkly-text-field label="Email" [(value)]="email" />`,
+})
+export class AppComponent {
+  email = "";
+}
+```
+
+Adornments (an icon, a unit, a button) are projected content tagged with a
+marker directive, rendered inside the border beside the input:
+
+```ts
+import { OkklyTextField, OkklyTextFieldStartAdornment } from "@okkly/angular";
+```
+
+```html
+<okkly-text-field label="Amount">
+  <span okklyTextFieldStartAdornment>$</span>
+</okkly-text-field>
+```
+
+`hideLabel` keeps the label in the DOM for assistive tech but visually hides
+it. `required` shows a dante asterisk after the label and marks the native
+`<input required>`. Its label/helper/error chrome comes from the internal
+`Field` shell shared with future field-based controls (Select, Autocomplete).
+
 ## Ripple
 
 `OkklyRipple` (`[okklyRipple]`) paints the press feedback and is applied to

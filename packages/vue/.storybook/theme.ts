@@ -12,7 +12,7 @@ export const okklyTheme = create({
   base: "dark",
 
   // Brand — the horizontal lockup; brandTitle is the alt text / no-image fallback
-  brandTitle: "okkly",
+  brandTitle: "okkly.vue",
   brandUrl: "./",
   brandImage: "/brand/logo.svg",
   brandTarget: "_self",

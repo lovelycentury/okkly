@@ -1,0 +1,97 @@
+name: Update Angular Playwright screenshots
+
+# The @okkly/angular counterpart of `playwright-screenshots.yml`. Baselines are
+# pixel-exact per platform, so they are never generated on a developer's
+# machine — `ignoreSnapshots` skips the comparison there. Run this workflow to
+# (re)generate them on the pinned Linux image and open a PR with the result.
+# It is also how the very first set of baselines is created.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    name: Regenerate screenshots
+    runs-on: ubuntu-latest
+    # Screenshots are pixel-exact per platform, so the baselines belong to this
+    # image. It is the one `playwright.yml` pins too, which keeps the Angular and
+    # React baselines rendered on an identical stack and therefore comparable.
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
+      options: --ipc=host
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # No workspace build step, unlike `playwright.yml`: the only workspace
+      # package @okkly/angular depends on, @okkly/design-system, exports its
+      # SCSS sources rather than a `dist`.
+      - name: Run component tests
+        working-directory: packages/angular
+        env:
+          CI: "true"
+          PW_UPDATE_SNAPSHOTS: "true"
+        # The browsers ship with the container image, so skip the download step
+        # `test:playwright` performs locally.
+        run: pnpm exec playwright test
+
+      # Under CI the config reports as `dot` + `blob`, so there is no HTML report
+      # to upload. `test-results` holds the expected/actual/diff images of a
+      # failed test; `npx playwright merge-reports --reporter html blob-report`
+      # turns the blob into an HTML report.
+      - name: Upload the results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular-playwright-results
+          path: |
+            packages/angular/test-results
+            packages/angular/blob-report
+          retention-days: 7
+
+      - name: Upload the refreshed screenshots
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular-screenshots
+          path: packages/angular/playwright/snapshots
+          retention-days: 1
+
+  pull-request:
+    name: Create pull request
+    runs-on: ubuntu-latest
+    needs: screenshots
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the refreshed screenshots
+        uses: actions/download-artifact@v4
+        with:
+          name: angular-screenshots
+          path: packages/angular/playwright/snapshots
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: ":camera: chore(angular): update Playwright screenshots"
+          title: "chore(angular): update Playwright screenshots"
+          body: >
+            Auto-generated. Every @okkly/angular screenshot matrix has been
+            regenerated on the pinned Playwright Linux image. Review the image
+            diffs before merging — an unexpected one is a visual regression.
+          branch: chore/angular-playwright-screenshots
+          branch-suffix: short-commit-hash
+          add-paths: packages/angular/playwright/snapshots
