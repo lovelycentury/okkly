@@ -13,5 +13,5 @@
   // keep them out of the published bundle's type build (same split as
   // @okkly/react). Compodoc reads this config too, so they stay out of the
   // generated API docs as well.
-  "exclude": ["src/**/*.spec.ts", "src/**/*.stories.ts"]
+  "exclude": ["src/**/*.spec.ts", "src/**/*.stories.ts", "src/**/*.ct.ts", "src/playwright/**"]
 }
