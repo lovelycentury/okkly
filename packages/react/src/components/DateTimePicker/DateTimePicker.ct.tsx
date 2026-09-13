@@ -260,9 +260,12 @@ test("should stay fully controlled when value is supplied", async ({ mount }) =>
 });
 
 test("should format the summary to match the format prop", async ({ mount, page }) => {
+  const changes: Date[] = [];
+  const onChange = (value: unknown) => changes.push(value as Date);
+
   // ARRANGE
   const component = await mount(
-    <DateTimePicker defaultValue={new Date(2024, 10, 8, 13, 0)} format="24h" />,
+    <DateTimePicker defaultValue={new Date(2024, 10, 8, 13, 0)} format="24h" onChange={onChange} />,
   );
 
   // ASSERT
@@ -272,7 +275,7 @@ test("should format the summary to match the format prop", async ({ mount, page 
   // settle before reading the summary, same as elsewhere in this file, or the
   // assertion can catch an intermediate scroll position.
   await component.update(
-    <DateTimePicker defaultValue={new Date(2024, 10, 8, 13, 0)} format="12h" />,
+    <DateTimePicker defaultValue={new Date(2024, 10, 8, 13, 0)} format="12h" onChange={onChange} />,
   );
   const hours = component.getByRole("spinbutton", { name: "Hours" });
   const amPm = component.getByRole("spinbutton", { name: "AM/PM" });
@@ -283,6 +286,9 @@ test("should format the summary to match the format prop", async ({ mount, page 
   await expect(component).toContainText("Nov 8, 2024 · 01:00 PM");
   await expect(hours).toHaveAttribute("aria-valuenow", "1");
   await expect(amPm).toHaveAttribute("aria-valuenow", "1");
+  // Re-dialing the wheels for a new format is display-only — it must not
+  // commit the rows it scrolls past on the way.
+  expect(changes).toHaveLength(0);
 });
 
 test("should use custom labels for the summary, empty state and confirm button", async ({

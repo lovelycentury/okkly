@@ -1,15 +1,15 @@
-# Production stack for the monorepo: the Storybook static site only
-# (storybook.okkly.lol). The apps (profile / iam / resume) moved to their
-# own repos and deploy themselves.
+# Production stack for the monorepo: one Storybook per framework
+# (react/vue/svelte/angular-storybook.okkly.dev). The apps (profile / iam /
+# resume) moved to their own repos and deploy themselves.
 #
 # No ports are published and there is no proxy in here any more. Caddy in
-# ~/vps-infra owns 80/443, terminates TLS and proxies straight to this
-# container over the shared network:
+# ~/vps-infra owns 80/443, terminates TLS and proxies straight to these
+# containers over the shared network:
 #
-#   vps-infra/Caddyfile → reverse_proxy storybook:80
+#   vps-infra/Caddyfile → reverse_proxy storybook-react:80 (and -vue/-svelte/-angular)
 #
-# The :80 on the other end is the image's own caddy:alpine serving the static
-# build — see Dockerfile.storybook and spa.Caddyfile.
+# The :80 on the other end is each image's own caddy:alpine serving the
+# static build — see Dockerfile.storybook and spa.Caddyfile.
 #
 #   docker compose up -d --pull always --remove-orphans
 #   docker compose logs -f
@@ -21,22 +21,40 @@ networks:
     external: true
     name: vps-infra_default
 
+x-storybook: &storybook
+  restart: unless-stopped
+  networks: [vps-infra]
+  healthcheck:
+    test: ["CMD", "wget", "-qO-", "http://localhost/healthz"]
+    interval: 30s
+    timeout: 3s
+    retries: 3
+    start_period: 5s
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
 services:
-  storybook:
-    image: ghcr.io/lovelycentury/okkly/storybook:latest
+  storybook-react:
+    <<: *storybook
+    image: ghcr.io/lovelycentury/okkly/storybook-react:latest
     # The name ~/vps-infra/Caddyfile proxies to. Has to stay unique across
     # every stack attached to vps-infra_default.
-    container_name: storybook
-    restart: unless-stopped
-    networks: [vps-infra]
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost/healthz"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
-      start_period: 5s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "3"
+    container_name: storybook-react
+
+  storybook-vue:
+    <<: *storybook
+    image: ghcr.io/lovelycentury/okkly/storybook-vue:latest
+    container_name: storybook-vue
+
+  storybook-svelte:
+    <<: *storybook
+    image: ghcr.io/lovelycentury/okkly/storybook-svelte:latest
+    container_name: storybook-svelte
+
+  storybook-angular:
+    <<: *storybook
+    image: ghcr.io/lovelycentury/okkly/storybook-angular:latest
+    container_name: storybook-angular

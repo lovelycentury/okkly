@@ -1,0 +1,64 @@
+name: Vue Playwright component tests
+
+# Reusable: `ci.yml` calls it to verify, `vue-playwright-screenshots.yml` calls
+# it with `update-snapshots` to refresh the committed baselines.
+on:
+  workflow_call:
+    inputs:
+      update-snapshots:
+        type: boolean
+        required: false
+        default: false
+        description: Rewrite the screenshot baselines instead of comparing against them.
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Component tests
+    runs-on: ubuntu-latest
+    # Screenshots are pixel-exact per platform, so the baselines belong to this
+    # image. Pin it rather than tracking `ubuntu-latest`'s rendering stack.
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
+      options: --ipc=host
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # No workspace build step, unlike `react-playwright.yml`: the only
+      # workspace package @okkly/vue depends on, @okkly/design-system, exports
+      # its SCSS sources rather than a `dist`.
+      - name: Run component tests
+        working-directory: packages/vue
+        env:
+          CI: "true"
+          PW_UPDATE_SNAPSHOTS: ${{ inputs.update-snapshots && 'true' || '' }}
+        # The browsers ship with the container image, so skip the download step
+        # `test:playwright` performs locally.
+        run: pnpm exec playwright test
+
+      - name: Upload the report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: vue-playwright-report
+          path: packages/vue/playwright-report
+          retention-days: 7
+
+      - name: Upload the refreshed screenshots
+        if: ${{ inputs.update-snapshots && !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: vue-screenshots
+          path: packages/vue/playwright/snapshots
+          retention-days: 1

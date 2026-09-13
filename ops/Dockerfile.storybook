@@ -1,13 +1,15 @@
 # syntax=docker/dockerfile:1.7
 #
-# @okkly/react Storybook — static build of the design system.
+# Storybook — static build of one framework package, picked by build arg.
 #
 # BUILD CONTEXT IS THE MONOREPO ROOT:
-#   docker build -f ops/Dockerfile.storybook -t storybook .
+#   docker build -f ops/Dockerfile.storybook --build-arg PACKAGE=vue -t storybook-vue .
 #
-# Storybook lives in packages/react; workspace deps
-# (@okkly/design-system, /icons, /helpers, /react-hooks) are built first
-# via the "..." filter. Runtime is spa.Caddyfile.
+# PACKAGE is one of: react, vue, svelte, angular. Workspace deps
+# (@okkly/design-system, /icons, /helpers, /react-hooks) are built first via
+# the "..." filter. Runtime is spa.Caddyfile.
+
+ARG PACKAGE=react
 
 FROM node:22-slim AS base
 ENV PNPM_HOME="/pnpm" \
@@ -22,15 +24,17 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm fetch
 
 FROM deps AS build
+ARG PACKAGE
 COPY . .
 RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
     pnpm install --frozen-lockfile --prefer-offline
 # Workspace package dist first (Storybook resolves them from packages/*/dist),
-# then the static Storybook build → packages/react/storybook-static.
-RUN pnpm --filter "@okkly/react..." --if-present run build
-RUN pnpm --filter "@okkly/react" run storybook:build
+# then the static Storybook build → packages/<package>/storybook-static.
+RUN pnpm --filter "@okkly/${PACKAGE}..." --if-present run build
+RUN pnpm --filter "@okkly/${PACKAGE}" run storybook:build
 
 FROM caddy:2-alpine AS runtime
+ARG PACKAGE
 COPY ops/spa.Caddyfile /etc/caddy/Caddyfile
-COPY --from=build /repo/packages/react/storybook-static /srv
+COPY --from=build /repo/packages/${PACKAGE}/storybook-static /srv
 EXPOSE 80
