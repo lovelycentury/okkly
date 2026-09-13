@@ -9,10 +9,7 @@ const config: StorybookConfig = {
    * copied — one set of binaries, one place to update them. Paths are relative
    * to this directory.
    */
-  staticDirs: [
-    "../../react/.storybook/favicon",
-    { from: "../../react/.storybook/brand", to: "/brand" },
-  ],
+  staticDirs: ["../../react/.storybook/favicon", { from: "./brand", to: "/brand" }],
   framework: {
     name: "@storybook/vue3-vite",
     options: {},
