@@ -1,0 +1,16 @@
+/* Hand-authored corner-radius tokens — same provenance note as colors.css.
+   Mirrors RADII in packages/figma-plugin/src/tokens/scales.ts (`radius/md` →
+   `--okkly-radius-md`); these are the radii the component stylesheets are
+   built on. */
+@layer okkly.utility {
+  :root {
+    --okkly-radius-none: 0;
+    --okkly-radius-sm: 0.375rem; /* 6px */
+    --okkly-radius-md: 0.625rem; /* 10px */
+    --okkly-radius-lg: 0.875rem; /* 14px */
+    --okkly-radius-xl: 1.25rem; /* 20px */
+    --okkly-radius-2xl: 1.75rem; /* 28px */
+    --okkly-radius-3xl: 2.25rem; /* 36px */
+    --okkly-radius-full: 9999px; /* pills and circles */
+  }
+}
