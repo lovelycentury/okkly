@@ -1,5 +1,11 @@
 # @okkly/angular
 
+## 0.2.0
+
+### Minor Changes
+
+- [#232](https://github.com/lovelycentury/okkly/pull/232) [`a19a09f`](https://github.com/lovelycentury/okkly/commit/a19a09f9bd574423aaf4b9686d868add4f895a8f) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `OkklyTextField` (`okkly-text-field`), a single-line text input with label, helper, and error — the foundation for most form fields. Built on a new internal `Field` shell shared with future field-based controls (Select, Autocomplete). `color` supports every design-system accent token (`primary`, `secondary`, `dante`, `violet`, `ember`, `ice`, `contrast`).
+
 ## 0.1.2
 
 ### Patch Changes
