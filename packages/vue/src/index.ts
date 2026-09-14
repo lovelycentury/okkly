@@ -20,3 +20,13 @@ export type {
   TextFieldSize,
   TextFieldColor,
 } from "./components/TextField/TextField.types";
+
+export { default as Box } from "./components/Box/Box.vue";
+export type {
+  BoxProps,
+  BoxResponsive,
+  BoxSpacing,
+  BoxSize,
+  BoxColor,
+  BoxColorToken,
+} from "./components/Box/Box.types";

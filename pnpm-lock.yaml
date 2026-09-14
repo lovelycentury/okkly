@@ -114,6 +114,9 @@ importers:
       '@okkly/design-system':
         specifier: workspace:*
         version: link:../design-system
+      '@okkly/shared':
+        specifier: workspace:*
+        version: link:../shared
       tslib:
         specifier: ^2.8.1
         version: 2.8.1
@@ -399,6 +402,9 @@ importers:
       '@okkly/design-system':
         specifier: workspace:*
         version: link:../design-system
+      '@okkly/shared':
+        specifier: workspace:*
+        version: link:../shared
     devDependencies:
       '@axe-core/playwright':
         specifier: ^4.13.0
@@ -463,6 +469,9 @@ importers:
       '@okkly/design-system':
         specifier: workspace:*
         version: link:../design-system
+      '@okkly/shared':
+        specifier: workspace:*
+        version: link:../shared
     devDependencies:
       '@axe-core/playwright':
         specifier: ^4.13.0
