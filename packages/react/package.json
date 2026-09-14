@@ -44,7 +44,6 @@
     "@maskito/kit": "^5.3.1",
     "@maskito/react": "^5.3.1",
     "@okkly/design-system": "workspace:*",
-    "@okkly/helpers": "workspace:*",
     "@okkly/icons": "workspace:*",
     "@okkly/react-hooks": "workspace:*",
     "@okkly/shared": "workspace:*",

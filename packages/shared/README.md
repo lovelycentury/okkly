@@ -40,6 +40,22 @@ resolveBoxSystemProps({ p: 2, display: { base: "block", "@md": "flex" }, id: "x"
 // }
 ```
 
+## Utilities
+
+Small framework-agnostic helpers (formerly `@okkly/helpers`):
+
+```ts
+import { bem, clamp, debounce, uniqueId } from "@okkly/shared";
+
+const button = bem("okkly-button");
+button("label"); // "okkly-button__label"
+button(null, "primary"); // "okkly-button okkly-button--primary"
+
+clamp(12, 0, 10); // 10
+const id = uniqueId("field"); // "field-1"
+const onScroll = debounce(() => {}, 100);
+```
+
 ## `@okkly/shared/testing`
 
 The data the framework packages' component tests share, so all four are held

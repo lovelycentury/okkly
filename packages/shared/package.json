@@ -1,7 +1,7 @@
 {
   "name": "@okkly/shared",
   "version": "0.0.0",
-  "description": "Okryshto design system — the framework-neutral component contracts @okkly/react, /vue, /svelte and /angular share",
+  "description": "Okryshto design system — the framework-neutral component contracts and utilities @okkly/react, /vue, /svelte and /angular share",
   "license": "MIT",
   "type": "module",
   "repository": {

@@ -6,7 +6,7 @@ export function clamp(value: number, min: number, max: number): number {
 let idCounter = 0;
 
 /** Generate a unique id, optionally prefixed. Useful for `aria-*` associations. */
-export function uniqueId(prefix = "lokki"): string {
+export function uniqueId(prefix = "okkly"): string {
   idCounter += 1;
   return `${prefix}-${idCounter}`;
 }

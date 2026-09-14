@@ -1,3 +1,7 @@
+export { bem } from "./utils/bem";
+export { clamp, uniqueId } from "./utils/dom";
+export { debounce } from "./utils/timing";
+
 export {
   BOX_BREAKPOINTS,
   BOX_CONTAINER_BREAKPOINTS,

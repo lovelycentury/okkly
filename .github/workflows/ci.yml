@@ -68,7 +68,6 @@ jobs:
               - "packages/react/**"
               - "packages/design-system/**"
               - "packages/icons/**"
-              - "packages/helpers/**"
               - "packages/shared/**"
               - "packages/react-hooks/**"
               - ".github/workflows/react-playwright.yml"
