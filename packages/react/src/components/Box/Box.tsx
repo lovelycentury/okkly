@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, type CSSProperties, type ElementType, type Ref } from "react";
-import { resolveBoxSystemProps } from "@okkly/helpers";
+import { resolveBoxSystemProps } from "@okkly/shared";
 import "@okkly/design-system/components/Box/Box.scss";
 import type { BoxProps } from "./Box.types";
 

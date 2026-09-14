@@ -1,7 +1,36 @@
 import type { CSSProperties } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { BOX_SYSTEM_PROPS, type BoxSystemPropName, type BoxValueKind } from "@okkly/shared";
 import { Box } from "./Box";
 import type { BoxColorToken } from "./Box.types";
+
+/**
+ * The type the Controls table shows for each system prop. react-docgen expands
+ * the generic `BoxResponsive<T>` into its body with `T` unfilled, so the
+ * readable form is spelled out here, from the kind of value each prop takes.
+ */
+const KIND_TYPES: Record<BoxValueKind, string> = {
+  spacing: "BoxResponsive<BoxSpacing>",
+  radius: "BoxResponsive<BoxSpacing>",
+  size: "BoxResponsive<BoxSize>",
+  color: "BoxResponsive<BoxColor>",
+  border: "BoxResponsive<number | string>",
+  keyword: "BoxResponsive<number | string>",
+};
+const KEYWORD_TYPES: Partial<Record<BoxSystemPropName, string>> = {
+  display: "BoxResponsive<BoxDisplay>",
+  flexDirection: "BoxResponsive<BoxFlexDirection>",
+  flexWrap: "BoxResponsive<BoxFlexWrap>",
+  alignItems: "BoxResponsive<BoxAlign>",
+  justifyContent: "BoxResponsive<BoxJustify>",
+  alignSelf: "BoxResponsive<BoxAlign>",
+};
+const systemPropTypes = Object.fromEntries(
+  Object.entries(BOX_SYSTEM_PROPS).map(([prop, kind]) => [
+    prop,
+    { table: { type: { summary: KEYWORD_TYPES[prop as BoxSystemPropName] ?? KIND_TYPES[kind] } } },
+  ]),
+);
 
 const SURFACE_TOKENS = [
   "bg.canvas",
@@ -33,19 +62,38 @@ const meta: Meta<typeof Box> = {
     children: "A box with a 16px padding",
   },
   argTypes: {
-    display: { control: "select", options: ["block", "flex", "inline-flex", "grid", "none"] },
-    flexDirection: { control: "inline-radio", options: ["row", "column"] },
-    alignItems: { control: "select", options: ["stretch", "flex-start", "center", "flex-end"] },
+    ...systemPropTypes,
+    display: {
+      ...systemPropTypes.display,
+      control: "select",
+      options: ["block", "flex", "inline-flex", "grid", "none"],
+    },
+    flexDirection: {
+      ...systemPropTypes.flexDirection,
+      control: "inline-radio",
+      options: ["row", "column"],
+    },
+    alignItems: {
+      ...systemPropTypes.alignItems,
+      control: "select",
+      options: ["stretch", "flex-start", "center", "flex-end"],
+    },
     justifyContent: {
+      ...systemPropTypes.justifyContent,
       control: "select",
       options: ["flex-start", "center", "flex-end", "space-between"],
     },
-    bgcolor: { control: "select", options: SURFACE_TOKENS },
+    bgcolor: { ...systemPropTypes.bgcolor, control: "select", options: SURFACE_TOKENS },
     borderColor: {
+      ...systemPropTypes.borderColor,
       control: "select",
       options: ["border.subtle", "border.default", "border.strong"],
     },
-    color: { control: "select", options: ["text.primary", "text.secondary", "text.muted"] },
+    color: {
+      ...systemPropTypes.color,
+      control: "select",
+      options: ["text.primary", "text.secondary", "text.muted"],
+    },
     as: { control: false },
   },
 };

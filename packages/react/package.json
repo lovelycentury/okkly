@@ -47,6 +47,7 @@
     "@okkly/helpers": "workspace:*",
     "@okkly/icons": "workspace:*",
     "@okkly/react-hooks": "workspace:*",
+    "@okkly/shared": "workspace:*",
     "@popperjs/core": "^2.11.8",
     "@tiptap/extension-link": "^3.29.2",
     "@tiptap/extension-placeholder": "^3.29.2",

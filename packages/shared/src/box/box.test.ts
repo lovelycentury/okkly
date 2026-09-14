@@ -96,11 +96,26 @@ describe("resolveBoxSystemProps", () => {
     });
   });
 
-  it("should skip unset values and unknown breakpoints", () => {
+  it("should give container-query keys a -cq- suffix", () => {
     // ACT
     const { className, style } = resolveBoxSystemProps({
+      flexDirection: { base: "column", md: "row", "@sm": "row-reverse" },
+    });
+
+    // ASSERT
+    expect(className.split(" ")).toEqual([
+      "okkly-box--flex-direction",
+      "okkly-box--flex-direction-md",
+      "okkly-box--flex-direction-cq-sm",
+    ]);
+    expect(style["--okkly-box-flex-direction-cq-sm"]).toBe("row-reverse");
+  });
+
+  it("should skip unset values and keys outside both scales", () => {
+    // ACT — `@2xs` does not exist: `2xs` is on the viewport scale only
+    const { className, style } = resolveBoxSystemProps({
       p: undefined,
-      m: { base: undefined, huge: 4 } as never,
+      m: { base: undefined, huge: 4, "@2xs": 1 } as never,
     });
 
     // ASSERT
@@ -114,6 +129,17 @@ describe("resolveBoxSystemProps", () => {
 
     // ASSERT
     expect(className).toBe("okkly-box--m okkly-box--flex-shrink");
+  });
+
+  it("should turn `container` into a class and keep it off the element", () => {
+    // ACT
+    const on = resolveBoxSystemProps({ container: true, id: "box" });
+    const off = resolveBoxSystemProps({ container: false });
+
+    // ASSERT
+    expect(on.className).toBe("okkly-box--container");
+    expect(on.rest).toEqual({ id: "box" });
+    expect(off.className).toBe("");
   });
 
   it("should hand back everything that is not a system prop", () => {
@@ -136,39 +162,5 @@ describe("resolveBoxSystemProps", () => {
     expect(names).toContain("okkly-box--bgcolor");
     expect(names).toContain("okkly-box--border-radius");
     expect(names).toHaveLength(37);
-  });
-
-  it("should give container-query keys a -cq- suffix", () => {
-    // ACT
-    const { className, style } = resolveBoxSystemProps({
-      flexDirection: { base: "column", md: "row", "@sm": "row-reverse" },
-    });
-
-    // ASSERT
-    expect(className.split(" ")).toEqual([
-      "okkly-box--flex-direction",
-      "okkly-box--flex-direction-md",
-      "okkly-box--flex-direction-cq-sm",
-    ]);
-    expect(style["--okkly-box-flex-direction-cq-sm"]).toBe("row-reverse");
-  });
-
-  it("should skip container keys outside the container scale", () => {
-    // ACT — `2xs` exists on the viewport scale only
-    const { className } = resolveBoxSystemProps({ p: { "@2xs": 1, "@huge": 2 } as never });
-
-    // ASSERT
-    expect(className).toBe("");
-  });
-
-  it("should turn `container` into a class and keep it off the element", () => {
-    // ACT
-    const on = resolveBoxSystemProps({ container: true, id: "box" });
-    const off = resolveBoxSystemProps({ container: false });
-
-    // ASSERT
-    expect(on.className).toBe("okkly-box--container");
-    expect(on.rest).toEqual({ id: "box" });
-    expect(off.className).toBe("");
   });
 });

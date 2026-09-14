@@ -1,43 +1,42 @@
 /**
  * Box's system props — the MUI-style shorthands (`p`, `mx`, `display`,
  * `bgcolor`…) — resolved into the classes and CSS variables that
- * `@okkly/design-system`'s Box stylesheet reads. Framework-agnostic on purpose:
- * every framework's Box runs its props through `resolveBoxSystemProps` and
- * puts the result on its root element, so all of them render the same DOM.
+ * `@okkly/design-system`'s Box stylesheet reads. Every framework's Box runs its
+ * props through `resolveBoxSystemProps` and puts the result on its root
+ * element, so all of them render the same DOM.
  */
+import type {
+  BoxBreakpoint,
+  BoxContainerBreakpoint,
+  BoxSystemPropName,
+  BoxSystemProps,
+  BoxValueKind,
+  ResolvedBoxSystemProps,
+} from "./box.types";
 
-/** The breakpoints a responsive value accepts, narrowest first — `$breakpoints` in breakpoints.scss. */
-export const BOX_BREAKPOINTS = ["2xs", "xs", "sm", "md", "lg", "xl"] as const;
+/** The viewport breakpoints, narrowest first — `$breakpoints` in breakpoints.scss. */
+export const BOX_BREAKPOINTS = [
+  "2xs",
+  "xs",
+  "sm",
+  "md",
+  "lg",
+  "xl",
+] as const satisfies readonly BoxBreakpoint[];
 
-export type BoxBreakpoint = (typeof BOX_BREAKPOINTS)[number];
-
-/**
- * The container breakpoints an `@`-key names, narrowest first —
- * `$container-breakpoints` in breakpoints.scss. Smaller than the viewport
- * scale: a container is a region of the page, not the page.
- */
-export const BOX_CONTAINER_BREAKPOINTS = ["xs", "sm", "md", "lg", "xl"] as const;
-
-export type BoxContainerBreakpoint = (typeof BOX_CONTAINER_BREAKPOINTS)[number];
-
-/**
- * A value, or one value per breakpoint. `base` applies at every width; a
- * viewport breakpoint (`md`) from that window width up; a container breakpoint
- * (`@md`) from that width of the nearest `container` Box up. Container values
- * win over viewport values, and wider breakpoints over narrower ones.
- */
-export type BoxResponsiveValue<T> =
-  | T
-  | ({ base?: T } & { [B in BoxBreakpoint]?: T } & {
-      [B in BoxContainerBreakpoint as `@${B}`]?: T;
-    });
-
-/** How a prop's value turns into CSS. */
-type BoxValueKind = "spacing" | "size" | "color" | "border" | "radius" | "keyword";
+/** The container breakpoints, narrowest first — `$container-breakpoints` in breakpoints.scss. */
+export const BOX_CONTAINER_BREAKPOINTS = [
+  "xs",
+  "sm",
+  "md",
+  "lg",
+  "xl",
+] as const satisfies readonly BoxContainerBreakpoint[];
 
 /**
  * Every system prop and how its value is read. Kept in step with `$props` in
- * the Box stylesheet, which names each class after the kebab-cased prop.
+ * the Box stylesheet, which names each class after the kebab-cased prop; the
+ * `satisfies` clause keeps it in step with `BoxSystemProps`.
  */
 export const BOX_SYSTEM_PROPS = {
   m: "spacing",
@@ -77,17 +76,7 @@ export const BOX_SYSTEM_PROPS = {
   border: "border",
   borderColor: "color",
   borderRadius: "radius",
-} as const satisfies Record<string, BoxValueKind>;
-
-export type BoxSystemPropName = keyof typeof BOX_SYSTEM_PROPS;
-
-/** The loosest shape a framework's Box props can have; each framework narrows it. */
-export type BoxSystemProps = {
-  [K in BoxSystemPropName]?: BoxResponsiveValue<string | number | undefined>;
-} & {
-  /** Makes the Box a query container, which its descendants' `@`-keys answer to. */
-  container?: boolean;
-};
+} as const satisfies Record<BoxSystemPropName, BoxValueKind>;
 
 /** Token groups a color can name as `"<group>.<name>"`: `"bg.surface"` → `var(--okkly-bg-surface)`. */
 const COLOR_TOKEN_GROUPS = new Set(["accent", "text", "bg", "border", "feedback", "glass"]);
@@ -134,18 +123,6 @@ function breakpointSuffix(key: string): string | undefined {
   return (BOX_BREAKPOINTS as readonly string[]).includes(key) ? `-${key}` : undefined;
 }
 
-export interface ResolvedBoxSystemProps<P> {
-  /**
-   * An `okkly-box--<name><suffix>` class for every value that was set, plus
-   * `okkly-box--container` for a container.
-   */
-  className: string;
-  /** The `--okkly-box-<name><suffix>` variables those classes read. */
-  style: Record<string, string>;
-  /** Everything that is not a system prop — what the element itself receives. */
-  rest: Omit<P, BoxSystemPropName | "container">;
-}
-
 /**
  * Splits a Box's props into the system props — resolved into classes and CSS
  * variables — and the rest, which the caller forwards to the element.
@@ -162,7 +139,7 @@ export interface ResolvedBoxSystemProps<P> {
  * //   rest: { id: "x" },
  * // }
  */
-export function resolveBoxSystemProps<P extends BoxSystemProps>(
+export function resolveBoxSystemProps<P extends BoxSystemProps & { container?: boolean }>(
   props: P,
 ): ResolvedBoxSystemProps<P> {
   const classes: string[] = [];

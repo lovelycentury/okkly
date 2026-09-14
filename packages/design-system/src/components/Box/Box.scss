@@ -2,7 +2,7 @@
 @use "../../styles/breakpoints.scss";
 
 // Every system prop Box accepts, by its kebab-cased name, and the CSS property
-// it sets. Kept in step with `BOX_SYSTEM_PROPS` in @okkly/helpers, which turns
+// it sets. Kept in step with `BOX_SYSTEM_PROPS` in @okkly/shared, which turns
 // a prop into the matching `okkly-box--<name>` class plus the
 // `--okkly-box-<name>` variable that class reads.
 //
