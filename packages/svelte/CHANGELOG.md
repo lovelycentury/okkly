@@ -1,5 +1,11 @@
 # @okkly/svelte
 
+## 0.2.0
+
+### Minor Changes
+
+- [#231](https://github.com/lovelycentury/okkly/pull/231) [`676b3e5`](https://github.com/lovelycentury/okkly/commit/676b3e5be6af75f60b5dafdb1f48739f8c357f8a) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `TextField`, a single-line text input with label, helper, and error, mirroring `@okkly/react`'s `TextField`. Its `color` prop exposes every accent token the shared `field.shell` mixin supports: `primary`, `secondary`, `dante`, `violet`, `ember`, `ice`, and `contrast`.
+
 ## 0.1.2
 
 ### Patch Changes

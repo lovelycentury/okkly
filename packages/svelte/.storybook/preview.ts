@@ -7,6 +7,7 @@ import "@okkly/design-system/styles/index.scss";
 // Vite resolves them; the build reads them off disk instead.
 import "@okkly/design-system/components/Button/Button.scss";
 import "@okkly/design-system/components/Ripple/Ripple.scss";
+import "@okkly/design-system/components/TextField/TextField.scss";
 import "./preview.css";
 import Canvas from "./Canvas.svelte";
 import { okklyTheme } from "./theme";
