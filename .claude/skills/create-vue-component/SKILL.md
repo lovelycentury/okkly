@@ -28,7 +28,7 @@ The component's look lives in `@okkly/design-system`, not in this package. If `p
 2. Read `packages/vue/src/components/Button/` — `Button.vue`, `Button.types.ts`, `Button.stories.ts`, `Button.ct.ts` — the reference for every convention below. [templates.md](templates.md) is a starting point, not a substitute; where they differ, follow the existing code.
 3. Read the component's stylesheet to learn its block, element and modifier classes and its `--okkly-<kebab>-*` variables.
 4. If porting, read the React component, its stories and its `.ct.tsx`.
-5. Reuse before inventing: `src/composables/` (e.g. `useRipple`), existing components (`Ripple`), and `@okkly/shared` — the framework-neutral half every package shares (a component's prop types and prop-to-class logic, as for Box, plus `bem`/`clamp`/`uniqueId`/`debounce`); anything the four framework packages would each repeat belongs there. A React hook from `@okkly/react-hooks` becomes a composable in `src/composables/use<Name>.ts`, exported from `src/index.ts`.
+5. Reuse before inventing: `@okkly/vue-composables` (e.g. `useRipple`), existing components (`Ripple`), and `@okkly/shared` — the framework-neutral half every package shares (a component's prop types and prop-to-class logic, as for Box, plus `bem`/`clamp`/`uniqueId`/`debounce`); anything the four framework packages would each repeat belongs there. A React hook from `@okkly/react-hooks` becomes a composable in `packages/vue-composables/src/use<Name>.ts`, exported from that package's `src/index.ts` — mirroring `@okkly/react-hooks`, it is a separate package the component imports rather than a local `src/composables/` folder, and `@okkly/vue`'s own `src/index.ts` does not re-export it.
 
 ## Files to create
 

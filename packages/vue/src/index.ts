@@ -11,8 +11,12 @@ export type {
 export { default as Ripple } from "./components/Ripple/Ripple.vue";
 export type { RippleProps } from "./components/Ripple/Ripple.types";
 
-export { useRipple } from "./composables/useRipple";
-export type { RippleInstance, UseRippleReturn } from "./composables/useRipple";
+export { default as Checkbox } from "./components/Checkbox/Checkbox.vue";
+export type {
+  CheckboxProps,
+  CheckboxSize,
+  CheckboxColor,
+} from "./components/Checkbox/Checkbox.types";
 
 export { default as TextField } from "./components/TextField/TextField.vue";
 export type {
@@ -30,3 +34,50 @@ export type {
   BoxColor,
   BoxColorToken,
 } from "./components/Box/Box.types";
+
+export { default as Popper } from "./components/Popper/Popper.vue";
+export type {
+  PopperProps,
+  PopperPlacement,
+  PopperAnchorEl,
+  PopperSlotProps,
+  PopperTransitionSlotProps,
+} from "./components/Popper/Popper.types";
+
+export { default as Popover } from "./components/Popover/Popover.vue";
+export type {
+  PopoverProps,
+  PopoverAnchorPosition,
+  PopoverTransitionDuration,
+} from "./components/Popover/Popover.types";
+
+export { default as Modal } from "./components/Modal/Modal.vue";
+export type { ModalProps } from "./components/Modal/Modal.types";
+
+export { default as Fade } from "./components/Fade/Fade.vue";
+export type { FadeProps, FadeTimeout } from "./components/Fade/Fade.types";
+
+export { default as Grow } from "./components/Grow/Grow.vue";
+export type { GrowProps, GrowTimeout } from "./components/Grow/Grow.types";
+
+export { default as Zoom } from "./components/Zoom/Zoom.vue";
+export type { ZoomProps, ZoomTimeout } from "./components/Zoom/Zoom.types";
+
+export { default as Slide } from "./components/Slide/Slide.vue";
+export type { SlideProps, SlideTimeout, SlideDirection } from "./components/Slide/Slide.types";
+
+export { default as Collapse } from "./components/Collapse/Collapse.vue";
+export type {
+  CollapseProps,
+  CollapseTimeout,
+  CollapseOrientation,
+} from "./components/Collapse/Collapse.types";
+
+export type {
+  OverlayCloseReason,
+  OverlayCloseHandler,
+  TransitionTimeout,
+  TransitionTimeoutWithAuto,
+  TransitionEasing,
+  SharedTransitionProps,
+} from "./types";

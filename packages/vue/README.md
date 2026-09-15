@@ -63,6 +63,40 @@ Anything the element itself understands — `class`, `type`, `@click`, `aria-*` 
 falls through to the rendered `<button>`/`<a>`. A disabled `<a>` drops its href
 and reports `aria-disabled`.
 
+## Checkbox
+
+Binary or indeterminate choice. Props mirror `@okkly/react`'s `<Checkbox>`
+name-for-name.
+
+| Prop            | Type                                                                                   | Default        |
+| --------------- | -------------------------------------------------------------------------------------- | -------------- |
+| `indeterminate` | `boolean`                                                                              | `false`        |
+| `size`          | `small \| medium \| large`                                                             | `medium`       |
+| `color`         | `primary \| dante \| indigo \| violet \| ember \| ice \| success \| warning \| danger` | `primary`      |
+| `disabled`      | `boolean`                                                                              | `false`        |
+| `id`            | `string`                                                                               | auto-generated |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Checkbox } from "@okkly/vue";
+
+const subscribed = ref(false);
+</script>
+
+<template>
+  <Checkbox v-model="subscribed">
+    <template #label>Subscribe to updates</template>
+  </Checkbox>
+</template>
+```
+
+`label` is a slot rather than a prop, since Vue has no `ReactNode`, and renders
+only when filled. The controlled `checked` state is `v-model`. Anything else
+the `<input>` itself understands (`value`, `name`, `required`, `aria-*`,
+`@change`…) falls through to it — `class` is the one exception, which lands
+on the outer `<label>` instead, matching React's `className`.
+
 ## TextField
 
 Single-line text input with label, helper text, and error state — the
@@ -143,16 +177,210 @@ breakpoints `@xs` (320px) … `@xl` (1024px) from that width of the nearest
 attribute fall through to the element, and a consumer's `class`/`style` merge
 after Box's own.
 
+## Popper
+
+Positioning and nothing else — puts its default slot next to `anchorEl` and
+keeps it there through scrolling, resizing and the edges of the viewport, via
+[`@popperjs/core`][popperjs]. It draws no surface and owns no dismissal; it is
+the engine `Popover` is built on. Props mirror `@okkly/react`'s `<Popper>`
+name-for-name.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Popper } from "@okkly/vue";
+
+const anchorEl = ref<HTMLElement | null>(null);
+</script>
+
+<template>
+  <button ref="anchorEl" type="button">Anchor</button>
+  <Popper :open="!!anchorEl" :anchor-el="anchorEl" placement="bottom-start">
+    <div class="my-panel">Positioned, and nothing else.</div>
+  </Popper>
+</template>
+```
+
+| Prop               | Type                                  | Default     |
+| ------------------ | ------------------------------------- | ----------- |
+| `open`             | `boolean`                             | —           |
+| `anchorEl`         | `PopperAnchorEl`                      | `undefined` |
+| `placement`        | `PopperPlacement`                     | `"bottom"`  |
+| `keepMounted`      | `boolean`                             | `false`     |
+| `disablePortal`    | `boolean`                             | `false`     |
+| `container`        | `Element \| DocumentFragment \| null` | `undefined` |
+| `modifiers`        | `Array<Partial<Modifier<…>>>`         | `undefined` |
+| `popperOptions`    | `Partial<Options>`                    | `undefined` |
+| `transition`       | `boolean`                             | `false`     |
+| `matchAnchorWidth` | `boolean \| "min"`                    | `false`     |
+| `minWidth`         | `number \| string`                    | `undefined` |
+| `role`             | `string`                              | `"tooltip"` |
+
+`children`, including React's render-prop form, becomes the default slot,
+scoped with `{ placement, transitionProps }`: `placement` is what Popper.js
+actually resolved to, and `transitionProps` (present only when `transition`
+is set) is `{ in, onEnter, onExited }` — wire it into a `<Transition>` so
+Popper stays mounted for the whole exit. `popperRef` is dropped; put a
+template ref on `<Popper>` and read its exposed `popperInstance` instead.
+
+## Popover
+
+`Popper` plus dismissal: Escape, click-outside, a surface, and a scale+fade
+transition. It is **not** modal and has **no scrim by default** —
+`hideBackdrop` starts at `true`. Props mirror `@okkly/react`'s `<Popover>`
+name-for-name; `onClose` becomes the `close` emit, still carrying
+`(event, reason)`.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Popover } from "@okkly/vue";
+
+const anchorEl = ref<HTMLElement | null>(null);
+</script>
+
+<template>
+  <button @click="anchorEl = $event.currentTarget">Open</button>
+  <Popover :open="!!anchorEl" :anchor-el="anchorEl" @close="anchorEl = null">
+    <div>A menu, a filter panel, a date picker — anything that belongs to a control.</div>
+  </Popover>
+</template>
+```
+
+| Prop                 | Type                                    | Default     |
+| -------------------- | --------------------------------------- | ----------- |
+| `open`               | `boolean`                               | —           |
+| `anchorEl`           | `HTMLElement \| null`                   | `undefined` |
+| `anchorPosition`     | `{ top: number; left: number }`         | `undefined` |
+| `placement`          | `PopperPlacement`                       | `"bottom"`  |
+| `transitionDuration` | `number \| { enter?; exit? } \| "auto"` | `"auto"`    |
+| `disablePortal`      | `boolean`                               | `false`     |
+| `hideBackdrop`       | `boolean`                               | `true`      |
+| `matchAnchorWidth`   | `boolean`                               | `false`     |
+| `minWidth`           | `number \| string`                      | `undefined` |
+| `paperClassName`     | `string`                                | `undefined` |
+
+## Modal
+
+The low-level primitive every modal overlay is built from: a portal, a
+backdrop, a trapped focus, a body scroll lock, Escape handling, and focus
+restored on close. **It draws no surface of its own** — the default slot
+supplies all visual chrome. Props mirror `@okkly/react`'s `<Modal>`
+name-for-name; `onClose` becomes the `close` emit.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Modal } from "@okkly/vue";
+
+const open = ref(false);
+</script>
+
+<template>
+  <button @click="open = true">Open</button>
+  <Modal :open="open" @close="open = false">
+    <div class="my-dialog" role="dialog" aria-modal="true" aria-label="Example">
+      Your own panel, centred and styled by you.
+    </div>
+  </Modal>
+</template>
+```
+
+| Prop                   | Type              | Default     |
+| ---------------------- | ----------------- | ----------- |
+| `open`                 | `boolean`         | —           |
+| `container`            | `Element \| null` | `undefined` |
+| `disablePortal`        | `boolean`         | `false`     |
+| `disableEscapeKeyDown` | `boolean`         | `false`     |
+| `disableAutoFocus`     | `boolean`         | `false`     |
+| `disableEnforceFocus`  | `boolean`         | `false`     |
+| `disableRestoreFocus`  | `boolean`         | `false`     |
+| `disableScrollLock`    | `boolean`         | `false`     |
+| `hideBackdrop`         | `boolean`         | `false`     |
+| `keepMounted`          | `boolean`         | `false`     |
+| `backdropClass`        | `string`          | `undefined` |
+
+MUI's `slotProps.backdrop` escape hatch narrows to `backdropClass` — a single
+extra class for restyling the backdrop. Anything a backdrop click should
+additionally do belongs in the `close` handler, which already sees the
+`"backdropClick"` reason.
+
+[popperjs]: https://popper.js.org/
+
+## Transitions
+
+`Fade`, `Grow`, `Zoom`, `Slide` and `Collapse` mirror `@okkly/react`'s
+transition family, which in turn follows MUI's. Each takes a single default
+slot and an `in` boolean (yes, `in` — it is only a reserved word as a bare
+identifier, not as a prop name, so `:in="open"` works), and animates it:
+
+| Component  | Animates                  | Default use                                                      |
+| ---------- | ------------------------- | ---------------------------------------------------------------- |
+| `Fade`     | opacity                   | present or not, with no directional cue                          |
+| `Grow`     | scale + opacity, from 75% | something arriving _from_ a trigger — `Popover` is built on this |
+| `Zoom`     | scale, from nothing       | a floating action button, a badge popping in                     |
+| `Slide`    | translate along one edge  | a drawer, a toast, a bottom sheet                                |
+| `Collapse` | height (or width)         | an accordion panel, "show more"                                  |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Fade } from "@okkly/vue";
+
+const open = ref(false);
+</script>
+
+<template>
+  <button @click="open = !open">Toggle</button>
+  <Fade :in="open">
+    <div class="my-panel">…</div>
+  </Fade>
+</template>
+```
+
+Shared props (`in`, `appear`, `easing`, and — Fade/Grow/Zoom/Slide only —
+`keepMounted`) are documented on `SharedTransitionProps`. Two differences from
+React's family, both forced by Vue having no `cloneElement`:
+
+- Each component owns one wrapper element around the slot, rather than
+  writing its class/style directly onto the caller's own child — the only way
+  to reach that child reliably is through Vue's `<Transition>` hooks, and a
+  bare `<slot>` cannot carry `v-show` (or any directive) for `keepMounted` to
+  use.
+- `mountOnEnter`/`unmountOnExit` — react-transition-group's two independent
+  knobs — collapse into the one `keepMounted` boolean: `false` (the default)
+  removes the child from the DOM once hidden (`v-if`); `true` keeps it,
+  hidden with `display: none` (`v-show`), which is Vue's native way to do
+  what React does with `visibility: hidden` while staying mounted.
+
+`Collapse` is the exception: it always owns a wrapper, so its content is
+mounted by default (`unmountOnExit`, off by default, opts into removing it
+once fully collapsed) and it has no `keepMounted` prop.
+
+Every component's six React lifecycle callbacks (`onEnter`/`onEntering`/
+`onEntered`/`onExit`/`onExiting`/`onExited`) narrow to four emits — `enter`,
+`entered`, `exit`, `exited` — since Vue's `<Transition>` exposes one hook per
+phase rather than react-transition-group's three-part state machine.
+`addEndListener`, an RTG escape hatch, has no Vue equivalent and is dropped;
+every component already owns its end-of-transition timing.
+
 ## useRipple
 
-`useRipple` is the Vue counterpart of the `@okkly/react-hooks` hook, and
-`<Ripple>` paints the overlay it tracks. Use them on any element that is
+`<Ripple>` paints the overlay `useRipple` tracks. The composable itself, along
+with the ones `Modal` and `Popover` are built from, lives in
+[`@okkly/vue-composables`][vue-composables] — install it alongside this
+package to use them directly. Use them on any element that is
 `position: relative; overflow: hidden`:
+
+```bash
+pnpm add @okkly/vue-composables
+```
 
 ```vue
 <script setup lang="ts">
 import { useTemplateRef } from "vue";
-import { Ripple, useRipple } from "@okkly/vue";
+import { Ripple } from "@okkly/vue";
+import { useRipple } from "@okkly/vue-composables";
 
 const root = useTemplateRef<HTMLElement>("root");
 const { ripples, events, hideRipple } = useRipple(root);
@@ -165,6 +393,8 @@ const { ripples, events, hideRipple } = useRipple(root);
   </div>
 </template>
 ```
+
+[vue-composables]: https://github.com/lovelycentury/okkly/tree/main/packages/vue-composables#readme
 
 ## Workbench
 

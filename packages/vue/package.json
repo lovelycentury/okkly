@@ -41,7 +41,9 @@
   },
   "dependencies": {
     "@okkly/design-system": "workspace:*",
-    "@okkly/shared": "workspace:*"
+    "@okkly/shared": "workspace:*",
+    "@okkly/vue-composables": "workspace:*",
+    "@popperjs/core": "^2.11.8"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
