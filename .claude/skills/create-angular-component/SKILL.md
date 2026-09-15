@@ -28,7 +28,7 @@ The component's look lives in `@okkly/design-system`, not in this package. If `p
 2. Read `packages/angular/src/components/Button/` — `Button.ts`, `Button.html`, `Button.stories.ts`, `Button.ct.ts` — and `Ripple/Ripple.ts`, the reference for every convention below. [templates.md](templates.md) is a starting point, not a substitute; where they differ, follow the existing code.
 3. Read the component's stylesheet to learn its block, element and modifier classes and its `--okkly-<kebab>-*` variables.
 4. If porting, read the React component, its stories and its `.ct.tsx`, and fetch the matching Angular Material API page if there is one.
-5. Reuse before inventing: existing directives (`OkklyRipple`) and `@okkly/helpers`. Behaviour React attaches through a hook becomes a **directive** in `src/components/<Name>/<Name>.ts`, applied as a `hostDirectives` entry where a component needs it.
+5. Reuse before inventing: existing directives (`OkklyRipple`) and `@okkly/shared` — the framework-neutral half every package shares (a component's prop types and prop-to-class logic, as for Box, plus `bem`/`clamp`/`uniqueId`/`debounce`); anything the four framework packages would each repeat belongs there. Behaviour React attaches through a hook becomes a **directive** in `src/components/<Name>/<Name>.ts`, applied as a `hostDirectives` entry where a component needs it.
 
 ## Files to create
 
