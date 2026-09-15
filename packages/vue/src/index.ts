@@ -18,6 +18,9 @@ export type {
   CheckboxColor,
 } from "./components/Checkbox/Checkbox.types";
 
+export { default as Switch } from "./components/Switch/Switch.vue";
+export type { SwitchProps, SwitchSize, SwitchColor } from "./components/Switch/Switch.types";
+
 export { default as TextField } from "./components/TextField/TextField.vue";
 export type {
   TextFieldProps,

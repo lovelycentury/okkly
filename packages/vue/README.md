@@ -97,6 +97,41 @@ the `<input>` itself understands (`value`, `name`, `required`, `aria-*`,
 `@change`…) falls through to it — `class` is the one exception, which lands
 on the outer `<label>` instead, matching React's `className`.
 
+## Switch
+
+Immediate on/off toggle — prefer `Checkbox` for form "agree" statements that
+submit later. Props mirror `@okkly/react`'s `<Switch>` name-for-name.
+
+| Prop       | Type                                                   | Default        |
+| ---------- | ------------------------------------------------------ | -------------- |
+| `size`     | `small \| medium \| large`                             | `medium`       |
+| `color`    | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`      |
+| `disabled` | `boolean`                                              | `false`        |
+| `id`       | `string`                                               | auto-generated |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Switch } from "@okkly/vue";
+
+const notifications = ref(false);
+</script>
+
+<template>
+  <Switch v-model="notifications">
+    <template #label>Enable notifications</template>
+  </Switch>
+</template>
+```
+
+`label` is a slot rather than a prop, since Vue has no `ReactNode`, and renders
+only when filled. The controlled `checked` state is `v-model`. Anything else
+the `<input>` itself understands (`value`, `name`, `required`, `aria-*`,
+`@change`…) falls through to it — `class` is the one exception, which lands
+on the outer `<label>` instead, matching React's `className`. The rendered
+`<input type="checkbox" role="switch">` carries the switch role for assistive
+technology.
+
 ## TextField
 
 Single-line text input with label, helper text, and error state — the
