@@ -1,5 +1,23 @@
 # @okkly/vue
 
+## 0.3.0
+
+### Minor Changes
+
+- [#264](https://github.com/lovelycentury/okkly/pull/264) [`141c5cd`](https://github.com/lovelycentury/okkly/commit/141c5cd851329d961bce84fa6747b3890cf7484c) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `Box`, a layout primitive with MUI-style system props — spacing, flex layout, sizing, token colors and border, each responsive per viewport breakpoint or, through `@`-keys, per container breakpoint — mirroring `@okkly/react`'s `Box`.
+
+### Patch Changes
+
+- Updated dependencies [[`9704758`](https://github.com/lovelycentury/okkly/commit/97047588018e70159e385d443a9066c1e02ac5ae), [`cbed6f0`](https://github.com/lovelycentury/okkly/commit/cbed6f0b765ee06086798509a3e597227a51a076), [`1d72f7d`](https://github.com/lovelycentury/okkly/commit/1d72f7d3da20c163a399d2f2c17d4bf68619456b), [`fbff64d`](https://github.com/lovelycentury/okkly/commit/fbff64d93ea4a2554892852e03156885a38e1376)]:
+  - @okkly/design-system@0.4.0
+  - @okkly/shared@0.1.0
+
+## 0.2.1
+
+### Patch Changes
+
+- [#256](https://github.com/lovelycentury/okkly/pull/256) [`1ebd944`](https://github.com/lovelycentury/okkly/commit/1ebd9448b9daf2a23df9f16f26cbb6dc09737d89) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Stop publishing test files: `dist` no longer ships the type declarations of the `*.ct.ts` component tests and their `src/playwright` helpers.
+
 ## 0.2.0
 
 ### Minor Changes

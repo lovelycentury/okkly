@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { TimePicker } from "./TimePicker";
-import type { TimePickerColor, TimePickerFormat } from "./TimePicker";
+import type { TimePickerColor, TimePickerFormat } from "./TimePicker.types";
 
 const COLORS = [
   "primary",

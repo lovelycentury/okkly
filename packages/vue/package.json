@@ -1,6 +1,6 @@
 {
   "name": "@okkly/vue",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Okryshto design system — Vue component library",
   "license": "MIT",
   "type": "module",
@@ -40,7 +40,8 @@
     "test:playwright:update": "PW_UPDATE_SNAPSHOTS=true CI=true playwright test"
   },
   "dependencies": {
-    "@okkly/design-system": "workspace:*"
+    "@okkly/design-system": "workspace:*",
+    "@okkly/shared": "workspace:*"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
@@ -50,7 +51,6 @@
     "@storybook/vue3-vite": "^10.6.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/compiler-dom": "^3.5.42",
-    "@vue/test-utils": "^2.5.0",
     "axe-core": "^4.13.0",
     "jsdom": "^25.0.1",
     "playwright-core": "catalog:",

@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Skeleton } from "./Skeleton";
-import type { SkeletonVariant } from "./Skeleton";
+import type { SkeletonVariant } from "./Skeleton.types";
 
 const VARIANTS = [
   "text",

@@ -3,7 +3,7 @@ import { executeMatrixScreenshotTest, MOCK_PLAYWRIGHT_ICON } from "../../playwri
 import { useFocusStateHooks } from "../../playwright/matrix";
 import { Button } from "./Button";
 import { Icon } from "../Icon/Icon";
-import type { ButtonColor, ButtonSize, ButtonVariant } from "./Button";
+import type { ButtonColor, ButtonSize, ButtonVariant } from "./Button.types";
 
 const VARIANTS = [
   "primary",

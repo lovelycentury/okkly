@@ -8,11 +8,8 @@ import {
   iconList,
   iconUnderline,
 } from "@okkly/icons";
-import {
-  SegmentedToggle,
-  type SegmentedToggleColor,
-  type SegmentedToggleItem,
-} from "./SegmentedToggle";
+import { SegmentedToggle } from "./SegmentedToggle";
+import type { SegmentedToggleColor, SegmentedToggleItem } from "./SegmentedToggle.types";
 
 const icon = (svg: string) => <span dangerouslySetInnerHTML={{ __html: svg }} />;
 

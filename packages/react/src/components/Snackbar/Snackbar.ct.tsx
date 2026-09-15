@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Snackbar } from "./Snackbar";
 import { Button } from "../Button/Button";
-import type { SnackbarAnchorHorizontal, SnackbarAnchorVertical } from "./Snackbar";
+import type { SnackbarAnchorHorizontal, SnackbarAnchorVertical } from "./Snackbar.types";
 
 const VERTICALS = ["top", "bottom"] as const satisfies readonly SnackbarAnchorVertical[];
 const HORIZONTALS = [

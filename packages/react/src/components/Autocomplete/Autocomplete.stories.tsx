@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Autocomplete, type AutocompleteOption } from "./Autocomplete";
+import { Autocomplete } from "./Autocomplete";
+import type { AutocompleteOption } from "./Autocomplete.types";
 import {
   HighlightMatch,
   OptionBody,

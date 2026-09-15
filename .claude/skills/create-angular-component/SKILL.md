@@ -1,6 +1,6 @@
 ---
 name: create-angular-component
-description: Scaffold a new component in @okkly/angular following the package's structure — a standalone, zoneless, signal-input component (.ts + .html), a Storybook story documented through Compodoc, Vitest + TestBed tests, the stylesheet registration, the public export, a README section, and a changeset. Styles come from @okkly/design-system via the create-design-component skill. Use when asked to create, add, scaffold, or port (from @okkly/react) an Angular component in packages/angular.
+description: Scaffold a new component in @okkly/angular following the package's structure — a standalone, zoneless, signal-input component (.ts + .html), a Storybook story documented through Compodoc, Playwright component tests with matrix screenshots, the stylesheet registration, the public export, a README section, and a changeset. Styles come from @okkly/design-system via the create-design-component skill. Use when asked to create, add, scaffold, or port (from @okkly/react) an Angular component in packages/angular.
 argument-hint: <ComponentName> [what it does / which @okkly/react or Angular Material component it mirrors]
 ---
 
@@ -19,16 +19,16 @@ The component's look lives in `@okkly/design-system`, not in this package. If `p
 - Inputs follow **Angular Material's API** where the two designs overlap (selector style, `disabled`, `disableRipple`, output names), and mirror **`@okkly/react`** name-for-name for everything specific to this design system (`variant`, `color`, `size`…). The union types keep React's names (`<Name>Variant`, `<Name>Size`…).
 - The rendered DOM — element, classes, modifiers, `aria-*` wiring, keyboard handling — matches React's, so the same stylesheet produces the same result.
 - The differences are listed in the component's doc comment (see Conventions).
-- The behaviours React's `<Name>.ct.tsx` tests (`should …`) are the checklist for this package's spec.
+- The behaviours React's `<Name>.ct.tsx` tests (`should …`) are the checklist for this package's `<Name>.ct.ts`, and its screenshot matrices are copied axis for axis.
 - The stories mirror React's `<Name>.stories.tsx`: same `title`, same story names in the same order, so the workbenches read the same.
 
 ## Read before writing
 
 1. Confirm the name is free: `packages/angular/src/components/<Name>/` must not exist.
-2. Read `packages/angular/src/components/Button/` — `Button.ts`, `Button.html`, `Button.stories.ts`, `Button.spec.ts` — and `Ripple/Ripple.ts`, the reference for every convention below. [templates.md](templates.md) is a starting point, not a substitute; where they differ, follow the existing code.
+2. Read `packages/angular/src/components/Button/` — `Button.ts`, `Button.html`, `Button.stories.ts`, `Button.ct.ts` — and `Ripple/Ripple.ts`, the reference for every convention below. [templates.md](templates.md) is a starting point, not a substitute; where they differ, follow the existing code.
 3. Read the component's stylesheet to learn its block, element and modifier classes and its `--okkly-<kebab>-*` variables.
 4. If porting, read the React component, its stories and its `.ct.tsx`, and fetch the matching Angular Material API page if there is one.
-5. Reuse before inventing: existing directives (`OkklyRipple`) and `@okkly/helpers`. Behaviour React attaches through a hook becomes a **directive** in `src/components/<Name>/<Name>.ts`, applied as a `hostDirectives` entry where a component needs it.
+5. Reuse before inventing: existing directives (`OkklyRipple`) and `@okkly/shared` — the framework-neutral half every package shares (a component's prop types and prop-to-class logic, as for Box, plus `bem`/`clamp`/`uniqueId`/`debounce`); anything the four framework packages would each repeat belongs there. Behaviour React attaches through a hook becomes a **directive** in `src/components/<Name>/<Name>.ts`, applied as a `hostDirectives` entry where a component needs it.
 
 ## Files to create
 
@@ -37,14 +37,14 @@ The component's look lives in `@okkly/design-system`, not in this package. If `p
 | `packages/angular/src/components/<Name>/<Name>.ts`         | The component (and any marker directives it projects) |
 | `packages/angular/src/components/<Name>/<Name>.html`       | Its template (`templateUrl`)                          |
 | `packages/angular/src/components/<Name>/<Name>.stories.ts` | Storybook stories = the component's docs page         |
-| `packages/angular/src/components/<Name>/<Name>.spec.ts`    | Vitest + TestBed tests                                |
+| `packages/angular/src/components/<Name>/<Name>.ct.ts`      | Playwright component tests + matrix screenshots       |
 | `packages/angular/src/styles.scss`                         | `@use` the component's stylesheet                     |
 | `packages/angular/.storybook/preview.ts`                   | Import the same stylesheet for the workbench          |
 | `packages/angular/src/index.ts`                            | Append the export block                               |
 | `packages/angular/README.md`                               | A `## <Name>` section, like `## Button`               |
 | `.changeset/angular-<kebab-name>.md`                       | `minor` bump for `@okkly/angular`                     |
 
-A template of a few lines may stay inline (`template:`), but anything with control flow goes in `<Name>.html`. Specs and stories never ship — `tsconfig.build.json` excludes them, from the build and from Compodoc alike.
+A template of a few lines may stay inline (`template:`), but anything with control flow goes in `<Name>.html`. Tests and stories never ship — `tsconfig.build.json` excludes them, from the build and from Compodoc alike.
 
 ### Registering the stylesheet (both places, always)
 
@@ -92,12 +92,18 @@ Also add the stylesheet of every design-system component this one renders (e.g. 
 - If not porting: first story `Playground` ("Play with every prop from the controls panel."), then one story per realistic use case with a JSDoc comment, ending with `CustomStyling`, which overrides the `--okkly-<kebab>-*` variables inline on the component.
 - Control flow in templates uses `@for`/`@if`, never `*ngFor`/`*ngIf`.
 
-### Tests (`<Name>.spec.ts`)
+### Tests (`<Name>.ct.ts`)
 
-- `describe`/`it`/`expect`/`vi` from `vitest` (no globals). The zoneless TestBed environment is already wired in `vitest.setup.ts`.
-- Render through a test-local `Host` component whose state is **signals** (the comment in `Button.spec.ts` explains why), and a `render(patch)` helper that patches the host and calls `fixture.detectChanges()`.
-- One `describe("Okkly<Name>", …)`, test names in the present tense, as in `Button.spec.ts`. Cover: content, default classes, each modifier, projected slots, outputs (bind them to `vi.fn()` on the host), keyboard interaction, disabled/edge states.
-- The environment is jsdom: there is no layout, so assert classes and attributes, not sizes.
+Tests run in a real Chromium through Playwright, against the stylesheet the package ships — the same setup as `@okkly/react`'s `.ct.tsx`, with a template string where React writes JSX.
+
+- Import `test`/`expect` from `../../playwright/harness` (never directly from Playwright) and `executeMatrixScreenshotTest` from `../../playwright/screenshots`.
+- Mount with the `mountTemplate(template, state?)` fixture. Every public export of the package is in scope, and it returns the template's root element. The harness around it:
+  - an input the test changes later is bound to `state().<key>` (`[size]="state().size"`), its starting value passed in `state`, and flipped with the `update({ … })` fixture — the counterpart of React's `component.update()`;
+  - an output is reported with `record('<name>', $event)` in the template and read back with `recordedEvents("<name>")` — the counterpart of a callback prop. Record serializable values only.
+- Declare option arrays with `as const satisfies readonly <Name>Variant[]` so a new union member is a type error until the tests cover it.
+- A `test.describe("Screenshot tests", …)` block with one matrix per visual axis (variants, colors, sizes, states), as in `Button.ct.ts`. A matrix that shows hover/focus/active uses `hooks.beforeEach` with `useFocusStateHooks` and stays isolated; a purely static one may set `fastNoIsolation: true`.
+- Behaviour tests named `should …`, each body marked with `// ARRANGE`, `// ACT`, `// ASSERT` comments. Cover: role and accessible name, default classes, each modifier, projected content, outputs, keyboard interaction, disabled/edge states. Group related cases with `test.describe("<input>", …)`.
+- Drive the component the way a user does — `click()`, `page.mouse`, `pressSequentially()` — rather than dispatching synthetic events.
 
 ### Export (`src/index.ts`)
 
@@ -126,12 +132,12 @@ Run from the repo root and fix everything before reporting done:
 
 ```bash
 pnpm --filter @okkly/angular typecheck
-pnpm --filter @okkly/angular test
+pnpm --filter @okkly/angular exec playwright test src/components/<Name>
 pnpm --filter @okkly/angular build
 pnpm lint
 pnpm exec prettier --check packages/angular .changeset
 ```
 
-`build` is not optional: `typecheck` is plain `tsc`, while ng-packagr's AOT compile is what type-checks the templates (`strictTemplates`) and compiles `styles.scss`. Then check `dist/okkly-angular.css` contains `.okkly-<kebab>`. Offer to start Storybook (`pnpm storybook angular`, port 6007) so the user can check the docs page.
+`build` is not optional: `typecheck` is plain `tsc`, while ng-packagr's AOT compile is what type-checks the templates (`strictTemplates`) and compiles `styles.scss`. Then check `dist/okkly-angular.css` contains `.okkly-<kebab>`. Tests must pass with no retries (the config has `retries: 0`); if Chromium is missing, run `pnpm --filter @okkly/angular exec playwright install chromium` first. Screenshots are compared only on CI's Linux image — locally they are skipped — so new baselines come from the `Update Angular Playwright screenshots` workflow. Offer to start Storybook (`pnpm storybook angular`, port 6007) so the user can check the docs page.
 
 When committing (only if asked), follow the repo convention, e.g. `:sparkles: feat(angular): add the <Name> component`.

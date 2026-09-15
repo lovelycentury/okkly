@@ -1,0 +1,96 @@
+name: Angular Playwright component tests
+
+# Reusable: `ci.yml` calls it to verify, `angular-playwright-screenshots.yml`
+# calls it with `update-snapshots` to refresh the committed baselines.
+on:
+  workflow_call:
+    inputs:
+      update-snapshots:
+        type: boolean
+        required: false
+        default: false
+        description: Rewrite the screenshot baselines instead of comparing against them.
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Component tests
+    runs-on: ubuntu-latest
+    # Screenshots are pixel-exact per platform, so the baselines belong to this
+    # image. It is the one `react-playwright.yml` pins too, which keeps the
+    # Angular and React baselines rendered on an identical stack and therefore
+    # comparable.
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
+      options: --ipc=host
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # @okkly/shared (the contracts Box shares) resolves through its `exports` to
+      # `dist`, which a fresh checkout does not have. Build the workspace
+      # dependencies; @okkly/design-system exports its SCSS sources and has no
+      # build to run.
+      - name: Build the workspace dependencies
+        run: pnpm --filter "@okkly/angular^..." --if-present run build
+
+      # Behaviour tests gate the job. The screenshot matrices — everything under
+      # `test.describe("Screenshot tests")` — run as their own step that reports
+      # without failing the job, so a pixel diff never blocks a PR on its own.
+      # Each run writes to its own folders: Playwright empties its output
+      # directories when it starts. The browsers ship with the container image,
+      # so both skip the download step `test:playwright` performs locally.
+      - name: Run behaviour tests
+        working-directory: packages/angular
+        env:
+          CI: "true"
+          PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/behaviour
+        run: pnpm exec playwright test --grep-invert "Screenshot tests" --output test-results/behaviour
+
+      - name: Run screenshot tests
+        id: screenshots
+        if: ${{ !cancelled() }}
+        # Refreshing the baselines must not swallow a failure.
+        continue-on-error: ${{ !inputs.update-snapshots }}
+        working-directory: packages/angular
+        env:
+          CI: "true"
+          PW_UPDATE_SNAPSHOTS: ${{ inputs.update-snapshots && 'true' || '' }}
+          PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/screenshots
+        run: pnpm exec playwright test --grep "Screenshot tests" --output test-results/screenshots
+
+      - name: Flag failed screenshots
+        if: ${{ steps.screenshots.outcome == 'failure' }}
+        run: echo "::warning title=Screenshot tests failed::A matrix no longer matches its baseline — see the angular-playwright-results artifact for the diffs."
+
+      # Under CI the config reports as `dot` + `blob`, so there is no HTML report
+      # to upload. `test-results` holds the expected/actual/diff images of a
+      # failed test; `npx playwright merge-reports --reporter html <blob dir>`
+      # turns a blob into an HTML report.
+      - name: Upload the results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular-playwright-results
+          path: |
+            packages/angular/test-results
+            packages/angular/blob-report
+          retention-days: 7
+
+      - name: Upload the refreshed screenshots
+        if: ${{ inputs.update-snapshots && !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular-screenshots
+          path: packages/angular/playwright/snapshots
+          retention-days: 1

@@ -1,37 +1,65 @@
-import { test, expect } from "@playwright/experimental-ct-svelte";
+import { expect, test } from "../../playwright/a11y";
+import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
+import { useFocusStateHooks } from "../../playwright/matrix";
 import TextField from "./TextField.svelte";
+import type { TextFieldColor, TextFieldSize } from "./TextField.types";
+
+const COLORS = [
+  "primary",
+  "secondary",
+  "dante",
+  "violet",
+  "ember",
+  "ice",
+  "contrast",
+] as const satisfies readonly TextFieldColor[];
+const SIZES = ["small", "medium", "large"] as const satisfies readonly TextFieldSize[];
 
 test.describe("Screenshot tests", () => {
-  test("TextField default state", async ({ mount }) => {
-    const component = await mount(TextField, {
-      props: { placeholder: "you@example.com" },
-      slots: { label: "Email" },
-    });
-    await expect(component).toHaveScreenshot();
+  executeMatrixScreenshotTest({
+    name: "TextField (states)",
+    columns: ["default", "filled", "error", "disabled"],
+    rows: ["default", "hover", "focus-visible"],
+    hooks: {
+      beforeEach: async (component, page, _column, row) =>
+        useFocusStateHooks({ component, page, state: row }),
+    },
+    component: TextField,
+    args: (column) => ({
+      props: {
+        placeholder: "you@example.com",
+        value: column === "filled" ? "hello@okkly.dev" : undefined,
+        error: column === "error",
+        disabled: column === "disabled",
+      },
+      slots: {
+        label: "Email",
+        ...(column === "error" ? { helperText: "That address looks wrong" } : {}),
+      },
+    }),
   });
 
-  test("TextField filled", async ({ mount }) => {
-    const component = await mount(TextField, {
-      props: { placeholder: "you@example.com", value: "hello@okryshto.dev" },
+  executeMatrixScreenshotTest({
+    name: "TextField (sizes)",
+    columns: SIZES,
+    rows: [...COLORS, "required", "no-label"],
+    // Isolated: the accent color only shows on a focused field, and a page can
+    // focus one field at a time.
+    hooks: {
+      beforeEach: async (component, page) =>
+        useFocusStateHooks({ component, page, state: "focus-visible" }),
+    },
+    component: TextField,
+    args: (column, row) => ({
+      props: {
+        placeholder: "you@example.com",
+        size: column,
+        color: (COLORS as readonly string[]).includes(row) ? (row as TextFieldColor) : "primary",
+        required: row === "required",
+        hideLabel: row === "no-label",
+      },
       slots: { label: "Email" },
-    });
-    await expect(component).toHaveScreenshot();
-  });
-
-  test("TextField error", async ({ mount }) => {
-    const component = await mount(TextField, {
-      props: { placeholder: "you@example.com", value: "hello@okryshto.dev", error: true },
-      slots: { label: "Email", helperText: "That address looks wrong" },
-    });
-    await expect(component).toHaveScreenshot();
-  });
-
-  test("TextField disabled", async ({ mount }) => {
-    const component = await mount(TextField, {
-      props: { placeholder: "you@example.com", disabled: true },
-      slots: { label: "Email" },
-    });
-    await expect(component).toHaveScreenshot();
+    }),
   });
 });
 
@@ -169,4 +197,63 @@ test("should fire oninput as the user types", async ({ mount }) => {
   // ASSERT
   expect(changes).toBe(3);
   await expect(component.getByRole("textbox")).toHaveValue("abc");
+});
+
+test("should apply the default classes", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(TextField, { slots: { label: "Email" } });
+
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-component/);
+  await expect(component).toHaveClass(/okkly-text-field/);
+  await expect(component).not.toHaveClass(/okkly-text-field--color-/);
+  await expect(component).not.toHaveClass(/okkly-text-field--(small|large)/);
+});
+
+for (const color of COLORS.filter((c) => c !== "primary")) {
+  test(`should apply the ${color} color modifier`, async ({ mount }) => {
+    // ARRANGE
+    const component = await mount(TextField, { props: { color }, slots: { label: "Email" } });
+
+    // ASSERT
+    await expect(component).toHaveClass(new RegExp(`okkly-text-field--color-${color}`));
+  });
+}
+
+test("should keep a consumer's own class alongside the modifiers", async ({ mount }) => {
+  // ARRANGE
+  const component = await mount(TextField, {
+    props: { class: "my-field" },
+    slots: { label: "Email" },
+  });
+
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-text-field/);
+  await expect(component).toHaveClass(/my-field/);
+});
+
+test.describe("adornments", () => {
+  test("should not render the adornment slots without snippets", async ({ mount }) => {
+    // ARRANGE
+    const component = await mount(TextField, { slots: { label: "Email" } });
+
+    // ASSERT
+    await expect(component.locator(".okkly-text-field__adornment")).toHaveCount(0);
+  });
+
+  test("should render the adornment slots when snippets are passed", async ({ mount }) => {
+    // ARRANGE
+    const component = await mount(TextField, {
+      slots: {
+        label: "Email",
+        startAdornment: '<span data-testid="start-adornment"></span>',
+        endAdornment: '<span data-testid="end-adornment"></span>',
+      },
+    });
+
+    // ASSERT
+    await expect(component.getByTestId("start-adornment")).toBeAttached();
+    await expect(component.getByTestId("end-adornment")).toBeAttached();
+    await expect(component.locator(".okkly-text-field__adornment")).toHaveCount(2);
+  });
 });

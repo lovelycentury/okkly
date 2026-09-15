@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { iconHeart, iconSearch, iconStar } from "@okkly/icons";
 import { useState } from "react";
-import { Icon, ICON_NAMES, type IconName } from "./Icon";
+import { Icon, ICON_NAMES } from "./Icon";
+import type { IconName } from "./Icon.types";
 
 /**
  * Renders any glyph from `@okkly/icons`. Pick one by `name` for autocomplete over the

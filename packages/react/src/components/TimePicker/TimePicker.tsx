@@ -6,19 +6,10 @@ import {
   useLayoutEffect,
   useRef,
   useState,
-  type HTMLAttributes,
   type KeyboardEvent,
-  type ReactNode,
 } from "react";
 import "@okkly/design-system/components/TimePicker/TimePicker.scss";
-
-export interface TimePickerValue {
-  h: number;
-  m: number;
-}
-
-export type TimePickerColor = "primary" | "dante" | "indigo" | "violet" | "ember" | "ice";
-export type TimePickerFormat = "24h" | "12h";
+import type { TimePickerValue, WheelColumnProps, TimePickerProps } from "./TimePicker.types";
 
 // Matches `--okkly-time-picker-row-height`'s default (2.5rem @ 16px root) —
 // only used when the real rendered height can't be measured (e.g. jsdom in
@@ -71,44 +62,6 @@ function scrollElementTo(el: HTMLElement, top: number, behavior: ScrollBehavior)
   else el.scrollTop = top;
 }
 
-interface WheelColumnProps {
-  /**
-   * Values.
-   *
-   * @default undefined
-   * @type {number[]}
-   */
-  values: number[];
-  /**
-   * Value.
-   *
-   * @default undefined
-   * @type {number}
-   */
-  value: number;
-  /**
-   * On Value Change.
-   *
-   * @default undefined
-   * @type {(value: number) => void}
-   */
-  onValueChange: (value: number) => void;
-  /**
-   * Format Value.
-   *
-   * @default undefined
-   * @type {(value: number) => ReactNode}
-   */
-  formatValue: (value: number) => ReactNode;
-  /**
-   * Aria Label.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  ariaLabel: string;
-}
-
 /**
  * A single scrollable value list (hours, minutes, or AM/PM) — a plain,
  * MUI `MultiSectionDigitalClock`-style column: uniform rows, the selected
@@ -125,6 +78,12 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
   // sync effect below. Comparing against it there is what tells a render
   // apart as self-inflicted vs. genuinely external — see that effect.
   const lastReportedRef = useRef(value);
+  // The scrollTop a smooth scroll *we* started is heading for. While set, the
+  // scroll listener ignores every intermediate position — otherwise the rows
+  // crossed on the way get committed as values (e.g. switching `format` from
+  // 13:00 re-dials the hour from row 13 to row 0 and emitted 12, 11, 10…, and a
+  // ResizeObserver re-centre mid-animation could strand it on one of them).
+  const programmaticTargetRef = useRef<number | null>(null);
 
   const valuesRef = useRef(values);
   valuesRef.current = values;
@@ -138,6 +97,12 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
   // `__column-container` in the SCSS), so centring row `i` is exactly
   // `i * rowHeight` — every value can reach the middle, ends included.
   const targetScrollTop = (index: number) => index * rowHeightRef.current;
+
+  const smoothScrollToIndex = (el: HTMLElement, index: number) => {
+    const top = targetScrollTop(index);
+    programmaticTargetRef.current = top;
+    scrollElementTo(el, top, "smooth");
+  };
 
   // Land on the initial value with no animation, and measure the real rendered
   // row height before the first paint (CSS sizes it in `rem`, so a hardcoded
@@ -158,6 +123,8 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
     if (typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver(() => {
       measure();
+      // A hard jump supersedes any smooth scroll still in flight.
+      programmaticTargetRef.current = null;
       el.scrollTop = targetScrollTop(indexOf(valueRef.current));
     });
     observer.observe(el);
@@ -172,6 +139,11 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
     const el = viewportRef.current;
     if (!el) return;
     const update = () => {
+      const target = programmaticTargetRef.current;
+      if (target !== null) {
+        if (Math.abs(el.scrollTop - target) > 1) return;
+        programmaticTargetRef.current = null;
+      }
       const vals = valuesRef.current;
       const centered = el.scrollTop / rowHeightRef.current;
       const nearestIndex = Math.min(Math.max(Math.round(centered), 0), vals.length - 1);
@@ -181,8 +153,17 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
         onValueChangeRef.current(nearest);
       }
     };
+    // Any real gesture hands control back to the user mid-animation.
+    const releaseToUser = () => {
+      programmaticTargetRef.current = null;
+    };
+    const userEvents = ["wheel", "touchstart", "pointerdown"] as const;
     el.addEventListener("scroll", update, { passive: true });
-    return () => el.removeEventListener("scroll", update);
+    for (const type of userEvents) el.addEventListener(type, releaseToUser, { passive: true });
+    return () => {
+      el.removeEventListener("scroll", update);
+      for (const type of userEvents) el.removeEventListener(type, releaseToUser);
+    };
   }, []);
 
   // Reacts to *externally*-driven value changes only. A render whose `value`
@@ -192,14 +173,16 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
   // gesture is still in progress and must not be interrupted. Force-scrolling
   // on every one of those self-inflicted renders is what made scrolling feel
   // robotic: it fought the browser's own momentum on every row crossed mid-drag.
-  useEffect(() => {
+  // A layout effect so the programmatic-scroll guard is in place before the
+  // browser fires the scroll event from clamping `scrollTop` when `values` shrinks.
+  useLayoutEffect(() => {
     const isSelfInflicted = value === lastReportedRef.current;
     lastReportedRef.current = value;
     if (isSelfInflicted) return;
     const el = viewportRef.current;
     if (!el) return;
-    const target = targetScrollTop(indexOf(value));
-    if (Math.abs(el.scrollTop - target) > 1) scrollElementTo(el, target, "smooth");
+    const index = indexOf(value);
+    if (Math.abs(el.scrollTop - targetScrollTop(index)) > 1) smoothScrollToIndex(el, index);
   }, [value, values]);
 
   // Click/keyboard commit the value directly instead of only nudging the
@@ -211,7 +194,7 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
     lastReportedRef.current = next;
     onValueChangeRef.current(next);
     const el = viewportRef.current;
-    if (el) scrollElementTo(el, targetScrollTop(index), "smooth");
+    if (el) smoothScrollToIndex(el, index);
   };
 
   const step = (delta: number) =>
@@ -267,94 +250,6 @@ function WheelColumn({ values, value, onValueChange, formatValue, ariaLabel }: W
       </div>
     </div>
   );
-}
-
-/**
- * No MUI equivalent — MUI X's `TimePicker`/`DesktopTimePicker` is a masked text
- * input with a popover, not an always-visible inline picker; the source spec
- * deliberately calls that gap out ("Precise typed time → use a masked input").
- * The picker itself mirrors MUI's `MultiSectionDigitalClock`: up to three
- * plain scrollable columns (hours, minutes, and — only for `format="12h"` —
- * a third AM/PM column), each a simple list with the selected row picked out
- * by a filled pill, not a centered/enlarged carousel row. `value.h` is always
- * canonical 24-hour (0–23); the AM/PM column is purely a 12-hour selection
- * helper layered on top of it and is absent by default (`format` defaults to
- * `"24h"`, which has no AM/PM concept).
- */
-export interface TimePickerProps extends Omit<
-  HTMLAttributes<HTMLDivElement>,
-  "onChange" | "defaultValue"
-> {
-  /**
-   * Selected time. Controlled if provided; otherwise driven by `defaultValue`.
-   *
-   * @default undefined
-   * @type {TimePickerValue}
-   */
-  value?: TimePickerValue;
-  /**
-   * Initial time when uncontrolled.
-   *
-   * @default { h: 0, m: 0 }
-   * @type {TimePickerValue}
-   */
-  defaultValue?: TimePickerValue;
-  /**
-   * Minute column step.
-   *
-   * @default 1
-   * @type {number}
-   */
-  step?: number;
-  /**
-   * `"12h"` splits the hour column into 1–12 plus a third AM/PM column; the underlying value stays 24-hour either way.
-   *
-   * @default "24h"
-   * @type {TimePickerFormat}
-   */
-  format?: TimePickerFormat;
-  /**
-   * Accent tone for the focus outline and selected-row pill.
-   *
-   * @default "primary"
-   * @type {TimePickerColor}
-   */
-  color?: TimePickerColor;
-  /**
-   * Fires whenever any column settles on a new value.
-   *
-   * @default undefined
-   * @type {(value: TimePickerValue) => void}
-   */
-  onChange?: (value: TimePickerValue) => void;
-  /**
-   * Accessible name for the hour column.
-   *
-   * @default "Hours"
-   * @type {string}
-   */
-  hoursAriaLabel?: string;
-  /**
-   * Accessible name for the minute column.
-   *
-   * @default "Minutes"
-   * @type {string}
-   */
-  minutesAriaLabel?: string;
-  /**
-   * Accessible name for the AM/PM column (only rendered for `format="12h"`).
-   *
-   * @default "AM/PM"
-   * @type {string}
-   */
-  meridiemAriaLabel?: string;
-  /**
-   * Class Name.
-   *
-   * @default undefined
-   * @type {string}
-   */
-  className?: string;
 }
 
 export const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(function TimePicker(

@@ -1,7 +1,7 @@
 import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Pagination } from "./Pagination";
-import type { PaginationColor, PaginationShape, PaginationSize } from "./Pagination";
+import type { PaginationColor, PaginationShape, PaginationSize } from "./Pagination.types";
 
 const COLORS = [
   "primary",

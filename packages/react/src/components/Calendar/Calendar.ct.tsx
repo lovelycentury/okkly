@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Calendar } from "./Calendar";
 import type { CSSProperties } from "react";
-import type { CalendarTone } from "./Calendar";
+import type { CalendarTone } from "./Calendar.types";
 
 const TONES = [
   "primary",

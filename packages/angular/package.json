@@ -1,6 +1,6 @@
 {
   "name": "@okkly/angular",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Okryshto design system — Angular component library",
   "license": "MIT",
   "type": "module",
@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@okkly/design-system": "workspace:*",
+    "@okkly/shared": "workspace:*",
     "tslib": "^2.8.1"
   },
   "devDependencies": {

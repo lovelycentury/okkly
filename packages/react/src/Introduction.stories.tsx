@@ -21,6 +21,8 @@ import {
 } from "./brand/BrandDocs";
 
 import { Logo } from "./components/Logo/Logo";
+import { TYPOGRAPHY_VARIANTS } from "./components/Typography/Typography";
+import type { TypographyVariant } from "./components/Typography/Typography.types";
 
 import { Button } from "./components/Button/Button";
 import { ButtonGroup } from "./components/ButtonGroup/ButtonGroup";
@@ -670,55 +672,57 @@ export const Color: Story = {
 
 /* ------------------------------------------------- Type, space and elevation */
 
-const typeScale = [
-  { label: "display/2xl", size: "72px", lineHeight: "76px", weight: "Semi Bold" },
-  { label: "display/xl", size: "56px", lineHeight: "60px", weight: "Semi Bold" },
-  { label: "display/lg", size: "44px", lineHeight: "50px", weight: "Semi Bold" },
-  { label: "heading/h1", size: "34px", lineHeight: "42px", weight: "Semi Bold" },
-  { label: "heading/h2", size: "26px", lineHeight: "34px", weight: "Medium" },
-  { label: "heading/h3", size: "22px", lineHeight: "30px", weight: "Medium" },
-  { label: "title/lg", size: "20px", lineHeight: "28px", weight: "Medium" },
-  { label: "title/md", size: "18px", lineHeight: "26px", weight: "Medium" },
-  { label: "body/lg", size: "16px", lineHeight: "26px", weight: "Regular" },
-  { label: "body/md", size: "15px", lineHeight: "24px", weight: "Regular" },
-  { label: "body/sm", size: "13px", lineHeight: "20px", weight: "Regular" },
-  { label: "label/md", size: "12px", lineHeight: "16px", weight: "Medium" },
-  { label: "label/sm", size: "11px", lineHeight: "14px", weight: "Medium" },
-];
+// Everything below renders from the shipped styles — real `Typography`
+// variants and the `--okkly-*` tokens — so this page cannot drift from the
+// code. The name lists mirror the Figma library (packages/figma-plugin/src/
+// tokens), which the tokens themselves are named after.
 
+/** Every variant, in scale order — `TypographyVariant` is inferred from this map. */
+const typeVariants = Object.keys(TYPOGRAPHY_VARIANTS) as TypographyVariant[];
+
+/** Figma names a text style by role and step (`heading/h1`, `body/md`); the variant is flat. */
+const figmaTypeName = (variant: TypographyVariant) =>
+  /^h\d$/.test(variant) ? `heading/${variant}` : variant.replace("-", "/");
+
+/** `space/<step>` is step × 4px — SPACING in scales.ts, `--okkly-space-*` in tokens/spacing.css. */
 const spaces = [
-  { label: "space/4", px: 4 },
-  { label: "space/8", px: 8 },
-  { label: "space/12", px: 12 },
-  { label: "space/16", px: 16 },
-  { label: "space/20", px: 20 },
-  { label: "space/24", px: 24 },
-  { label: "space/32", px: 32 },
-  { label: "space/40", px: 40 },
-  { label: "space/48", px: 48 },
-  { label: "space/64", px: 64 },
-  { label: "space/80", px: 80 },
-  { label: "space/120", px: 120 },
+  { step: "px", px: 1 },
+  { step: "0.5", px: 2 },
+  { step: "1", px: 4 },
+  { step: "1.5", px: 6 },
+  { step: "2", px: 8 },
+  { step: "3", px: 12 },
+  { step: "4", px: 16 },
+  { step: "5", px: 20 },
+  { step: "6", px: 24 },
+  { step: "8", px: 32 },
+  { step: "10", px: 40 },
+  { step: "12", px: 48 },
+  { step: "16", px: 64 },
+  { step: "20", px: 80 },
+  { step: "24", px: 96 },
+  { step: "32", px: 128 },
+  { step: "40", px: 160 },
 ];
 
+/** RADII in scales.ts, `--okkly-radius-*` in tokens/radius.css. */
 const radii = [
-  { label: "r/0", value: "0" },
-  { label: "r/2", value: "2px" },
-  { label: "r/4", value: "4px" },
-  { label: "r/8", value: "8px" },
-  { label: "r/12", value: "12px" },
-  { label: "r/16", value: "16px" },
-  { label: "r/20", value: "20px" },
-  { label: "r/24", value: "24px" },
-  { label: "r/32", value: "32px" },
-  { label: "r/max", value: "9999px" },
+  { name: "none", px: "0" },
+  { name: "sm", px: "6px" },
+  { name: "md", px: "10px" },
+  { name: "lg", px: "14px" },
+  { name: "xl", px: "20px" },
+  { name: "2xl", px: "28px" },
+  { name: "3xl", px: "36px" },
+  { name: "full", px: "9999px" },
 ];
 
-const elevations = [
-  { label: "elevation/xs", shadow: "var(--okkly-shadow-medium-bottom)" },
-  { label: "elevation/sm", shadow: "var(--okkly-shadow-soft-bottom)" },
-  { label: "elevation/md", shadow: "0 0.5rem 1.5rem rgba(0,0,0,0.28)" },
-  { label: "elevation/lg", shadow: "0 1rem 2.5rem rgba(0,0,0,0.36)" },
+/** SHADOW_TOKENS in effects.ts, `--okkly-shadow-*` in tokens/shadow.css. */
+const shadows = [
+  { name: "xs", note: "Hairline lift" },
+  { name: "sm", note: "Chips, small cards" },
+  { name: "md", note: "Cards, popovers" },
+  { name: "lg", note: "Menus, modals" },
 ];
 
 const durations = [
@@ -734,7 +738,7 @@ export const TypeSpaceElevation: Story = {
       <BrandDocsHeader
         eyebrow="Foundations — System"
         title="Type, space, elevation"
-        lede="The structural tokens. Type as text styles; spacing & radii as constants; elevation & glass as effect styles."
+        lede="The structural tokens. Type as text styles; spacing, radii and elevation as tokens named after the Figma variables and effect styles."
         showRule
       />
 
@@ -743,27 +747,28 @@ export const TypeSpaceElevation: Story = {
         note="Editorial modular scale — display for identity, text for reading. Families: Inter (sans), JetBrains Mono (mono)."
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
-          {typeScale.map((row) => (
-            <TypeRow key={row.label} {...row} />
+          {typeVariants.map((variant) => (
+            <TypeRow key={variant} variant={variant} label={figmaTypeName(variant)} />
           ))}
         </div>
       </BrandDocsSection>
 
       <hr className="okkly-brand-docs__divider" />
 
-      <BrandDocsSection title="Font families" note="Three faces, three jobs.">
+      <BrandDocsSection
+        title="Font families"
+        note="Two faces on the web; the Figma library adds a third for display styles."
+      >
         <CardRack>
           <Card title="Inter" subtitle="--okkly-font-family-sans">
             <p className="okkly-brand-docs__token-desc" style={{ fontFamily: "Inter, sans-serif" }}>
-              Primary UI sans — body, labels, most chrome.
+              Primary UI sans — body, labels, most chrome, and display on the web.
             </p>
           </Card>
-          <Card title="Inter Tight" subtitle="display fallback → Inter">
-            <p
-              className="okkly-brand-docs__token-desc"
-              style={{ fontFamily: "Inter Tight, Inter, sans-serif" }}
-            >
-              Tighter display moments when available.
+          <Card title="Inter Tight" subtitle="Figma only — web renders Inter">
+            <p className="okkly-brand-docs__token-desc">
+              Figma sets the display and heading styles in Inter Tight when it is installed. There
+              is no web token for it: the same styles render in Inter here.
             </p>
           </Card>
           <Card title="JetBrains Mono" subtitle="--okkly-font-family-mono">
@@ -781,13 +786,16 @@ export const TypeSpaceElevation: Story = {
 
       <BrandDocsSection
         title="Spacing"
-        note="Linear scale used for padding, gaps, and layout rhythm."
+        note="A 4px scale for padding, gaps and layout rhythm: space/<n> is n × 4px — the same steps as Box's numeric props (p={4} is space/4)."
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
           {spaces.map((space) => (
-            <div key={space.label} className="okkly-brand-docs__space-row">
-              <span className="okkly-brand-docs__space-label">{space.label}</span>
-              <div className="okkly-brand-docs__space-bar" style={{ width: `${space.px}px` }} />
+            <div key={space.step} className="okkly-brand-docs__space-row">
+              <span className="okkly-brand-docs__space-label">space/{space.step}</span>
+              <div
+                className="okkly-brand-docs__space-bar"
+                style={{ width: `var(--okkly-space-${space.step.replace(".", "-")})` }}
+              />
               <span className="okkly-brand-docs__space-label">{space.px}px</span>
             </div>
           ))}
@@ -796,15 +804,17 @@ export const TypeSpaceElevation: Story = {
 
       <hr className="okkly-brand-docs__divider" />
 
-      <BrandDocsSection title="Radii" note="Corner radii from sharp to pill.">
+      <BrandDocsSection title="Radii" note="Corner radii from sharp to pill — --okkly-radius-*.">
         <div className="okkly-brand-docs__radius-grid">
           {radii.map((radius) => (
-            <div key={radius.label} className="okkly-brand-docs__radius-item">
+            <div key={radius.name} className="okkly-brand-docs__radius-item">
               <div
                 className="okkly-brand-docs__radius-box"
-                style={{ borderRadius: radius.value }}
+                style={{ borderRadius: `var(--okkly-radius-${radius.name})` }}
               />
-              <span className="okkly-brand-docs__radius-label">{radius.label}</span>
+              <span className="okkly-brand-docs__radius-label">
+                radius/{radius.name} · {radius.px}
+              </span>
             </div>
           ))}
         </div>
@@ -812,18 +822,23 @@ export const TypeSpaceElevation: Story = {
 
       <hr className="okkly-brand-docs__divider" />
 
-      <BrandDocsSection title="Elevation" note="Depth via soft shadows on raised surfaces.">
+      <BrandDocsSection
+        title="Elevation"
+        note="Depth via soft shadows on raised surfaces — --okkly-shadow-*."
+      >
         <div className="okkly-brand-docs__elevation-grid">
-          {elevations.map((item) => (
+          {shadows.map((shadow) => (
             <div
-              key={item.label}
+              key={shadow.name}
               style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
             >
               <div
                 className="okkly-brand-docs__elevation-card"
-                style={{ boxShadow: item.shadow }}
+                style={{ boxShadow: `var(--okkly-shadow-${shadow.name})` }}
               />
-              <span className="okkly-brand-docs__radius-label">{item.label}</span>
+              <span className="okkly-brand-docs__radius-label">
+                shadow/{shadow.name} · {shadow.note}
+              </span>
             </div>
           ))}
         </div>
@@ -836,8 +851,9 @@ export const TypeSpaceElevation: Story = {
           <TokenGuide rows={durations} />
         </Card>
         <Prose>
-          Under <Code>prefers-reduced-motion</Code> these collapse to near zero — the animation goes
-          away, the end state does not.
+          The durations themselves stay put: each component that moves — Drawer, Slide, Card,
+          Progress, the animated background — drops its own motion under{" "}
+          <Code>prefers-reduced-motion</Code>. The animation goes away, the end state does not.
         </Prose>
       </BrandDocsSection>
     </BrandDocsPage>
@@ -883,10 +899,10 @@ export const Guidelines: Story = {
                 desc: "Brand moments, hero identity, empty states with presence",
               },
               { name: "heading/*", desc: "Page and section titles" },
-              { name: "title/*", desc: "Card titles, dialog headers, dense UI labels with weight" },
               { name: "body/*", desc: "Readable paragraphs and supporting copy" },
-              { name: "label/*", desc: "Meta, captions, overlines, chip text" },
-              { name: "mono", desc: "Code, tokens, hex values, technical metadata" },
+              { name: "label/*", desc: "Form labels, chip and button text" },
+              { name: "caption · overline", desc: "Meta lines, and eyebrow labels above titles" },
+              { name: "mono/sm", desc: "Code, tokens, hex values, technical metadata" },
             ]}
           />
         </Card>
@@ -897,8 +913,8 @@ export const Guidelines: Story = {
           title="Spacing — keep the rhythm"
           subtitle="Stick to the space scale. Odd values break alignment across surfaces."
           dos={[
-            "Stack with space/16–24 between related blocks",
-            "Use space/8–12 inside compact controls",
+            "Stack with space/4–6 (16–24px) between related blocks",
+            "Use space/2–3 (8–12px) inside compact controls",
             "Align to an 8px mental grid when unsure",
           ]}
           donts={[
@@ -913,10 +929,10 @@ export const Guidelines: Story = {
         <Card>
           <TokenGuide
             rows={[
-              { name: "r/4–8", desc: "Inputs, chips, compact controls" },
-              { name: "r/12–16", desc: "Cards, menus, popovers" },
-              { name: "r/20–24", desc: "Large panels, feature tiles" },
-              { name: "r/max", desc: "Pills, avatars, FAB — fully rounded" },
+              { name: "radius/sm–md", desc: "Inputs, chips, compact controls" },
+              { name: "radius/lg–xl", desc: "Cards, menus, popovers" },
+              { name: "radius/2xl–3xl", desc: "Large panels, feature tiles" },
+              { name: "radius/full", desc: "Pills, avatars, FAB — fully rounded" },
             ]}
           />
         </Card>
@@ -943,7 +959,7 @@ export const Guidelines: Story = {
         <Card>
           <TokenGuide
             rows={[
-              { name: "elevation/*", desc: "Raise surfaces; prefer soft shadows on dark canvas" },
+              { name: "shadow/*", desc: "Raise surfaces; prefer soft shadows on dark canvas" },
               {
                 name: "duration-sm",
                 desc: "Micro interactions — hover, focus, chips (~400ms token)",
@@ -954,7 +970,7 @@ export const Guidelines: Story = {
               },
               {
                 name: "reduced-motion",
-                desc: "Collapse transition duration near 0 when prefers-reduced-motion",
+                desc: "Components that move drop their motion under prefers-reduced-motion",
               },
             ]}
           />

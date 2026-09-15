@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { useFocusStateHooks } from "../../playwright/matrix";
 import { Switch } from "./Switch";
-import type { SwitchColor, SwitchSize } from "./Switch";
+import type { SwitchColor, SwitchSize } from "./Switch.types";
 
 const COLORS = [
   "primary",

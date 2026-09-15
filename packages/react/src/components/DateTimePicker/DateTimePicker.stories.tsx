@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { DateTimePicker, type DateTimePickerColor } from "./DateTimePicker";
+import { DateTimePicker } from "./DateTimePicker";
+import type { DateTimePickerColor } from "./DateTimePicker.types";
 import { Chip } from "../Chip/Chip";
 
 // Fixed reference date so the visuals match the source design 1:1.

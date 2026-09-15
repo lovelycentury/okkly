@@ -14,7 +14,10 @@ export type TestArgs = Parameters<Parameters<typeof test>[2]>[0];
  */
 export type MatrixCellArgs = {
   props?: Record<string, unknown>;
-  /** Slot content, as the raw markup Playwright's Vue mount compiles. */
+  /**
+   * Slot content, as the raw markup Playwright's Vue mount compiles — so an
+   * `<svg>` renders as an element, not as text.
+   */
   slots?: Record<string, string>;
   on?: Record<string, (...args: unknown[]) => void>;
 };

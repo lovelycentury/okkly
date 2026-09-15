@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import { Alert } from "./Alert";
 import { Button } from "../Button/Button";
-import type { AlertSeverity, AlertVariant } from "./Alert";
+import type { AlertSeverity, AlertVariant } from "./Alert.types";
 
 const SEVERITIES = [
   "info",

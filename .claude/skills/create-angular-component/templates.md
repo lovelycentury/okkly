@@ -145,71 +145,82 @@ export const CustomStyling: Story = {
 };
 ```
 
-## `packages/angular/src/components/Example/Example.spec.ts`
+## `packages/angular/src/components/Example/Example.ct.ts`
 
 ```ts
-import { Component, signal } from "@angular/core";
-import { TestBed, type ComponentFixture } from "@angular/core/testing";
-import { beforeEach, describe, expect, it } from "vitest";
-import { OkklyExample } from "./Example";
+import { expect, test } from "../../playwright/harness";
+import { executeMatrixScreenshotTest } from "../../playwright/screenshots";
 import type { ExampleSize, ExampleVariant } from "./Example";
 
-// State is held in signals rather than plain fields: this package is zoneless,
-// so nothing else would mark the host dirty between `detectChanges()` calls.
-@Component({
-  imports: [OkklyExample],
-  template: `
-    <okkly-example [variant]="variant()" [size]="size()" class="custom" data-testid="example">
-      Hello
-    </okkly-example>
-  `,
-})
-class Host {
-  readonly variant = signal<ExampleVariant>("filled");
-  readonly size = signal<ExampleSize>("medium");
-}
+const VARIANTS = ["filled", "outlined"] as const satisfies readonly ExampleVariant[];
+const SIZES = ["small", "medium", "large"] as const satisfies readonly ExampleSize[];
 
-describe("OkklyExample", () => {
-  let fixture: ComponentFixture<Host>;
-
-  const root = () => fixture.nativeElement.querySelector("okkly-example") as HTMLElement;
-  const render = (patch: (host: Host) => void = () => {}) => {
-    patch(fixture.componentInstance);
-    fixture.detectChanges();
-  };
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(Host);
-    render();
+test.describe("Screenshot tests", () => {
+  executeMatrixScreenshotTest({
+    name: "Example (variants)",
+    columns: VARIANTS,
+    rows: SIZES,
+    fastNoIsolation: true,
+    component: (column, row) =>
+      `<okkly-example variant="${column}" size="${row}">Example</okkly-example>`,
   });
+});
 
-  it("renders its content", () => {
-    expect(root().textContent?.trim()).toBe("Hello");
-  });
+test("should render its content", async ({ mountTemplate }) => {
+  // ARRANGE
+  const component = await mountTemplate(`<okkly-example>Hello</okkly-example>`);
 
-  it("applies the default classes", () => {
-    expect(root().className).toContain("okkly-component");
-    expect(root().className).toContain("okkly-example");
-    expect(root().className).not.toMatch(/okkly-example--(outlined|small|large)/);
-  });
+  // ASSERT
+  await expect(component).toHaveText("Hello");
+});
 
-  it("applies the variant modifier", () => {
-    render((host) => host.variant.set("outlined"));
-    expect(root().className).toContain("okkly-example--outlined");
-  });
+test("should apply the default classes", async ({ mountTemplate }) => {
+  // ARRANGE
+  const component = await mountTemplate(`<okkly-example>Hello</okkly-example>`);
 
-  it("applies a size modifier only for non-medium sizes", () => {
-    render((host) => host.size.set("small"));
-    expect(root().className).toContain("okkly-example--small");
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-component/);
+  await expect(component).toHaveClass(/okkly-example/);
+  await expect(component).not.toHaveClass(/okkly-example--(outlined|small|large)/);
+});
 
-    render((host) => host.size.set("medium"));
-    expect(root().className).not.toMatch(/okkly-example--(small|large)/);
-  });
+test("should apply the variant modifier", async ({ mountTemplate }) => {
+  // ARRANGE
+  const component = await mountTemplate(`<okkly-example variant="outlined">Hello</okkly-example>`);
 
-  it("keeps a consumer's own class and attributes", () => {
-    expect(root().className).toContain("custom");
-    expect(root().getAttribute("data-testid")).toBe("example");
-  });
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-example--outlined/);
+});
+
+test("should apply a size modifier only for non-medium sizes", async ({
+  mountTemplate,
+  update,
+}) => {
+  // ARRANGE
+  const component = await mountTemplate(
+    `<okkly-example [size]="state().size">Hello</okkly-example>`,
+    { size: "small" },
+  );
+
+  // ASSERT
+  await expect(component).toHaveClass(/okkly-example--small/);
+
+  // ACT
+  await update({ size: "medium" });
+
+  // ASSERT
+  await expect(component).not.toHaveClass(/okkly-example--(small|large)/);
+});
+
+test("should keep a consumer's own class and attributes", async ({ mountTemplate }) => {
+  // ARRANGE
+  const component = await mountTemplate(
+    `<okkly-example class="custom" data-testid="example">Hello</okkly-example>`,
+  );
+
+  // ASSERT
+  await expect(component).toHaveClass(/custom/);
+  await expect(component).toHaveAttribute("data-testid", "example");
 });
 ```
 

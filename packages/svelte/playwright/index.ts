@@ -3,5 +3,8 @@
 // @okkly/react's equivalent file — every component under test needs its own
 // stylesheet imported here explicitly, alongside the global design tokens.
 import "@okkly/design-system/styles/index.scss";
+import "@okkly/design-system/components/Box/Box.scss";
+import "@okkly/design-system/components/Button/Button.scss";
+import "@okkly/design-system/components/Ripple/Ripple.scss";
 import "@okkly/design-system/components/TextField/TextField.scss";
 import "./index.css";

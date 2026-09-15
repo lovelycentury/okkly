@@ -2,7 +2,7 @@ import { expect, test } from "../../playwright/a11y";
 import { executeMatrixScreenshotTest, MOCK_PLAYWRIGHT_ICON } from "../../playwright/screenshots";
 import { StatCard } from "./StatCard";
 import { Icon } from "../Icon/Icon";
-import type { StatCardColor, StatCardSize } from "./StatCard";
+import type { StatCardColor, StatCardSize } from "./StatCard.types";
 
 const COLORS = [
   "primary",

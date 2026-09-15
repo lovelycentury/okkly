@@ -1,8 +1,10 @@
 "use client";
 
-import type { CSSProperties, ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { iconCheck, iconX } from "@okkly/icons";
 import "@okkly/design-system/components/BrandDocs/BrandDocs.scss";
+import { Typography } from "../components/Typography/Typography";
+import type { TypographyVariant } from "../components/Typography/Typography.types";
 
 export function BrandDocsPage({ children }: { children: ReactNode }) {
   return <div className="okkly-brand-docs">{children}</div>;
@@ -211,33 +213,46 @@ export function ColorSwatch({
   );
 }
 
+/** Figma's names for the weights the type scale uses. */
+const WEIGHT_NAMES: Record<string, string> = {
+  "400": "Regular",
+  "500": "Medium",
+  "600": "Semi Bold",
+  "700": "Bold",
+};
+
+/**
+ * One step of the type scale, rendered by the real `Typography` so the page
+ * shows exactly what ships. The metrics line is read back from the computed
+ * style rather than typed in, so it cannot drift from Typography.scss.
+ */
 export function TypeRow({
+  variant,
   label,
-  size,
-  lineHeight,
-  weight,
   sample = "The quiet details make the whole",
 }: {
+  variant: TypographyVariant;
   label: string;
-  size: string;
-  lineHeight: string;
-  weight: string;
   sample?: string;
 }) {
-  const style: CSSProperties = {
-    fontSize: size,
-    lineHeight,
-    fontWeight: weight === "Semi Bold" ? 600 : weight === "Medium" ? 500 : 400,
-    letterSpacing: Number.parseFloat(size) >= 34 ? "-0.02em" : undefined,
-  };
+  const ref = useRef<HTMLParagraphElement>(null);
+  const [metrics, setMetrics] = useState("");
+
+  useLayoutEffect(() => {
+    if (!ref.current) return;
+    const { fontSize, lineHeight, fontWeight } = getComputedStyle(ref.current);
+    setMetrics(
+      `${Number.parseFloat(fontSize)}/${Number.parseFloat(lineHeight)} · ${WEIGHT_NAMES[fontWeight] ?? fontWeight}`,
+    );
+  }, [variant]);
 
   return (
     <div className="okkly-brand-docs__type-row">
-      <p className="okkly-brand-docs__type-sample" style={style}>
+      <Typography ref={ref} variant={variant} as="p" className="okkly-brand-docs__type-sample">
         {sample}
-      </p>
+      </Typography>
       <p className="okkly-brand-docs__type-meta">
-        {label} · {size.replace("px", "")}/{lineHeight.replace("px", "")} · {weight}
+        {label} · {metrics}
       </p>
     </div>
   );
