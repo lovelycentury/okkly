@@ -9,6 +9,17 @@ $breakpoints: (
   xl: 1921px,
 );
 
+/// Container-query breakpoints. A container is a region of the page, not the
+/// page, so the scale is smaller than `$breakpoints`. Box's `@`-keys (`"@md"`)
+/// use these.
+$container-breakpoints: (
+  xs: 320px,
+  sm: 480px,
+  md: 640px,
+  lg: 800px,
+  xl: 1024px,
+);
+
 /// Applies CSS only if the screen width satisfies the given breakpoint.
 /// @example screen(min, sm)
 /// @example screen(max, sm)

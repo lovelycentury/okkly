@@ -6,7 +6,7 @@
 #   docker build -f ops/Dockerfile.storybook --build-arg PACKAGE=vue -t storybook-vue .
 #
 # PACKAGE is one of: react, vue, svelte, angular. Workspace deps
-# (@okkly/design-system, /icons, /helpers, /react-hooks) are built first via
+# (@okkly/design-system, /icons, /shared, /react-hooks) are built first via
 # the "..." filter. Runtime is spa.Caddyfile.
 
 ARG PACKAGE=react

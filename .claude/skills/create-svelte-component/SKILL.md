@@ -28,7 +28,7 @@ The component's look lives in `@okkly/design-system`, not in this package. If `p
 2. Read `packages/svelte/src/components/Button/` — `Button.svelte`, `Button.types.ts`, `Button.stories.svelte`, `Button.ct.ts` — the reference for every convention below. [templates.md](templates.md) is a starting point, not a substitute; where they differ, follow the existing code.
 3. Read the component's stylesheet to learn its block, element and modifier classes and its `--okkly-<kebab>-*` variables.
 4. If porting, read the React component, its stories and its `.ct.tsx`.
-5. Reuse before inventing: `src/actions/` (e.g. `ripple`), existing components, and `@okkly/helpers`. Behaviour React attaches through a hook + element (`useRipple` + `<Ripple>`) becomes a Svelte **action** in `src/actions/<name>.ts`, exported from `src/index.ts`.
+5. Reuse before inventing: `src/actions/` (e.g. `ripple`), existing components, and `@okkly/shared` — the framework-neutral half every package shares (a component's prop types and prop-to-class logic, as for Box, plus `bem`/`clamp`/`uniqueId`/`debounce`); anything the four framework packages would each repeat belongs there. Behaviour React attaches through a hook + element (`useRipple` + `<Ripple>`) becomes a Svelte **action** in `src/actions/<name>.ts`, exported from `src/index.ts`.
 
 ## Files to create
 

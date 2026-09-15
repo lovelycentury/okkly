@@ -1,15 +1,15 @@
 {
-  "name": "@okkly/helpers",
-  "version": "0.1.0",
-  "description": "Okryshto design system — framework-agnostic utility helpers",
+  "name": "@okkly/shared",
+  "version": "0.0.0",
+  "description": "Okryshto design system — the framework-neutral component contracts and utilities @okkly/react, /vue, /svelte and /angular share",
   "license": "MIT",
   "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lovelycentury/okkly.git",
-    "directory": "packages/helpers"
+    "directory": "packages/shared"
   },
-  "homepage": "https://github.com/lovelycentury/okkly/tree/main/packages/helpers#readme",
+  "homepage": "https://github.com/lovelycentury/okkly/tree/main/packages/shared#readme",
   "bugs": "https://github.com/lovelycentury/okkly/issues",
   "publishConfig": {
     "access": "public",
@@ -24,6 +24,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "default": "./dist/testing.js"
     },
     "./package.json": "./package.json"
   },
