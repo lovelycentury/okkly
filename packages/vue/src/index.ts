@@ -54,6 +54,13 @@ export type {
 export { default as Modal } from "./components/Modal/Modal.vue";
 export type { ModalProps } from "./components/Modal/Modal.types";
 
+export { default as Dialog } from "./components/Dialog/Dialog.vue";
+export { default as DialogTitle } from "./components/Dialog/DialogTitle.vue";
+export { default as DialogContent } from "./components/Dialog/DialogContent.vue";
+export { default as DialogActions } from "./components/Dialog/DialogActions.vue";
+export { default as DialogClose } from "./components/Dialog/DialogClose.vue";
+export type { DialogProps, DialogMaxWidth } from "./components/Dialog/Dialog.types";
+
 export { default as Fade } from "./components/Fade/Fade.vue";
 export type { FadeProps, FadeTimeout } from "./components/Fade/Fade.types";
 

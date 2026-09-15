@@ -469,6 +469,9 @@ importers:
       '@okkly/design-system':
         specifier: workspace:*
         version: link:../design-system
+      '@okkly/icons':
+        specifier: workspace:*
+        version: link:../icons
       '@okkly/shared':
         specifier: workspace:*
         version: link:../shared

@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@okkly/design-system": "workspace:*",
+    "@okkly/icons": "workspace:*",
     "@okkly/shared": "workspace:*",
     "@okkly/vue-composables": "workspace:*",
     "@popperjs/core": "^2.11.8"

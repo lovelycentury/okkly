@@ -307,6 +307,52 @@ additionally do belongs in the `close` handler, which already sees the
 
 [popperjs]: https://popper.js.org/
 
+## Dialog
+
+A centred panel that interrupts — built on `Modal`, which owns the portal,
+backdrop, focus trap, scroll lock and focus restoration. `Dialog` adds the
+centring and the sized paper, opening it with a `Grow` transition, and ships
+`DialogTitle` / `DialogContent` / `DialogActions` / `DialogClose` for the
+parts. Props mirror `@okkly/react`'s `<Dialog>` name-for-name and inherit
+every `Modal` prop; `onClose` becomes the `close` emit, carrying
+`(event, reason)` so a stray backdrop click can be told apart from a
+deliberate Escape.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@okkly/vue";
+
+const open = ref(false);
+const close = () => {
+  open.value = false;
+};
+</script>
+
+<template>
+  <Button @click="open = true">Delete the project</Button>
+  <Dialog :open="open" max-width="xs" @close="close">
+    <DialogTitle>Delete “Night drive”?</DialogTitle>
+    <DialogContent>This cannot be undone.</DialogContent>
+    <DialogActions>
+      <Button variant="ghost" @click="close">Keep it</Button>
+      <Button color="ember" @click="close">Delete it</Button>
+    </DialogActions>
+  </Dialog>
+</template>
+```
+
+| Prop                 | Type                                            | Default  |
+| -------------------- | ----------------------------------------------- | -------- |
+| `fullWidth`          | `boolean`                                       | `false`  |
+| `maxWidth`           | `"xs" \| "sm" \| "md" \| "lg" \| "xl" \| false` | `"sm"`   |
+| `fullScreen`         | `boolean`                                       | `false`  |
+| `transitionDuration` | `number \| { enter?, exit? } \| "auto"`         | `"auto"` |
+
+Every `Modal` prop above (`container`, `keepMounted`, `disableEscapeKeyDown`,
+…) is inherited and forwarded. `DialogClose` renders the corner ✕ — pass it
+its own `@click` handler, since closing stays the caller's job.
+
 ## Transitions
 
 `Fade`, `Grow`, `Zoom`, `Slide` and `Collapse` mirror `@okkly/react`'s
