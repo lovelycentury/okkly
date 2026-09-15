@@ -21,6 +21,12 @@ export type {
 export { default as Switch } from "./components/Switch/Switch.vue";
 export type { SwitchProps, SwitchSize, SwitchColor } from "./components/Switch/Switch.types";
 
+export { default as Radio } from "./components/Radio/Radio.vue";
+export type { RadioProps, RadioSize, RadioColor } from "./components/Radio/Radio.types";
+
+export { default as RadioGroup } from "./components/RadioGroup/RadioGroup.vue";
+export type { RadioGroupProps } from "./components/RadioGroup/RadioGroup.types";
+
 export { default as TextField } from "./components/TextField/TextField.vue";
 export type {
   TextFieldProps,

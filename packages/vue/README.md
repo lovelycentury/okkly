@@ -132,6 +132,60 @@ on the outer `<label>` instead, matching React's `className`. The rendered
 `<input type="checkbox" role="switch">` carries the switch role for assistive
 technology.
 
+## Radio / RadioGroup
+
+`Radio` is a bare control — nest it inside `RadioGroup` for exclusive choice
+among options, matching MUI's RadioGroup composition pattern. Props mirror
+`@okkly/react`'s `<Radio>` / `<RadioGroup>` name-for-name.
+
+| `Radio` prop | Type                                                   | Default        |
+| ------------ | ------------------------------------------------------ | -------------- |
+| `checked`    | `boolean`                                              | `undefined`    |
+| `value`      | `string`                                               | `undefined`    |
+| `name`       | `string`                                               | `undefined`    |
+| `size`       | `small \| medium \| large`                             | `undefined`    |
+| `color`      | `primary \| dante \| indigo \| violet \| ember \| ice` | `undefined`    |
+| `disabled`   | `boolean`                                              | `false`        |
+| `id`         | `string`                                               | auto-generated |
+
+| `RadioGroup` prop | Type                                                   | Default        |
+| ----------------- | ------------------------------------------------------ | -------------- |
+| `name`            | `string`                                               | auto-generated |
+| `defaultValue`    | `string`                                               | `undefined`    |
+| `disabled`        | `boolean`                                              | `false`        |
+| `size`            | `small \| medium \| large`                             | `medium`       |
+| `color`           | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`      |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Radio, RadioGroup } from "@okkly/vue";
+
+const preference = ref("email");
+</script>
+
+<template>
+  <RadioGroup v-model="preference">
+    <template #label>Notification preference</template>
+    <Radio value="email"><template #label>Email</template></Radio>
+    <Radio value="sms"><template #label>SMS</template></Radio>
+  </RadioGroup>
+</template>
+```
+
+`RadioGroup` shares its selection with nested `Radio`s through `provide`/
+`inject` (the Vue equivalent of React's context) — no options array, just
+nest `<Radio value="...">` directly. The controlled `value` + `onChange` pair
+becomes `v-model`; `defaultValue` still seeds it once on mount when nothing is
+bound, same as React's uncontrolled mode. `size`/`color` set on `RadioGroup`
+apply to every nested `Radio` unless one sets its own. `label` is a slot on
+both components, rendering only when filled; on `RadioGroup` it also becomes
+the visible group heading above the options (there's no automatic
+`aria-label` derived from it, unlike React — pass your own `aria-label` when
+the visible label isn't plain text). `Radio`'s own `checked` stays a plain
+prop paired with the `change` emit rather than `v-model`, since a grouped
+radio's checked state is derived from the group rather than owned locally.
+
 ## TextField
 
 Single-line text input with label, helper text, and error state — the
