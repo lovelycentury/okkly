@@ -1,0 +1,29 @@
+/* Hand-authored spacing tokens — same provenance note as colors.css. Mirrors
+   SPACING in packages/figma-plugin/src/tokens/scales.ts: `space/<n>` is
+   n × 4px, so `--okkly-space-<n>` is too (`.` spelled `-`: `space/0.5` →
+   `--okkly-space-0-5`). Box's numeric spacing props (`p={2}`, `gap={3}`) step
+   on the same unit. */
+@layer okkly.utility {
+  :root {
+    --okkly-space-unit: 0.25rem; /* 4px */
+
+    --okkly-space-0: 0;
+    --okkly-space-px: var(--okkly-1px-in-rem); /* 1px */
+    --okkly-space-0-5: calc(0.5 * var(--okkly-space-unit)); /* 2px */
+    --okkly-space-1: var(--okkly-space-unit); /* 4px */
+    --okkly-space-1-5: calc(1.5 * var(--okkly-space-unit)); /* 6px */
+    --okkly-space-2: calc(2 * var(--okkly-space-unit)); /* 8px */
+    --okkly-space-3: calc(3 * var(--okkly-space-unit)); /* 12px */
+    --okkly-space-4: calc(4 * var(--okkly-space-unit)); /* 16px */
+    --okkly-space-5: calc(5 * var(--okkly-space-unit)); /* 20px */
+    --okkly-space-6: calc(6 * var(--okkly-space-unit)); /* 24px */
+    --okkly-space-8: calc(8 * var(--okkly-space-unit)); /* 32px */
+    --okkly-space-10: calc(10 * var(--okkly-space-unit)); /* 40px */
+    --okkly-space-12: calc(12 * var(--okkly-space-unit)); /* 48px */
+    --okkly-space-16: calc(16 * var(--okkly-space-unit)); /* 64px */
+    --okkly-space-20: calc(20 * var(--okkly-space-unit)); /* 80px */
+    --okkly-space-24: calc(24 * var(--okkly-space-unit)); /* 96px */
+    --okkly-space-32: calc(32 * var(--okkly-space-unit)); /* 128px */
+    --okkly-space-40: calc(40 * var(--okkly-space-unit)); /* 160px */
+  }
+}

@@ -106,6 +106,43 @@ wrapper instead, matching React's `className`.
 `color` tints the focus ring/glow — `dante` is a rare, deliberate accent
 moment; the rest are for matching a field to surrounding brand/section color.
 
+## Box
+
+The layout primitive: a `div` — or any element, through `as` — that takes
+MUI-style system props. Props mirror `@okkly/react`'s `<Box>` name-for-name and
+resolve through the same `@okkly/shared` function, so both render the same DOM.
+
+```vue
+<Box
+  as="section"
+  display="flex"
+  :flex-direction="{ base: 'column', md: 'row' }"
+  :gap="4"
+  :p="{ base: 3, md: 6 }"
+  bgcolor="bg.surface-raised"
+  :border-radius="3"
+>
+  …
+</Box>
+```
+
+| Props                                                                                                            | Value                                                                            |
+| ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `m` `mx` `my` `mt` `mr` `mb` `ml`, `p` `px` `py` `pt` `pr` `pb` `pl`, `gap` `rowGap` `columnGap`, `borderRadius` | A step on the 4px scale (`2` → 8px) or any CSS length                            |
+| `display` `flexDirection` `flexWrap` `alignItems` `justifyContent` `alignSelf` `flexGrow` `flexShrink`           | The CSS value                                                                    |
+| `flexBasis` `width` `height` `minWidth` `maxWidth` `minHeight` `maxHeight`                                       | A fraction up to `1` is a percentage, a larger number pixels, a string CSS       |
+| `bgcolor` `color` `borderColor`                                                                                  | A token path (`bg.surface`, `text.secondary`, `border.strong`…) or any CSS color |
+| `border`                                                                                                         | A width in pixels, drawn in the default border color, or the CSS shorthand       |
+| `as`                                                                                                             | A tag name or a component — `div` by default                                     |
+| `container`                                                                                                      | Makes the Box a query container for its descendants' `@`-keys                    |
+
+Every system prop takes one value per breakpoint: `base` at every width, the
+viewport breakpoints `2xs` … `xl` from that window width up, and the container
+breakpoints `@xs` (320px) … `@xl` (1024px) from that width of the nearest
+`container` Box up — container values win. `class`, `style` and every other
+attribute fall through to the element, and a consumer's `class`/`style` merge
+after Box's own.
+
 ## useRipple
 
 `useRipple` is the Vue counterpart of the `@okkly/react-hooks` hook, and

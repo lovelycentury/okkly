@@ -101,6 +101,43 @@ is a `$bindable` prop for two-way binding; pass a native `defaultValue`
 instead for an uncontrolled field. Anything else — `oninput`, `disabled`,
 `aria-*`, `data-*` — spreads through to the rendered `<input>`.
 
+## Box
+
+The layout primitive: a `div` — or any element, through `as` — that takes
+MUI-style system props. Props mirror `@okkly/react`'s `<Box>` name-for-name and
+resolve through the same `@okkly/shared` function, so both render the same DOM.
+
+```svelte
+<Box
+  as="section"
+  display="flex"
+  flexDirection={{ base: "column", md: "row" }}
+  gap={4}
+  p={{ base: 3, md: 6 }}
+  bgcolor="bg.surface-raised"
+  borderRadius={3}
+>
+  …
+</Box>
+```
+
+| Props                                                                                                            | Value                                                                            |
+| ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `m` `mx` `my` `mt` `mr` `mb` `ml`, `p` `px` `py` `pt` `pr` `pb` `pl`, `gap` `rowGap` `columnGap`, `borderRadius` | A step on the 4px scale (`2` → 8px) or any CSS length                            |
+| `display` `flexDirection` `flexWrap` `alignItems` `justifyContent` `alignSelf` `flexGrow` `flexShrink`           | The CSS value                                                                    |
+| `flexBasis` `width` `height` `minWidth` `maxWidth` `minHeight` `maxHeight`                                       | A fraction up to `1` is a percentage, a larger number pixels, a string CSS       |
+| `bgcolor` `color` `borderColor`                                                                                  | A token path (`bg.surface`, `text.secondary`, `border.strong`…) or any CSS color |
+| `border`                                                                                                         | A width in pixels, drawn in the default border color, or the CSS shorthand       |
+| `as`                                                                                                             | A tag name — `div` by default; the element's own props are inferred from it      |
+| `container`                                                                                                      | Makes the Box a query container for its descendants' `@`-keys                    |
+
+Every system prop takes one value per breakpoint: `base` at every width, the
+viewport breakpoints `2xs` … `xl` from that window width up, and the container
+breakpoints `@xs` (320px) … `@xl` (1024px) from that width of the nearest
+`container` Box up — container values win. `as` takes a tag name only, since
+`<svelte:element>` cannot render a component. A consumer's `class` and `style`
+merge after Box's own; every other attribute spreads onto the element.
+
 ## ripple
 
 `ripple` is a Svelte action — the framework's own primitive for behaviour

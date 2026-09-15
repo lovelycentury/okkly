@@ -1,0 +1,91 @@
+@use "../../styles/mixins/layers.scss";
+@use "../../styles/breakpoints.scss";
+
+// Every system prop Box accepts, by its kebab-cased name, and the CSS property
+// it sets. Kept in step with `BOX_SYSTEM_PROPS` in @okkly/shared, which turns
+// a prop into the matching `okkly-box--<name>` class plus the
+// `--okkly-box-<name>` variable that class reads.
+//
+// The order is the cascade order: shorthands come before the longhands that
+// refine them (`m` before `mt`, `border` before `border-color`), so `p={2}
+// pt={5}` gives `pt` the last word, as in MUI. Margins and paddings are logical
+// properties, so `ml`/`mr` mirror in RTL.
+$props: (
+  "m": margin,
+  "mx": margin-inline,
+  "my": margin-block,
+  "mt": margin-block-start,
+  "mr": margin-inline-end,
+  "mb": margin-block-end,
+  "ml": margin-inline-start,
+  "p": padding,
+  "px": padding-inline,
+  "py": padding-block,
+  "pt": padding-block-start,
+  "pr": padding-inline-end,
+  "pb": padding-block-end,
+  "pl": padding-inline-start,
+  "gap": gap,
+  "row-gap": row-gap,
+  "column-gap": column-gap,
+  "display": display,
+  "flex-direction": flex-direction,
+  "flex-wrap": flex-wrap,
+  "align-items": align-items,
+  "justify-content": justify-content,
+  "align-self": align-self,
+  "flex-grow": flex-grow,
+  "flex-shrink": flex-shrink,
+  "flex-basis": flex-basis,
+  "width": width,
+  "height": height,
+  "min-width": min-width,
+  "max-width": max-width,
+  "min-height": min-height,
+  "max-height": max-height,
+  "bgcolor": background-color,
+  "color": color,
+  "border": border,
+  "border-color": border-color,
+  "border-radius": border-radius,
+);
+
+// A class is only on the element when its prop is set, and the component sets
+// the variable alongside it — so an unset prop never resets anything.
+@mixin -props($suffix) {
+  @each $name, $property in $props {
+    &--#{$name}#{$suffix} {
+      #{$property}: var(--okkly-box-#{$name}#{$suffix});
+    }
+  }
+}
+
+.okkly-box {
+  @include layers.component() {
+    @include -props("");
+
+    // Mobile-first: each breakpoint's rules follow the base ones and the
+    // narrower breakpoints', so the widest breakpoint that matches wins.
+    @each $breakpoint, $_ in breakpoints.$breakpoints {
+      @include breakpoints.screen(min, $breakpoint) {
+        @include -props("-#{$breakpoint}");
+      }
+    }
+
+    // Container-query values (`"@md"`) come last: the nearest container is a
+    // more local context than the viewport, so its value wins. They answer to
+    // the nearest ancestor with `okkly-box--container`, never to the Box itself.
+    @each $breakpoint, $_ in breakpoints.$container-breakpoints {
+      @include breakpoints.container(min, $breakpoint, 0, breakpoints.$container-breakpoints) {
+        @include -props("-cq-#{$breakpoint}");
+      }
+    }
+
+    // `inline-size`, not `size`: only the width becomes queryable, so the Box
+    // keeps its content-driven height — its width, though, stops following
+    // its content.
+    &--container {
+      container-type: inline-size;
+    }
+  }
+}

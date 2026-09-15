@@ -24,7 +24,7 @@ This folder is managed by [changesets](https://github.com/changesets/changesets)
 ## Semver before 1.0.0
 
 All published packages (`@okkly/react`, `@okkly/design-system`, `@okkly/icons`,
-`@okkly/react-hooks`, `@okkly/helpers`) start at `0.0.0`. The first release makes
+`@okkly/react-hooks`, `@okkly/shared`) start at `0.0.0`. The first release makes
 them `0.1.0`: there has been no `1.0.0`, so the public API is treated as
 unstable (semver clause 4). While a package is on `0.x`:
 
@@ -106,7 +106,7 @@ One file, one line per package, each with its own bump:
 ---
 "@okkly/design-system": minor
 "@okkly/react": minor
-"@okkly/helpers": patch
+"@okkly/shared": patch
 ---
 
 Add the `density` token scale and wire `Table` / `List` to it.
@@ -114,20 +114,20 @@ Add the `density` token scale and wire `Table` / `List` to it.
 
 ### You changed a package that others depend on
 
-`@okkly/react` depends on `@okkly/design-system`, `@okkly/helpers`,
+`@okkly/react` depends on `@okkly/design-system`, `@okkly/shared`,
 `@okkly/icons`, and `@okkly/react-hooks`. When one of those is released,
 `updateInternalDependencies: "patch"` bumps `@okkly/react` too (at least
 `patch`) — you do **not** list it:
 
 ```markdown
 ---
-"@okkly/helpers": patch
+"@okkly/shared": patch
 ---
 
 Fix `clamp` rounding at negative bounds.
 ```
 
-Result: `@okkly/helpers` `0.3.1` → `0.3.2`, and `@okkly/react` `0.3.1` → `0.3.2`.
+Result: `@okkly/shared` `0.3.1` → `0.3.2`, and `@okkly/react` `0.3.1` → `0.3.2`.
 
 List `@okkly/react` yourself (as `minor`) only when the same change also alters
 what `@okkly/react` exports or how it behaves.

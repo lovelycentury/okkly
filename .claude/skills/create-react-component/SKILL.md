@@ -25,7 +25,7 @@ The existing components are the source of truth; the templates in [templates.md]
    - **Form field** → `TextField`
 3. Read the component's stylesheet to learn its block, element and modifier classes and its `--okkly-<kebab>-*` variables — the component, stories and tests all build on them.
 4. If the component mirrors an MUI component, fetch its API page so prop names match name-for-name.
-5. Reuse before inventing: check `@okkly/react-hooks`, `@okkly/helpers`, `src/helpers`, `src/types`, and existing components (`Ripple`, `Icon`, `Popper`, transitions) for anything the new component needs.
+5. Reuse before inventing: check `@okkly/react-hooks`, `@okkly/shared` (the framework-neutral contracts and utilities every framework package shares), `src/helpers`, `src/types`, and existing components (`Ripple`, `Icon`, `Popper`, transitions) for anything the new component needs.
 
 ## Files to create
 

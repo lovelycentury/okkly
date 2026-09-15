@@ -42,7 +42,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       # @okkly/svelte's tests alias the package to its own sources, so only
-      # the workspace deps it imports (design-system) need a real build.
+      # the workspace deps it imports (design-system, shared) need a real build.
       - name: Build the workspace dependencies
         run: pnpm --filter "@okkly/svelte^..." --if-present run build
 

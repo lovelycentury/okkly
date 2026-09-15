@@ -126,6 +126,45 @@ it. `required` shows a dante asterisk after the label and marks the native
 `<input required>`. Its label/helper/error chrome comes from the internal
 `Field` shell shared with future field-based controls (Select, Autocomplete).
 
+## Box
+
+`OkklyBox` (`[okklyBox]`) is the layout primitive, as a directive: MUI-style
+system props on whatever element it decorates. Inputs mirror `@okkly/react`'s
+`<Box>` name-for-name and resolve through the same `@okkly/shared` function, so
+both render the same DOM.
+
+```html
+<section
+  okklyBox
+  display="flex"
+  [flexDirection]="{ base: 'column', md: 'row' }"
+  gap="4"
+  [p]="{ base: 3, md: 6 }"
+  bgcolor="bg.surface-raised"
+  borderRadius="3"
+>
+  …
+</section>
+```
+
+| Inputs                                                                                                           | Value                                                                            |
+| ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `m` `mx` `my` `mt` `mr` `mb` `ml`, `p` `px` `py` `pt` `pr` `pb` `pl`, `gap` `rowGap` `columnGap`, `borderRadius` | A step on the 4px scale (`2` → 8px) or any CSS length                            |
+| `display` `flexDirection` `flexWrap` `alignItems` `justifyContent` `alignSelf` `flexGrow` `flexShrink`           | The CSS value                                                                    |
+| `flexBasis` `width` `height` `minWidth` `maxWidth` `minHeight` `maxHeight`                                       | A fraction up to `1` is a percentage, a larger number pixels, a string CSS       |
+| `bgcolor` `color` `borderColor`                                                                                  | A token path (`bg.surface`, `text.secondary`, `border.strong`…) or any CSS color |
+| `border`                                                                                                         | A width in pixels, drawn in the default border color, or the CSS shorthand       |
+| `container`                                                                                                      | Makes the Box a query container for its descendants' `@`-keys                    |
+
+Every system input takes one value per breakpoint: `base` at every width, the
+viewport breakpoints `2xs` … `xl` from that window width up, and the container
+breakpoints `@xs` (320px) … `@xl` (1024px) from that width of the nearest
+`container` Box up — container values win. There is no `as`: put `okklyBox` on
+the element the markup calls for. A numeric attribute (`p="4"`) reads as a
+number, as `[p]="4"` does; a static attribute also stays on the element, as
+with any Angular input, while a binding leaves nothing behind. The element's
+own `class` and `style` merge with the directive's.
+
 ## Ripple
 
 `OkklyRipple` (`[okklyRipple]`) paints the press feedback and is applied to

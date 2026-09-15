@@ -48,7 +48,8 @@
     "test:playwright:update": "PW_UPDATE_SNAPSHOTS=true CI=true playwright test"
   },
   "dependencies": {
-    "@okkly/design-system": "workspace:*"
+    "@okkly/design-system": "workspace:*",
+    "@okkly/shared": "workspace:*"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
