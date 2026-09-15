@@ -1,5 +1,15 @@
 # @okkly/design-system
 
+## 0.4.0
+
+### Minor Changes
+
+- [#264](https://github.com/lovelycentury/okkly/pull/264) [`9704758`](https://github.com/lovelycentury/okkly/commit/97047588018e70159e385d443a9066c1e02ac5ae) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `Box`, a layout primitive with MUI-style system props — spacing, flex layout, sizing, token colors and border — polymorphic through `as`. Every prop is responsive: per viewport breakpoint (`{ base: "column", md: "row" }`), and per container breakpoint through `@`-keys (`{ "@md": "row" }`), which answer to the nearest Box marked `container`. `@okkly/design-system` adds the 4px spacing scale from the Figma library (`--okkly-space-unit` and the `--okkly-space-<n>` steps), the `$container-breakpoints` scale and the Box styles. `@okkly/shared` is new: the framework-neutral half of the components — here Box's prop types and `resolveBoxSystemProps`, which turns the props into those styles — that every framework package shares.
+
+- [#264](https://github.com/lovelycentury/okkly/pull/264) [`cbed6f0`](https://github.com/lovelycentury/okkly/commit/cbed6f0b765ee06086798509a3e597227a51a076) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add corner-radius (`--okkly-radius-none` … `--okkly-radius-3xl`, `--okkly-radius-full`) and elevation (`--okkly-shadow-xs` … `--okkly-shadow-lg`) tokens, mirroring the `radius/*` variables and `shadow/*` effect styles of the Figma library.
+
+- [#264](https://github.com/lovelycentury/okkly/pull/264) [`1d72f7d`](https://github.com/lovelycentury/okkly/commit/1d72f7d3da20c163a399d2f2c17d4bf68619456b) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Remove the unused required/optional marker utilities from the global styles: the `.okkly-required-marker`, `.okkly-optional-marker`, `.okkly-use-required` and `.okkly-use-optional` classes and the `--ON`/`--OFF` custom properties they set on `:root`. No component used them — fields mark themselves required through their own `__required` element — and their colors and fonts pointed at tokens that do not exist.
+
 ## 0.3.0
 
 ### Minor Changes
