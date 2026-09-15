@@ -68,23 +68,26 @@ jobs:
               - "packages/react/**"
               - "packages/design-system/**"
               - "packages/icons/**"
-              - "packages/helpers/**"
+              - "packages/shared/**"
               - "packages/react-hooks/**"
               - ".github/workflows/react-playwright.yml"
             angular:
               - *shared
               - "packages/angular/**"
               - "packages/design-system/**"
+              - "packages/shared/**"
               - ".github/workflows/angular-playwright.yml"
             vue:
               - *shared
               - "packages/vue/**"
               - "packages/design-system/**"
+              - "packages/shared/**"
               - ".github/workflows/vue-playwright.yml"
             svelte:
               - *shared
               - "packages/svelte/**"
               - "packages/design-system/**"
+              - "packages/shared/**"
               - ".github/workflows/svelte-playwright.yml"
 
   # Real browsers, so these run on their own image rather than alongside `check`.

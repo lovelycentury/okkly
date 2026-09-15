@@ -6,6 +6,7 @@ on:
     paths:
       - "packages/vue/**"
       - "packages/design-system/**"
+      - "packages/shared/**"
       - "ops/Dockerfile.storybook"
       - "ops/docker-compose.yml"
       - ".github/workflows/deploy-vue-storybook.yml"

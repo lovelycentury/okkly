@@ -1,0 +1,13 @@
+/* Hand-authored elevation tokens — same provenance note as colors.css.
+   Mirrors SHADOW_TOKENS in packages/figma-plugin/src/tokens/effects.ts
+   (`shadow/md` → `--okkly-shadow-md`): x, y, blur, spread, color. Tuned for the
+   dark canvas, so unlike the directional `--okkly-shadow-medium-*` /
+   `--okkly-shadow-soft-*` in root.scss they are not switched off under `.dark`. */
+@layer okkly.utility {
+  :root {
+    --okkly-shadow-xs: 0 0.0625rem 0.125rem 0 #00000040; /* hairline lift */
+    --okkly-shadow-sm: 0 0.25rem 0.75rem -0.125rem #00000047; /* chips, small cards */
+    --okkly-shadow-md: 0 0.75rem 2rem -0.375rem #00000059; /* cards, popovers */
+    --okkly-shadow-lg: 0 1.75rem 4rem -0.75rem #00000073; /* menus, modals */
+  }
+}
