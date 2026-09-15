@@ -186,6 +186,63 @@ the visible label isn't plain text). `Radio`'s own `checked` stays a plain
 prop paired with the `change` emit rather than `v-model`, since a grouped
 radio's checked state is derived from the group rather than owned locally.
 
+## Chip / ChipGroup
+
+`Chip` is a compact filter, tag, or choice token; `ChipGroup` composes them
+into a wrapping row with single- or multi-select. Props mirror
+`@okkly/react`'s `<Chip>` / `<ChipGroup>` name-for-name.
+
+| `Chip` prop   | Type                                           | Default    |
+| ------------- | ---------------------------------------------- | ---------- |
+| `variant`     | `glass \| solid \| outline \| accent \| dante` | `glass`    |
+| `size`        | `small \| medium \| large`                     | `medium`   |
+| `selected`    | `boolean`                                      | `false`    |
+| `dot`         | `boolean`                                      | `false`    |
+| `removable`   | `boolean`                                      | `false`    |
+| `disabled`    | `boolean`                                      | `false`    |
+| `removeLabel` | `string`                                       | `"Remove"` |
+
+| `ChipGroup` prop | Type                                                   | Default     |
+| ---------------- | ------------------------------------------------------ | ----------- |
+| `items`          | `ChipGroupItem[]`                                      | `undefined` |
+| `exclusive`      | `boolean`                                              | `false`     |
+| `color`          | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`   |
+| `disabled`       | `boolean`                                              | `false`     |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { ChipGroup } from "@okkly/vue";
+
+const filters = ref<string[]>(["design"]);
+const items = [
+  { label: "Design", value: "design" },
+  { label: "Engineering", value: "engineering" },
+];
+</script>
+
+<template>
+  <ChipGroup v-model="filters" :items="items" />
+</template>
+```
+
+`Chip`'s `label` becomes the default slot (its only primary content, same
+mapping as `Button`'s `children`) and `icon` becomes the `icon` slot, since
+Vue has no `ReactNode`. `Chip`'s `click` listener — bound with `@click`, same
+as any native element — is read by the component itself rather than left to
+a plain fallthrough: only that lets it decide `role="button"`/keyboard
+activation from whether a listener is attached at all, and gate it in JS
+when `disabled`. `onRemove` becomes the `remove` emit.
+
+`ChipGroup`'s controlled `value` + `onChange` pair becomes an unnamed
+`v-model`, typed `string | string[]` depending on `exclusive`; `children`
+becomes the default slot, the escape hatch for a fully custom chip tree used
+when `items` is omitted. `ChipGroupItem.label` is a plain `string` rather
+than `ReactNode`, since a data array has no natural place for slot content;
+its `onClick`/`onRemove` stay plain callback props exactly as in React, since
+they live inside a data object rather than being props of a component
+instance.
+
 ## TextField
 
 Single-line text input with label, helper text, and error state — the

@@ -27,6 +27,16 @@ export type { RadioProps, RadioSize, RadioColor } from "./components/Radio/Radio
 export { default as RadioGroup } from "./components/RadioGroup/RadioGroup.vue";
 export type { RadioGroupProps } from "./components/RadioGroup/RadioGroup.types";
 
+export { default as Chip } from "./components/Chip/Chip.vue";
+export type { ChipProps, ChipVariant, ChipSize } from "./components/Chip/Chip.types";
+
+export { default as ChipGroup } from "./components/ChipGroup/ChipGroup.vue";
+export type {
+  ChipGroupProps,
+  ChipGroupItem,
+  ChipGroupColor,
+} from "./components/ChipGroup/ChipGroup.types";
+
 export { default as TextField } from "./components/TextField/TextField.vue";
 export type {
   TextFieldProps,
