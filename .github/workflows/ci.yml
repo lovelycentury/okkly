@@ -58,13 +58,16 @@ jobs:
         id: filter
         with:
           filters: |
-            shared: &shared
+            shared:
               - "package.json"
               - "pnpm-workspace.yaml"
               - "tsconfig.json"
               - ".github/workflows/ci.yml"
             react:
-              - *shared
+              - "package.json"
+              - "pnpm-workspace.yaml"
+              - "tsconfig.json"
+              - ".github/workflows/ci.yml"
               - "packages/react/**"
               - "packages/design-system/**"
               - "packages/icons/**"
@@ -72,19 +75,28 @@ jobs:
               - "packages/react-hooks/**"
               - ".github/workflows/react-playwright.yml"
             angular:
-              - *shared
+              - "package.json"
+              - "pnpm-workspace.yaml"
+              - "tsconfig.json"
+              - ".github/workflows/ci.yml"
               - "packages/angular/**"
               - "packages/design-system/**"
               - "packages/shared/**"
               - ".github/workflows/angular-playwright.yml"
             vue:
-              - *shared
+              - "package.json"
+              - "pnpm-workspace.yaml"
+              - "tsconfig.json"
+              - ".github/workflows/ci.yml"
               - "packages/vue/**"
               - "packages/design-system/**"
               - "packages/shared/**"
               - ".github/workflows/vue-playwright.yml"
             svelte:
-              - *shared
+              - "package.json"
+              - "pnpm-workspace.yaml"
+              - "tsconfig.json"
+              - ".github/workflows/ci.yml"
               - "packages/svelte/**"
               - "packages/design-system/**"
               - "packages/shared/**"
