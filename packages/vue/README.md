@@ -364,6 +364,72 @@ wrapper instead, matching React's `className`.
 `color` tints the focus ring/glow — `dante` is a rare, deliberate accent
 moment; the rest are for matching a field to surrounding brand/section color.
 
+## Spinner
+
+An indeterminate loading ring. Props mirror `@okkly/react`'s `<Spinner>`
+name-for-name: `size`/`color`/`thickness`.
+
+```vue
+<Spinner size="small" color="primary" />
+```
+
+## Option primitives
+
+`OptionScope`, `OptionRow`, `OptionLabel`, `OptionDescription`, `OptionBody`,
+`OptionCheck` and `HighlightMatch` — the building blocks a custom `#option`
+slot (see `Autocomplete` below) is built from, mirroring `@okkly/react`'s
+`Option.tsx` exports name-for-name. `OptionScope` names the BEM block
+(`"okkly-autocomplete"`, and later `"okkly-select"`) the parts underneath it
+read, so a custom row still picks up its listbox's styling; outside a scope
+they render as plain, unstyled elements.
+
+## Autocomplete
+
+Text field with a filtered suggestions list — continuous typing, multi-select
+tags, grouping and free solo. Props follow `@okkly/react`'s `<Autocomplete>`
+name-for-name where Vue lets it; see the doc comment on `AutocompleteProps` in
+`Autocomplete.types.ts` for the full list of Vue-forced differences. The
+highlights:
+
+- The controlled `value`/`onChange` pair becomes the primary `v-model`;
+  `inputValue`/`onInputChange` and `open`/`onOpenChange` become the named
+  models `v-model:input-value` and `v-model:open`. A `change` emit still
+  carries MUI's full `(event, value, reason, details)` signature for callers
+  that need the reason a plain `v-model` drops.
+- `renderOption`/`renderInput`/`renderGroup`/`renderNoOptions`/
+  `renderLoading`/`renderTags` become the scoped slots `#option`, `#input`,
+  `#group`, `#no-options`, `#loading` and `#tags`. `#option` and `#input` are
+  narrower than React's render props — Vue's template model has no equivalent
+  for "hand over pre-rendered content to reposition" without dropping to
+  manual render functions, so `#option` replaces a whole row (full parity) but
+  `#group` only replaces the header (the row list stays fixed) and `#input`
+  only replaces the `<input>` (the tag row and clear/toggle buttons stay
+  fixed).
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Autocomplete } from "@okkly/vue";
+import type { AutocompleteOption } from "@okkly/vue";
+
+const options: AutocompleteOption[] = [
+  { value: "paris", label: "Paris" },
+  { value: "tokyo", label: "Tokyo" },
+];
+const city = ref<AutocompleteOption | null>(null);
+</script>
+
+<template>
+  <Autocomplete v-model="city" :options="options">
+    <template #label>City</template>
+  </Autocomplete>
+</template>
+```
+
+It's built on the new `useAutocomplete` composable from
+`@okkly/vue-composables`, itself built on the new `useControllableState`
+composable — see that package's README for both.
+
 ## Box
 
 The layout primitive: a `div` — or any element, through `as` — that takes

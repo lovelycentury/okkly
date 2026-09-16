@@ -91,3 +91,63 @@ const slider = useSlider(root, () => ({ value: 30, min: 0, max: 100 }));
 
 See `@okkly/vue`'s `Slider.vue` for the full composition, including marks and
 the inverted-track segments.
+
+## useControllableState
+
+The Vue port of `@okkly/react-hooks`'s `useControllableState` — a value that
+is controlled whenever `options().value` is not `undefined`, and otherwise
+falls back to an internal ref seeded once from `defaultValue`. `useAutocomplete`
+is built on it, calling it once per independently-controllable piece of state
+(`open`, `inputValue`, the selected value).
+
+```ts
+import { useControllableState } from "@okkly/vue-composables";
+
+const { value, setValue } = useControllableState<boolean>(() => ({
+  value: props.open,
+  defaultValue: false,
+  onChange: (open) => emit("update:open", open),
+}));
+```
+
+## useAutocomplete
+
+Headless filter-as-you-type combobox behavior — multi-select tags, grouping,
+free solo, keyboard navigation and ARIA wiring — the Vue port of
+`@okkly/react-hooks`'s `useAutocomplete`, and what `Autocomplete` from
+`@okkly/vue` is built on.
+
+Like `useSlider`, this returns `v-bind`-able attrs separately from `v-on`-able
+event objects rather than React's `getInputProps()`/`getOptionProps()`/…
+prop-getter functions. The input's controlled value is wired to the native
+`input` event, not `change`.
+
+```vue
+<script setup lang="ts">
+import { useTemplateRef } from "vue";
+import { useAutocomplete } from "@okkly/vue-composables";
+
+const autocomplete = useAutocomplete(() => ({ options: ["Paris", "Tokyo", "Kyiv"] }));
+</script>
+
+<template>
+  <input
+    :ref="(el) => (autocomplete.inputRef.value = el as HTMLInputElement | null)"
+    v-bind="autocomplete.inputAttrs.value"
+    v-on="autocomplete.inputEvents"
+  />
+  <ul v-bind="autocomplete.listboxAttrs.value">
+    <li
+      v-for="(option, index) in autocomplete.filteredOptions.value"
+      :key="option"
+      v-bind="autocomplete.optionAttrs(index)"
+      v-on="autocomplete.optionEvents(index)"
+    >
+      {{ option }}
+    </li>
+  </ul>
+</template>
+```
+
+See `@okkly/vue`'s `Autocomplete.vue` for the full composition, including
+tags, grouping and the customization slots.

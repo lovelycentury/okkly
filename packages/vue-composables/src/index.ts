@@ -16,3 +16,19 @@ export {
   roundToStep,
   normalizeValues,
 } from "./useSlider.utils";
+
+export { useControllableState } from "./useControllableState";
+export type {
+  UseControllableStateOptions,
+  UseControllableStateReturn,
+} from "./useControllableState";
+
+export { useAutocomplete } from "./useAutocomplete";
+export type { UseAutocompleteOptions, UseAutocompleteReturn } from "./useAutocomplete";
+export type {
+  AutocompleteOption,
+  OptionGroup,
+  SelectionChangeDetails,
+  SelectionChangeHandler,
+  SelectionChangeReason,
+} from "./useAutocomplete.utils";

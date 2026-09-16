@@ -63,6 +63,36 @@ export type {
   TextFieldColor,
 } from "./components/TextField/TextField.types";
 
+export { default as Spinner } from "./components/Spinner/Spinner.vue";
+export type { SpinnerProps, SpinnerSize, SpinnerColor } from "./components/Spinner/Spinner.types";
+
+export { default as OptionScope } from "./components/Option/OptionScope.vue";
+export { default as OptionRow } from "./components/Option/OptionRow.vue";
+export { default as OptionLabel } from "./components/Option/OptionLabel.vue";
+export { default as OptionDescription } from "./components/Option/OptionDescription.vue";
+export { default as OptionBody } from "./components/Option/OptionBody.vue";
+export { default as OptionCheck } from "./components/Option/OptionCheck.vue";
+export { default as HighlightMatch } from "./components/Option/HighlightMatch.vue";
+export type {
+  OptionScopeProps,
+  OptionCheckProps,
+  HighlightMatchProps,
+} from "./components/Option/Option.types";
+
+export { default as Autocomplete } from "./components/Autocomplete/Autocomplete.vue";
+export type {
+  AutocompleteProps,
+  AutocompleteSize,
+  AutocompleteColor,
+  AutocompleteOption,
+  AutocompleteOptionState,
+  AutocompleteGroupSlotScope,
+  OptionGroup,
+  SelectionChangeReason,
+  SelectionChangeDetails,
+  SelectionChangeHandler,
+} from "./components/Autocomplete/Autocomplete.types";
+
 export { default as Box } from "./components/Box/Box.vue";
 export type {
   BoxProps,
