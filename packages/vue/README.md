@@ -531,6 +531,35 @@ the default slot.
 <Divider orientation="vertical" flex-item />
 ```
 
+## Calendar
+
+Month grid for a single date or a start/end range, with a year → month → day
+drill-down header. Props mirror `@okkly/react`'s `<Calendar>` name-for-name:
+`mode`/`min`/`max`/`weekStart`/`locale`/`previousMonthLabel`/`nextMonthLabel`/
+`color`.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Calendar } from "@okkly/vue";
+
+const value = ref<Date | null>(null);
+</script>
+
+<template>
+  <Calendar v-model="value" />
+</template>
+```
+
+The controlled `value`/`onSelect` pair becomes the primary `v-model`;
+`month`/`onMonthChange` becomes the named model `v-model:month`. `v-model` is
+always typed `Date | [Date, Date] | null` regardless of `mode` — React
+discriminates `onSelect`'s signature on `mode` via a union prop type, which
+`defineProps` can't express, so check `mode` yourself if the branch matters.
+`calendarToneStyle` (the `color` → `--okkly-calendar-tone` mapping) is
+exported alongside the component, same as React, for `DateField`/
+`DateTimePicker`-style consumers once those are ported.
+
 ## Box
 
 The layout primitive: a `div` — or any element, through `as` — that takes

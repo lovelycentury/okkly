@@ -206,3 +206,14 @@ export type {
   DividerVariant,
   DividerTextAlign,
 } from "./components/Divider/Divider.types";
+
+export { default as Calendar, calendarToneStyle } from "./components/Calendar/Calendar.vue";
+export type {
+  CalendarProps,
+  CalendarMode,
+  CalendarValue,
+  CalendarTone,
+  CalendarView,
+  CalendarWeekStart,
+  CalendarDay,
+} from "./components/Calendar/Calendar.types";
