@@ -104,6 +104,23 @@ const display = computed(() =>
   !props.open && props.keepMounted && (!props.transition || exited.value) ? "none" : undefined,
 );
 
+// `minWidth` is included only when the prop itself is set. `matchAnchorWidth`
+// sets the same CSS property imperatively (bypassing Vue), so an unconditional
+// `{ minWidth }` here — with `props.minWidth` at its default `undefined` — would
+// have Vue's own style patching clear it right back out on every re-render:
+// `v-bind:style`'s patcher walks every key of the *current* bound style object
+// on every patch, not just changed ones, and a value of `undefined` reads as
+// "unset this property". Any reactive dependency the slot content touches
+// (`filteredOptions`, `highlightedIndex`, …, for Autocomplete) is enough to
+// trigger that re-render, which is why the popup would visibly narrow back to
+// its content width as the listbox re-rendered while typing or arrowing.
+const rootStyle = computed(() => {
+  const style: Record<string, string | number> = { position: "fixed", top: 0, left: 0 };
+  if (display.value !== undefined) style.display = display.value;
+  if (props.minWidth !== undefined) style.minWidth = props.minWidth;
+  return style;
+});
+
 // Runs after the DOM patch so `root.value` is already attached once
 // `shouldRender` turns true — mirrors the React version's `useLayoutEffect`.
 watch(
@@ -217,7 +234,7 @@ defineExpose({ popperInstance });
       v-bind="restAttrs"
       :role="role"
       :class="rootClass"
-      :style="[{ position: 'fixed', top: 0, left: 0, display, minWidth }, attrs.style]"
+      :style="[rootStyle, attrs.style]"
     >
       <slot
         :placement="placement"

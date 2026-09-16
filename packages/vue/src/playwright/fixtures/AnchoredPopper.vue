@@ -17,24 +17,40 @@ const props = withDefaults(
     defaultOpen?: boolean;
     placement?: PopperPlacement;
     keepMounted?: boolean;
+    matchAnchorWidth?: boolean | "min";
   }>(),
   {
     triggerLabel: "Toggle",
     defaultOpen: false,
     placement: "bottom",
     keepMounted: false,
+    matchAnchorWidth: false,
   },
 );
 
 const open = ref(props.defaultOpen);
 const anchor = useTemplateRef<HTMLButtonElement>("anchor");
+
+// A reactive value read only inside Popper's default slot, so a "Bump"
+// click re-renders the panel's content without changing any prop Popper
+// itself watches — the same kind of update Autocomplete's listbox goes
+// through while its `filteredOptions`/`highlightedIndex` change as the user
+// types or arrows through options.
+const bumpCount = ref(0);
 </script>
 
 <template>
   <div class="fixture-root">
     <button ref="anchor" type="button" @click="open = !open">{{ triggerLabel }}</button>
-    <Popper :open="open" :anchor-el="anchor" :placement="placement" :keep-mounted="keepMounted">
-      <div class="fixture-panel"><slot>Popper content</slot></div>
+    <button type="button" @click="bumpCount++">Bump</button>
+    <Popper
+      :open="open"
+      :anchor-el="anchor"
+      :placement="placement"
+      :keep-mounted="keepMounted"
+      :match-anchor-width="matchAnchorWidth"
+    >
+      <div class="fixture-panel"><slot>Popper content</slot> {{ bumpCount }}</div>
     </Popper>
   </div>
 </template>

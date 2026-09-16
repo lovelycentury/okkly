@@ -87,6 +87,37 @@ test("should position itself against its anchor", async ({ mount, page }) => {
   await expect(page.locator(".okkly-popper")).toHaveAttribute("data-popper-placement", "bottom");
 });
 
+test("should keep matchAnchorWidth's min-width across an unrelated re-render", async ({
+  mount,
+  page,
+}) => {
+  // ARRANGE — a regression test for a bug where the popper would visibly
+  // narrow back to its content width while a consumer (like Autocomplete)
+  // typed or arrowed through options: the slot content re-rendering was
+  // enough to make Vue's own `:style` patch on Popper's root re-run and clear
+  // the `min-width` set imperatively by the `matchAnchorWidth` modifier,
+  // since `display`/`minWidth`'s Vue-managed style keys used to be bound
+  // unconditionally (including as `undefined`), and Vue's style patcher
+  // re-applies every key of the *current* bound object on every patch.
+  const component = await mount(AnchoredPopper, { props: { matchAnchorWidth: "min" } });
+  await component.getByRole("button", { name: "Toggle" }).click();
+  const popper = page.locator(".okkly-popper");
+  const anchorWidth = (await component.getByRole("button", { name: "Toggle" }).boundingBox())!
+    .width;
+  const readMinWidth = () => popper.evaluate((el) => Number.parseFloat(el.style.minWidth));
+
+  // ASSERT — sanity check the floor took effect at all.
+  await expect(async () => expect(await readMinWidth()).toBeCloseTo(anchorWidth, 0)).toPass();
+
+  // ACT — re-renders the panel's content without touching any prop Popper
+  // itself watches, the same way Autocomplete's listbox re-renders while
+  // filtering.
+  await component.getByRole("button", { name: "Bump" }).click();
+
+  // ASSERT
+  await expect(async () => expect(await readMinWidth()).toBeCloseTo(anchorWidth, 0)).toPass();
+});
+
 test("should stay visible when transition is set", async ({ mount, page }) => {
   // ARRANGE — the transition machinery itself (in/onEnter/onExited through the
   // default slot's scope) is exercised end-to-end by Popover, which is built
