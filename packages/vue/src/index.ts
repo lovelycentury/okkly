@@ -8,6 +8,15 @@ export type {
   ButtonLoadingPosition,
 } from "./components/Button/Button.types";
 
+export { default as ButtonGroup } from "./components/ButtonGroup/ButtonGroup.vue";
+export type {
+  ButtonGroupProps,
+  ButtonGroupItem,
+  ButtonGroupMenuItem,
+  ButtonGroupColor,
+  ButtonGroupVariant,
+} from "./components/ButtonGroup/ButtonGroup.types";
+
 export { default as IconButton } from "./components/IconButton/IconButton.vue";
 export type {
   IconButtonProps,

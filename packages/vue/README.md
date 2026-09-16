@@ -63,6 +63,26 @@ Anything the element itself understands — `class`, `type`, `@click`, `aria-*` 
 falls through to the rendered `<button>`/`<a>`. A disabled `<a>` drops its href
 and reports `aria-disabled`.
 
+## ButtonGroup
+
+A split button: one main action, always visible, plus an optional chevron
+menu of variants of that same action — MUI's "split button" recipe folded
+into a single component. Props mirror `@okkly/react`'s `<ButtonGroup>`
+name-for-name: `action`/`variant`/`menu`/`color`/`disabled`/`menuAriaLabel`.
+
+```vue
+<ButtonGroup
+  :action="{ label: 'Save', onClick: save }"
+  :menu="[{ label: 'Save as…', onClick: saveAs }]"
+/>
+```
+
+`action.icon` and each menu item's `label` narrow from React's `ReactNode` to
+`string` — `icon` is raw SVG markup, rendered the way `Icon`'s own `icon` prop
+is, since `action`/`menu` are plain data props rather than something a slot
+can reach into. For a row of independent toggle buttons, use
+`SegmentedToggle` instead — this component only ever renders one action.
+
 ## IconButton
 
 Icon-only control for toolbars and dense UIs. Renders a native `<button>`, or
