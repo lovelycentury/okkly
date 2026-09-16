@@ -435,7 +435,10 @@ test.describe("customization", () => {
     });
     const row = page.getByRole("option").first();
 
-    // ASSERT
+    // ASSERT — the row itself, not just the primitives inside it, needs the
+    // base option class: it's what gives a custom row its flex layout and
+    // typography, not only the highlighted/selected modifiers.
+    await expect(row).toHaveClass(/okkly-autocomplete__option\b/);
     await expect(row.locator(".okkly-autocomplete__option-label")).toBeAttached();
     await expect(row.locator(".okkly-autocomplete__option-meta")).toBeAttached();
     // Only the matching run is wrapped, and the wrapper adds no text of its own

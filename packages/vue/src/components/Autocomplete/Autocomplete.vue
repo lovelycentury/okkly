@@ -221,8 +221,18 @@ function toListeners<E extends Event>(
   );
 }
 
+// The composable's own `optionAttrs` carries only the role/aria/tabindex
+// wiring — it knows nothing about BEM classes. React's `getOptionProps`
+// merges a `className` into what it hands `renderOption`, so this does the
+// same for `#option`'s `optionAttrs`: without it, a custom row built from
+// `OptionRow` never gets `.okkly-autocomplete__option` at all, losing the
+// row's flex layout and typography, not just its highlight/selected state.
+function optionAttrsForSlot(index: number): Record<string, unknown> {
+  return { ...autocomplete.optionAttrs(index), class: optionClasses(index) };
+}
+
 function optionProps(index: number): Record<string, unknown> {
-  return { ...autocomplete.optionAttrs(index), ...toListeners(autocomplete.optionEvents(index)) };
+  return { ...optionAttrsForSlot(index), ...toListeners(autocomplete.optionEvents(index)) };
 }
 
 function optionState(index: number): AutocompleteOptionState {
@@ -451,12 +461,12 @@ const popupStyle = computed(() =>
                   <template v-for="{ index } in group.options" :key="index">
                     <slot
                       name="option"
-                      :option-attrs="autocomplete.optionAttrs(index)"
+                      :option-attrs="optionAttrsForSlot(index)"
                       :option-events="autocomplete.optionEvents(index)"
                       :option="autocomplete.filteredOptions.value[index]"
                       :state="optionState(index)"
                     >
-                      <li v-bind="optionProps(index)" :class="optionClasses(index)">
+                      <li v-bind="optionProps(index)">
                         <span class="okkly-autocomplete__option-label">{{
                           autocomplete.getOptionLabel(autocomplete.filteredOptions.value[index])
                         }}</span>
@@ -483,12 +493,12 @@ const popupStyle = computed(() =>
               <template v-for="(option, index) in autocomplete.filteredOptions.value" :key="index">
                 <slot
                   name="option"
-                  :option-attrs="autocomplete.optionAttrs(index)"
+                  :option-attrs="optionAttrsForSlot(index)"
                   :option-events="autocomplete.optionEvents(index)"
                   :option="option"
                   :state="optionState(index)"
                 >
-                  <li v-bind="optionProps(index)" :class="optionClasses(index)">
+                  <li v-bind="optionProps(index)">
                     <span class="okkly-autocomplete__option-label">{{
                       autocomplete.getOptionLabel(option)
                     }}</span>
