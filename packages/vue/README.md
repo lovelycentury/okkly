@@ -430,6 +430,87 @@ It's built on the new `useAutocomplete` composable from
 `@okkly/vue-composables`, itself built on the new `useControllableState`
 composable — see that package's README for both.
 
+## Icon
+
+Renders any glyph from `@okkly/icons`, painted with `currentColor` so it
+inherits the surrounding text colour by default. Props mirror
+`@okkly/react`'s `<Icon>` name-for-name: `name`/`icon`/`color`/`fontSize`/
+`titleAccess`.
+
+```vue
+<Icon name="iconStar" />
+<Icon :icon="iconHeart" color="danger" font-size="large" />
+```
+
+Give it `name` (autocompleted from the full set) or `icon` (markup you
+already imported, for a tree-shakeable bundle) — React encodes "exactly one
+of the two" as a discriminated union; Vue's `defineProps` can't express that
+XOR, so both stay plain optional props and neither being set renders empty.
+`ICON_NAMES` is exported alongside the component, the sorted list of every
+available name.
+
+## Typography
+
+Text primitive for the editorial type scale, from `display-2xl` down to
+`mono-sm`. Props mirror `@okkly/react`'s `<Typography>` name-for-name:
+`variant`/`color`/`align`/`gutterBottom`/`noWrap`/`as`.
+
+```vue
+<Typography variant="h1" as="div">Looks like a page title, renders a div</Typography>
+```
+
+`as` takes a tag name or a component, the same shape `Box`'s own `as`
+already uses, rather than React's per-element prop inference (`as="a"`
+accepting exactly `href`) — Vue has no equivalent of
+`ComponentPropsWithoutRef<E>` for a runtime-resolved `:is`, so whatever the
+chosen element accepts falls through unchecked. `TYPOGRAPHY_VARIANTS` (the
+variant → default-tag map) is exported alongside the component, same as
+`@okkly/react`.
+
+## Avatar
+
+The person, compressed to one glyph: an image when there's one, initials
+when there isn't, falling back to initials on its own if the image fails to
+load. Props mirror `@okkly/react`'s `<Avatar>` name-for-name: `src`/`alt`/
+`initials`/`status`/`shape`/`size`/`color`.
+
+```vue
+<Avatar src="/oleksii.jpg" alt="Oleksii Kryshtopa" status="online" />
+<Avatar initials="OK" color="dante" />
+```
+
+## AvatarGroup
+
+A stack of overlapping `Avatar` children for "who is on this", collapsing
+anything past `max` into a "+N" chip. Props mirror `@okkly/react`'s
+`<AvatarGroup>` name-for-name: `max`/`total`/`size`/`spacing`/`ring`/`hues`.
+
+```vue
+<AvatarGroup :max="4" :hues="['mint', 'dante', 'indigo']">
+  <Avatar v-for="member in team" :key="member.id" :initials="member.initials" />
+</AvatarGroup>
+```
+
+It reads its `Avatar` children from the default slot and overrides each
+one's `size`/`color` with Vue's `cloneVNode` — the same transparent-override
+contract React's version gets from `cloneElement`. One Vue-specific wrinkle
+this had to account for: a `v-for` inside a slot compiles to a single
+`Fragment` vnode wrapping the repeated children rather than N sibling
+vnodes the way `{list.map(...)}` already is in JSX, so the children are
+flattened before counting/slicing them.
+
+## Divider
+
+Hairline separator for lists, stacks and toolbars, with an optional
+centered (or aligned) label. Props mirror `@okkly/react`'s `<Divider>`
+name-for-name: `orientation`/`flexItem`/`textAlign`/`variant`; the label is
+the default slot.
+
+```vue
+<Divider>or</Divider>
+<Divider orientation="vertical" flex-item />
+```
+
 ## Box
 
 The layout primitive: a `div` — or any element, through `as` — that takes

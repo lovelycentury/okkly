@@ -156,3 +156,44 @@ export type {
   TransitionEasing,
   SharedTransitionProps,
 } from "./types";
+
+export { default as Icon, ICON_NAMES } from "./components/Icon/Icon.vue";
+export type {
+  IconProps,
+  IconName,
+  IconSource,
+  IconSize,
+  IconColor,
+} from "./components/Icon/Icon.types";
+
+export { default as Typography, TYPOGRAPHY_VARIANTS } from "./components/Typography/Typography.vue";
+export type {
+  TypographyProps,
+  TypographyVariant,
+  TypographyColor,
+  TypographyAlign,
+} from "./components/Typography/Typography.types";
+
+export { default as Avatar } from "./components/Avatar/Avatar.vue";
+export type {
+  AvatarProps,
+  AvatarSize,
+  AvatarShape,
+  AvatarStatus,
+  AvatarColor,
+} from "./components/Avatar/Avatar.types";
+
+export { default as AvatarGroup } from "./components/AvatarGroup/AvatarGroup.vue";
+export type {
+  AvatarGroupProps,
+  AvatarGroupSize,
+  AvatarGroupSpacing,
+} from "./components/AvatarGroup/AvatarGroup.types";
+
+export { default as Divider } from "./components/Divider/Divider.vue";
+export type {
+  DividerProps,
+  DividerOrientation,
+  DividerVariant,
+  DividerTextAlign,
+} from "./components/Divider/Divider.types";
