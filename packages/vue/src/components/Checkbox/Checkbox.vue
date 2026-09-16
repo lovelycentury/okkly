@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { computed, normalizeClass, useAttrs, useId } from "vue";
+import { computed, inject, normalizeClass, useAttrs, useId } from "vue";
 import "@okkly/design-system/components/Checkbox/Checkbox.scss";
+import { CheckboxGroupContextKey } from "../CheckboxGroup/CheckboxGroupContext";
 import type { CheckboxProps } from "./Checkbox.types";
 
 defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<CheckboxProps>(), {
+  value: undefined,
+  name: undefined,
   indeterminate: false,
-  size: "medium",
-  color: "primary",
+  size: undefined,
+  color: undefined,
   disabled: false,
   id: undefined,
 });
@@ -20,24 +23,41 @@ const slots = defineSlots<{
 
 const model = defineModel<boolean>();
 
+const group = inject(CheckboxGroupContextKey, null);
+
+const generatedId = useId();
+const inputId = computed(() => props.id ?? generatedId);
+
+const isGrouped = computed(() => group !== null);
+const finalName = computed(() => props.name ?? group?.name);
+const finalChecked = computed(() =>
+  isGrouped.value ? props.value !== undefined && group!.value.includes(props.value) : model.value,
+);
+const finalDisabled = computed(() => props.disabled || (group?.disabled ?? false));
+const finalSize = computed(() => props.size ?? group?.size ?? "medium");
+const finalColor = computed(() => props.color ?? group?.color ?? "primary");
+
 const attrs = useAttrs();
 const inputAttrs = computed(() => {
   const { class: _class, ...rest } = attrs;
   return rest;
 });
 
-const generatedId = useId();
-const inputId = computed(() => props.id ?? generatedId);
-
 const classes = computed(() =>
   normalizeClass([
     "okkly-component",
     "okkly-checkbox",
-    props.color !== "primary" && `okkly-checkbox--color-${props.color}`,
-    props.size !== "medium" && `okkly-checkbox--${props.size}`,
+    finalColor.value !== "primary" && `okkly-checkbox--color-${finalColor.value}`,
+    finalSize.value !== "medium" && `okkly-checkbox--${finalSize.value}`,
     attrs.class,
   ]),
 );
+
+function handleChange(event: Event) {
+  const checked = (event.target as HTMLInputElement).checked;
+  if (isGrouped.value && props.value !== undefined) group!.onToggle(props.value, checked);
+  else model.value = checked;
+}
 </script>
 
 <template>
@@ -45,12 +65,15 @@ const classes = computed(() =>
     <span class="okkly-checkbox__control">
       <input
         :id="inputId"
-        v-model="model"
         type="checkbox"
         class="okkly-checkbox__input"
+        :name="finalName"
+        :value="value"
+        :checked="finalChecked"
         :indeterminate="indeterminate"
-        :disabled="disabled"
+        :disabled="finalDisabled"
         v-bind="inputAttrs"
+        @change="handleChange"
       />
       <span class="okkly-checkbox__box" aria-hidden="true">
         <svg

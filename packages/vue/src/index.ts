@@ -35,6 +35,9 @@ export type {
   CheckboxColor,
 } from "./components/Checkbox/Checkbox.types";
 
+export { default as CheckboxGroup } from "./components/CheckboxGroup/CheckboxGroup.vue";
+export type { CheckboxGroupProps } from "./components/CheckboxGroup/CheckboxGroup.types";
+
 export { default as Switch } from "./components/Switch/Switch.vue";
 export type { SwitchProps, SwitchSize, SwitchColor } from "./components/Switch/Switch.types";
 

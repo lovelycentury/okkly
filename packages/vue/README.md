@@ -118,6 +118,8 @@ name-for-name.
 
 | Prop            | Type                                                                                   | Default        |
 | --------------- | -------------------------------------------------------------------------------------- | -------------- |
+| `value`         | `string`                                                                               | `undefined`    |
+| `name`          | `string`                                                                               | `undefined`    |
 | `indeterminate` | `boolean`                                                                              | `false`        |
 | `size`          | `small \| medium \| large`                                                             | `medium`       |
 | `color`         | `primary \| dante \| indigo \| violet \| ember \| ice \| success \| warning \| danger` | `primary`      |
@@ -140,10 +142,43 @@ const subscribed = ref(false);
 ```
 
 `label` is a slot rather than a prop, since Vue has no `ReactNode`, and renders
-only when filled. The controlled `checked` state is `v-model`. Anything else
-the `<input>` itself understands (`value`, `name`, `required`, `aria-*`,
-`@change`…) falls through to it — `class` is the one exception, which lands
+only when filled. The controlled `checked` state is `v-model` — standalone.
+Nested inside a `CheckboxGroup`, `value` picks the option and the checked
+state comes from the group instead; `size`/`color` also fall back through the
+group when unset. Anything else the `<input>` itself understands (`required`,
+`aria-*`, …) falls through to it — `class` is the one exception, which lands
 on the outer `<label>` instead, matching React's `className`.
+
+## CheckboxGroup
+
+Multi-select set of `Checkbox` children — nest them directly rather than
+passing an options array, the same composition pattern as `RadioGroup`
+(multi-select instead of single). Props mirror `@okkly/react`'s
+`<CheckboxGroup>` name-for-name: `name`/`defaultValue`/`disabled`/`size`/
+`color`.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Checkbox, CheckboxGroup } from "@okkly/vue";
+
+const channels = ref<string[]>(["email"]);
+</script>
+
+<template>
+  <CheckboxGroup v-model="channels">
+    <template #label>Notification channels</template>
+    <Checkbox value="email"><template #label>Email</template></Checkbox>
+    <Checkbox value="sms"><template #label>SMS</template></Checkbox>
+  </CheckboxGroup>
+</template>
+```
+
+The controlled `value`/`onChange` pair becomes an unnamed `defineModel<string[]>()`,
+so consumers can `v-model` it — `defaultValue` still seeds it (read in a
+computed fallback, never written into the model on mount) when nothing is
+bound. `children` becomes the default slot and `label` becomes the `label`
+slot.
 
 ## Switch
 
