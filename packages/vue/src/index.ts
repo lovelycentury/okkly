@@ -8,6 +8,14 @@ export type {
   ButtonLoadingPosition,
 } from "./components/Button/Button.types";
 
+export { default as IconButton } from "./components/IconButton/IconButton.vue";
+export type {
+  IconButtonProps,
+  IconButtonVariant,
+  IconButtonColor,
+  IconButtonSize,
+} from "./components/IconButton/IconButton.types";
+
 export { default as Ripple } from "./components/Ripple/Ripple.vue";
 export type { RippleProps } from "./components/Ripple/Ripple.types";
 

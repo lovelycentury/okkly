@@ -63,6 +63,34 @@ Anything the element itself understands — `class`, `type`, `@click`, `aria-*` 
 falls through to the rendered `<button>`/`<a>`. A disabled `<a>` drops its href
 and reports `aria-disabled`.
 
+## IconButton
+
+Icon-only control for toolbars and dense UIs. Renders a native `<button>`, or
+an `<a>` when given an `href`, exactly like `Button`. Props mirror
+`@okkly/react`'s `<IconButton>` name-for-name.
+
+| Prop            | Type                                                   | Default     |
+| --------------- | ------------------------------------------------------ | ----------- |
+| `variant`       | `ghost \| glass \| solid`                              | `ghost`     |
+| `color`         | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`   |
+| `size`          | `small \| medium \| large`                             | `medium`    |
+| `disabled`      | `boolean`                                              | `false`     |
+| `disableRipple` | `boolean`                                              | `false`     |
+| `href`          | `string`                                               | `undefined` |
+
+```vue
+<IconButton aria-label="Add">
+  <PlusIcon />
+</IconButton>
+```
+
+React's `icon` prop and `children` fallback (`icon ?? children`) collapse
+into a single default slot — the glyph, whichever way you pass it. Always
+provide `aria-label`, since the slot is a bare icon with no visible text.
+Anything else the element itself understands — `class`, `@click`, `aria-*` —
+falls through to the rendered `<button>`/`<a>`. A disabled `<a>` drops its
+href and reports `aria-disabled`.
+
 ## Checkbox
 
 Binary or indeterminate choice. Props mirror `@okkly/react`'s `<Checkbox>`
