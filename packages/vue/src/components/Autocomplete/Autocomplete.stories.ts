@@ -297,8 +297,12 @@ export const RecipeCustomInput: Story = {
       <Autocomplete :options="people" placeholder="Search people…">
         <template #label>People</template>
         <template #helper-text>The label, helper text and focus ring are still the field's</template>
-        <template #input="{ inputAttrs, inputEvents, inputRef }">
-          <span aria-hidden="true" style="flex-shrink: 0; font-size: 1.25rem">⌕</span>
+        <template #input="{ inputAttrs, inputEvents, inputRef, state }">
+          <span
+            aria-hidden="true"
+            :style="{ opacity: state.open ? 1 : 0.5, flexShrink: 0, fontSize: '1.25rem' }"
+            >⌕</span
+          >
           <input :ref="inputRef" v-bind="inputAttrs" v-on="inputEvents" class="okkly-autocomplete__input" />
         </template>
       </Autocomplete>`,
