@@ -271,6 +271,56 @@ its `onClick`/`onRemove` stay plain callback props exactly as in React, since
 they live inside a data object rather than being props of a component
 instance.
 
+## Slider
+
+Continuous or discrete value along a track, with single or range (two-thumb)
+selection. Props mirror `@okkly/react`'s `<Slider>` name-for-name.
+
+| Prop                | Type                                                   | Default      |
+| ------------------- | ------------------------------------------------------ | ------------ |
+| `min`               | `number`                                               | `0`          |
+| `max`               | `number`                                               | `100`        |
+| `step`              | `number`                                               | `1`          |
+| `marks`             | `boolean \| { value: number; label?: string }[]`       | `false`      |
+| `orientation`       | `horizontal \| vertical`                               | `horizontal` |
+| `disabled`          | `boolean`                                              | `false`      |
+| `color`             | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`    |
+| `size`              | `small \| medium \| large`                             | `medium`     |
+| `valueLabelDisplay` | `auto \| on \| off`                                    | `off`        |
+| `discrete`          | `boolean`                                              | `false`      |
+| `shiftStep`         | `number`                                               | `undefined`  |
+| `getAriaLabel`      | `(index: number) => string`                            | `undefined`  |
+| `getAriaValueText`  | `(value: number, index: number) => string`             | `undefined`  |
+| `track`             | `normal \| inverted \| none`                           | `normal`     |
+| `valueLabelFormat`  | `(value: number, index: number) => string`             | `String`     |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Slider } from "@okkly/vue";
+
+const brightness = ref(30);
+</script>
+
+<template>
+  <Slider v-model="brightness" value-label-display="auto" aria-label="Brightness" />
+</template>
+```
+
+The controlled `value` + `onChange` pair becomes an unnamed `v-model`, typed
+`number | number[]` — pass an array to get a two-thumb range slider.
+`defaultValue` still seeds it once on mount when nothing is bound, same as
+React's uncontrolled mode; unlike `RadioGroup`, this never happens through an
+eager write to the model (which would itself emit `update:modelValue` on
+mount) — the fallback lives in the read path instead, so nothing fires until
+the user actually moves a thumb, matching React's lazy initializer.
+`onChangeCommitted` becomes the `changeCommitted` emit, firing once a drag or
+keypress settles rather than on every intermediate value. Both drop the
+`(event, …)` pair down to just the value, since nothing native fires a real
+event here. The headless pointer/keyboard/ARIA behavior underneath is
+`useSlider` from `@okkly/vue-composables`, the Vue port of
+`@okkly/react-hooks`'s hook of the same name.
+
 ## TextField
 
 Single-line text input with label, helper text, and error state — the

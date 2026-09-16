@@ -45,6 +45,17 @@ export type {
   ChipGroupColor,
 } from "./components/ChipGroup/ChipGroup.types";
 
+export { default as Slider } from "./components/Slider/Slider.vue";
+export type {
+  SliderProps,
+  SliderSize,
+  SliderColor,
+  SliderValueLabelDisplay,
+  SliderTrack,
+  SliderMark,
+  SliderOrientation,
+} from "./components/Slider/Slider.types";
+
 export { default as TextField } from "./components/TextField/TextField.vue";
 export type {
   TextFieldProps,

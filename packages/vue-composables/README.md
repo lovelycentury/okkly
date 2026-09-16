@@ -51,3 +51,43 @@ useEscapeKey(
   () => props.open && !props.disableEscapeKeyDown,
 );
 ```
+
+## useSlider
+
+Headless pointer/keyboard/ARIA behavior for a single or range (two-thumb)
+slider — the Vue port of `@okkly/react-hooks`'s `useSlider`, and what
+`Slider` from `@okkly/vue` is built on. `options` is a getter, called fresh
+whenever the composable needs it, since a `setup()` body — unlike a React
+hook's — runs only once rather than every render.
+
+Unlike React's `getRootProps()`/`getThumbInputProps()` (JSX-spread
+ergonomics templates don't need), this returns styles/attrs — `v-bind`-able,
+no event-key casing to get wrong — separately from event listeners —
+`v-on`-able, keyed by bare native event name, the same shape `useRipple`'s
+own `events` already uses.
+
+```vue
+<script setup lang="ts">
+import { useTemplateRef } from "vue";
+import { useSlider } from "@okkly/vue-composables";
+
+const root = useTemplateRef<HTMLDivElement>("root");
+const slider = useSlider(root, () => ({ value: 30, min: 0, max: 100 }));
+</script>
+
+<template>
+  <div ref="root" :style="slider.rootStyle.value" v-on="slider.rootEvents">
+    <div :style="slider.trackStyle.value" />
+    <div
+      v-for="(thumbValue, index) in slider.values.value"
+      :key="index"
+      :style="slider.thumbStyle(index, thumbValue)"
+    >
+      <input v-bind="slider.thumbInputAttrs(index, thumbValue)" v-on="slider.thumbInputEvents" />
+    </div>
+  </div>
+</template>
+```
+
+See `@okkly/vue`'s `Slider.vue` for the full composition, including marks and
+the inverted-track segments.
