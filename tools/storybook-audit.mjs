@@ -416,7 +416,21 @@ async function auditStory(context, entry) {
           "the story looks identical with the pointer over its first control",
         );
 
-        // Pressed, photographed between mousedown and mouseup.
+        // Pressed, photographed between mousedown and mouseup. The mouseup below
+        // is also the click that opens overlays, further down — so real anchor
+        // navigation is disarmed first: an `AsLink` Button, a Breadcrumbs crumb,
+        // anything with a real `href` would otherwise leave the story (or, for an
+        // external URL a sandboxed run can't reach, hang on DNS for the rest of
+        // the timeout). `preventDefault` stops the navigation but not the click
+        // event itself, so a component's own `onClick` still runs and an overlay
+        // it opens is still caught below.
+        await page.evaluate(() => {
+          const swallow = (event) => {
+            if (event.target.closest?.("a[href]")) event.preventDefault();
+          };
+          document.addEventListener("click", swallow, { capture: true });
+          window.okklyStorybookAuditSwallowNav = swallow;
+        });
         const box = await target.boundingBox().catch(() => null);
         if (box) {
           await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
@@ -432,6 +446,16 @@ async function auditStory(context, entry) {
             "the story looks identical while the control is held down",
           );
         }
+        await page
+          .evaluate(() => {
+            if (window.okklyStorybookAuditSwallowNav) {
+              document.removeEventListener("click", window.okklyStorybookAuditSwallowNav, {
+                capture: true,
+              });
+              delete window.okklyStorybookAuditSwallowNav;
+            }
+          })
+          .catch(() => {});
 
         // That mouseup was the click. Did it open something, and does Escape close it?
         const overlays = page.locator(OVERLAY);
