@@ -25,6 +25,9 @@ export type {
   IconButtonSize,
 } from "./components/IconButton/IconButton.types";
 
+export { default as Fab } from "./components/Fab/Fab.vue";
+export type { FabProps, FabVariant, FabColor, FabSize } from "./components/Fab/Fab.types";
+
 export { default as Ripple } from "./components/Ripple/Ripple.vue";
 export type { RippleProps } from "./components/Ripple/Ripple.types";
 

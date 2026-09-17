@@ -111,6 +111,41 @@ Anything else the element itself understands — `class`, `@click`, `aria-*` —
 falls through to the rendered `<button>`/`<a>`. A disabled `<a>` drops its
 href and reports `aria-disabled`.
 
+## Fab
+
+Floating action button for a screen's primary create/navigate action. Renders
+a native `<button>`, or an `<a>` when given an `href`, exactly like `Button`.
+Props mirror `@okkly/react`'s `<Fab>` name-for-name.
+
+| Prop            | Type                                                   | Default     |
+| --------------- | ------------------------------------------------------ | ----------- |
+| `variant`       | `standard \| soft`                                     | `standard`  |
+| `color`         | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`   |
+| `size`          | `small \| medium \| large`                             | `medium`    |
+| `disabled`      | `boolean`                                              | `false`     |
+| `disableRipple` | `boolean`                                              | `false`     |
+| `href`          | `string`                                               | `undefined` |
+
+```vue
+<Fab aria-label="Add">
+  <PlusIcon />
+</Fab>
+
+<Fab>
+  <PlusIcon />
+  <template #label>New track</template>
+</Fab>
+```
+
+React's required `icon` prop becomes the default slot — the glyph, always
+present. `label` becomes the `label` slot; filling it grows the FAB into an
+extended pill instead of a plain circle, the same way React infers shape from
+whether `label` is set rather than a separate enum value. Provide
+`aria-label` when the `label` slot is empty. Anything else the element itself
+understands — `class`, `@click`, `aria-*` — falls through to the rendered
+`<button>`/`<a>`. A disabled `<a>` drops its href and reports
+`aria-disabled`. No built-in `SpeedDial` — compose plain `Fab`s instead.
+
 ## Checkbox
 
 Binary or indeterminate choice. Props mirror `@okkly/react`'s `<Checkbox>`
