@@ -57,6 +57,15 @@ export type {
   NumberInputControls,
 } from "./components/NumberInput/NumberInput.types";
 
+export { default as Rating } from "./components/Rating/Rating.vue";
+export type {
+  RatingProps,
+  RatingSize,
+  RatingColor,
+  RatingIcon,
+  RatingPrecision,
+} from "./components/Rating/Rating.types";
+
 export { default as Ripple } from "./components/Ripple/Ripple.vue";
 export type { RippleProps } from "./components/Ripple/Ripple.types";
 

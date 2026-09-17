@@ -296,6 +296,48 @@ Vue's own fallthrough (`class`) and `useId()` (`id`) handle them; every
 other native `<input>` attribute falls through to the rendered `<input>` on
 its own.
 
+## Rating
+
+Star (or custom glyph) scale for scores. Support half-steps with
+`precision` when the data allows it. Props follow MUI's `Rating` API
+closely, mirroring `@okkly/react`'s `<Rating>` name-for-name.
+
+| Prop           | Type                                                              | Default     |
+| -------------- | ----------------------------------------------------------------- | ----------- |
+| `defaultValue` | `number \| null`                                                  | `null`      |
+| `max`          | `number`                                                          | `5`         |
+| `precision`    | `0.5 \| 1`                                                        | `0.5`       |
+| `size`         | `small \| medium \| large`                                        | `medium`    |
+| `color`        | `warning \| primary \| dante \| indigo \| violet \| ember \| ice` | `warning`   |
+| `icon`         | `star \| heart`                                                   | `"star"`    |
+| `readOnly`     | `boolean`                                                         | `false`     |
+| `disabled`     | `boolean`                                                         | `false`     |
+| `name`         | `string`                                                          | `undefined` |
+| `getLabelText` | `(value: number) => string`                                       | —           |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Rating } from "@okkly/vue";
+
+const value = ref<number | null>(3);
+</script>
+
+<template>
+  <Rating v-model="value" />
+</template>
+```
+
+The controlled `value`/`onChange` pair becomes an unnamed
+`defineModel<number | null>()`; `defaultValue` still seeds it once on mount
+when nothing is bound, and the event argument drops the same way it does
+for `Checkbox`/`Switch`. `icon` narrows from React's `RatingIcon | ReactNode`
+to just `RatingIcon` — pass a custom filled glyph through the `icon` slot
+instead, which wins over the `icon` prop when filled (rendered the same way
+for every star — full, half, and empty differ only by wrapping CSS, same as
+the built-in star/heart). `label` (`ReactNode` in React) becomes the `label`
+slot.
+
 ## Checkbox
 
 Binary or indeterminate choice. Props mirror `@okkly/react`'s `<Checkbox>`
