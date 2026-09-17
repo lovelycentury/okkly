@@ -40,6 +40,15 @@ export type {
   FileUploadFileSlotScope,
 } from "./components/FileUpload/FileUpload.types";
 
+export { default as InlineAction } from "./components/InlineAction/InlineAction.vue";
+export type {
+  InlineActionProps,
+  InlineActionSize,
+  InlineActionColor,
+  InlineActionFill,
+  InlineActionState,
+} from "./components/InlineAction/InlineAction.types";
+
 export { default as Ripple } from "./components/Ripple/Ripple.vue";
 export type { RippleProps } from "./components/Ripple/Ripple.types";
 

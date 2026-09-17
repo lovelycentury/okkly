@@ -202,6 +202,53 @@ yourself if the branch matters. `label` becomes the `label` slot. React's
 `Tooltip` in `@okkly/vue` yet, so the `size="small"` error surfaces via the
 native `title` attribute instead of a floating tooltip.
 
+## InlineAction
+
+Compact text/icon control for table rows and cards — loading, success, and
+error states without a full `Button`. `state` is the single source of truth
+for the non-native visual states (loading/success/error/readonly/disabled);
+`disabled`/`loading`/`readonly` are convenience overrides that win over
+`state` when true (disabled > loading > readonly). Props mirror
+`@okkly/react`'s `<InlineAction>` name-for-name.
+
+| Prop          | Type                                                                                         | Default     |
+| ------------- | -------------------------------------------------------------------------------------------- | ----------- |
+| `placeholder` | `string`                                                                                     | `undefined` |
+| `action`      | `string`                                                                                     | `"Copy"`    |
+| `size`        | `small \| medium \| large`                                                                   | `medium`    |
+| `color`       | `primary \| dante \| indigo \| violet \| ember \| ice \| success \| warning \| danger`       | `undefined` |
+| `fill`        | `filled \| soft \| outline \| gradient \| glass`                                             | `filled`    |
+| `message`     | `string`                                                                                     | `undefined` |
+| `state`       | `default \| hover \| focus \| filled \| loading \| success \| error \| readonly \| disabled` | `default`   |
+| `readonly`    | `boolean`                                                                                    | `false`     |
+| `loading`     | `boolean`                                                                                    | `false`     |
+| `disabled`    | `boolean`                                                                                    | `false`     |
+| `id`          | `string`                                                                                     | `undefined` |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { InlineAction } from "@okkly/vue";
+
+const value = ref("");
+</script>
+
+<template>
+  <InlineAction v-model="value" placeholder="you@company.com" @action="copy" />
+</template>
+```
+
+The controlled `value`/`onChange` pair becomes an unnamed `defineModel<string>()`
+(this component has no uncontrolled `defaultValue` in React either, so there
+is none here). `actionIcon` (`ReactNode` in React) becomes the `action-icon`
+slot, shown only when `state` is `default`/`hover`/`focus`/`filled`/`readonly`
+— it's overridden automatically for loading/success/error/readonly, same as
+React. `onAction` becomes the `action` emit — a prop and an emit sharing a
+name is fine in Vue, since `props.action`/`emit("action")` live in separate
+namespaces. `className` is dropped — a consumer's `class` merges onto the
+root automatically; every other native `<input>` attribute falls through to
+the rendered `<input>` on its own.
+
 ## Checkbox
 
 Binary or indeterminate choice. Props mirror `@okkly/react`'s `<Checkbox>`
