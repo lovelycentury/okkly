@@ -400,3 +400,6 @@ export type {
   ProgressSize,
   ProgressColor,
 } from "./components/Progress/Progress.types";
+
+export { default as Alert } from "./components/Alert/Alert.vue";
+export type { AlertProps, AlertSeverity, AlertVariant } from "./components/Alert/Alert.types";

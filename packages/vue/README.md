@@ -1694,6 +1694,40 @@ The element carries `role="progressbar"` but no accessible name of its own
 announces what it is measuring. `variant="indeterminate"` omits
 `aria-valuenow`, since there's nothing truthful to report.
 
+## Alert
+
+An inline banner that reports the outcome of something the user just did,
+or a condition they need to know about before they act. Props mirror
+`@okkly/react`'s `<Alert>` name-for-name: `severity`/`variant`/`icon`.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Alert, Button } from "@okkly/vue";
+
+const open = ref(true);
+</script>
+
+<template>
+  <Alert v-if="open" severity="warning" @close="open = false">
+    <template #title>Approaching your quota</template>
+    You have used 940 of 1,000 monthly builds.
+    <template #action><Button variant="ghost" size="small">Upgrade</Button></template>
+  </Alert>
+</template>
+```
+
+`title` becomes the `#title` slot, `children` (the body message) becomes
+the default slot, and `action` becomes the `#action` slot, since Vue has no
+`ReactNode`. `icon` narrows from `ReactNode | false` to just `false` — pass
+it to hide the built-in severity icon — and overriding it is the `#icon`
+slot instead. `onClose` drops the `on` prefix and becomes a native `close`
+listener attached with `@close`; like `Chip`'s `click`, the component reads
+it itself rather than declaring it through `defineEmits`, since only that
+lets it decide whether to render the dismiss button from whether a
+listener is present at all — the same thing React's `onClose && <button>`
+gate does.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
