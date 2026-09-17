@@ -49,6 +49,14 @@ export type {
   InlineActionState,
 } from "./components/InlineAction/InlineAction.types";
 
+export { default as NumberInput } from "./components/NumberInput/NumberInput.vue";
+export type {
+  NumberInputProps,
+  NumberInputSize,
+  NumberInputColor,
+  NumberInputControls,
+} from "./components/NumberInput/NumberInput.types";
+
 export { default as Ripple } from "./components/Ripple/Ripple.vue";
 export type { RippleProps } from "./components/Ripple/Ripple.types";
 

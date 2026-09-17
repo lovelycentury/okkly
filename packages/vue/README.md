@@ -249,6 +249,53 @@ namespaces. `className` is dropped — a consumer's `class` merges onto the
 root automatically; every other native `<input>` attribute falls through to
 the rendered `<input>` on its own.
 
+## NumberInput
+
+Numeric text field with steppers. Prefer over `TextField` when min/max/step
+matter and values stay numeric. Props follow MUI's `TextField` API where
+applicable, mirroring `@okkly/react`'s `<NumberInput>` name-for-name.
+
+| Prop        | Type                       | Default     |
+| ----------- | -------------------------- | ----------- |
+| `hideLabel` | `boolean`                  | `false`     |
+| `size`      | `small \| medium \| large` | `medium`    |
+| `color`     | `primary \| dante`         | `primary`   |
+| `error`     | `boolean`                  | `false`     |
+| `fullWidth` | `boolean`                  | `false`     |
+| `disabled`  | `boolean`                  | `false`     |
+| `controls`  | `stepper \| chevrons`      | `stepper`   |
+| `min`       | `number`                   | `undefined` |
+| `max`       | `number`                   | `undefined` |
+| `step`      | `number`                   | `1`         |
+| `required`  | `boolean`                  | `false`     |
+| `id`        | `string`                   | `undefined` |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { NumberInput } from "@okkly/vue";
+
+const value = ref<number | null>(12);
+</script>
+
+<template>
+  <NumberInput v-model="value" :min="1" :max="99">
+    <template #label>Quantity</template>
+  </NumberInput>
+</template>
+```
+
+`label`/`helperText` (both `ReactNode` in React) become the `label`/
+`helper-text` slots. The controlled `value`/`onChange` pair becomes an
+unnamed `defineModel<number | null>()`; `defaultValue` still seeds it once
+on mount when nothing is bound. `onBlur`/`onKeyDown` are dropped — Vue
+merges a consumer's `@blur`/`@keydown` with the component's own internal
+listeners automatically (both run), unlike React where the component has to
+manually call the prop back. `className`/`id` are dropped from that list —
+Vue's own fallthrough (`class`) and `useId()` (`id`) handle them; every
+other native `<input>` attribute falls through to the rendered `<input>` on
+its own.
+
 ## Checkbox
 
 Binary or indeterminate choice. Props mirror `@okkly/react`'s `<Checkbox>`
