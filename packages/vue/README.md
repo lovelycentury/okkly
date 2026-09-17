@@ -713,6 +713,37 @@ Same slot/model mapping as `DateField`: `label`/`helperText` become the
 an unnamed `defineModel<Date | null>()` (time-of-day on a fixed base day),
 and `open`/`onOpenChange` becomes the named `defineModel<boolean>("open")`.
 
+## DateTimeField
+
+Masked `dd.mm.yyyy, HH:mm` text input with a `DateTimePicker` popover, built
+on `@maskito/vue`'s `v-maskito` directive; the picker closes on its own
+Confirm click. Closest MUI counterpart is MUI X's
+`DateTimeField`/`DateTimePicker`. Props mirror `@okkly/react`'s
+`<DateTimeField>` name-for-name: `size`/`color`/`error`/`fullWidth`/
+`disabled`/`min`/`max`/`placeholder`/`id`/`required`.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { DateTimeField } from "@okkly/vue";
+
+const value = ref<Date | null>(null);
+</script>
+
+<template>
+  <DateTimeField v-model="value">
+    <template #label>Date & time</template>
+  </DateTimeField>
+</template>
+```
+
+Same slot/model mapping as `DateField`/`TimeField`: `label`/`helperText`
+become the `label`/`helper-text` slots, the controlled `value`/`onChange`
+pair becomes an unnamed `defineModel<Date | null>()`, and
+`open`/`onOpenChange` becomes the named `defineModel<boolean>("open")`. The
+input updates live as the popover's date/time wheels move; it also updates
+(and the popover closes) when the popover's own Confirm button is clicked.
+
 ## Box
 
 The layout primitive: a `div` — or any element, through `as` — that takes
