@@ -1487,6 +1487,32 @@ since the whole object is a plain data prop with no slot equivalent.
 when left empty. Past `maxItems` crumbs, the middle collapses behind a "…"
 button that expands to the full path in place.
 
+## Pagination
+
+Page controls with boundary pages, a sibling window around the current page,
+and ellipses in between. Props mirror `@okkly/react`'s `<Pagination>`
+name-for-name: `count`/`siblingCount`/`boundaryCount`/`showFirstButton`/
+`showLastButton`/`size`/`color`/`disabled`/`shape`.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Pagination } from "@okkly/vue";
+
+const page = ref(1);
+</script>
+
+<template>
+  <Pagination v-model="page" :count="20" />
+</template>
+```
+
+The controlled `page`/`onChange` pair (React has no separate `defaultValue`
+— it is always controlled, defaulting to page 1 when unbound) becomes an
+unnamed `defineModel<number>({ default: 1 })`, so consumers can `v-model`
+it. The click event `onChange` also carried is dropped, matching
+`Rating`/`Checkbox`/`Switch` — nothing here needs it.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

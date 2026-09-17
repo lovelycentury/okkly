@@ -336,3 +336,11 @@ export type {
 
 export { default as Breadcrumbs } from "./components/Breadcrumbs/Breadcrumbs.vue";
 export type { BreadcrumbsProps, BreadcrumbItem } from "./components/Breadcrumbs/Breadcrumbs.types";
+
+export { default as Pagination } from "./components/Pagination/Pagination.vue";
+export type {
+  PaginationProps,
+  PaginationColor,
+  PaginationSize,
+  PaginationShape,
+} from "./components/Pagination/Pagination.types";
