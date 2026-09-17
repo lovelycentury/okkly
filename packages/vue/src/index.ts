@@ -391,3 +391,12 @@ export type {
   SkeletonVariant,
   SkeletonAnimation,
 } from "./components/Skeleton/Skeleton.types";
+
+export { default as Progress } from "./components/Progress/Progress.vue";
+export type {
+  ProgressProps,
+  ProgressVariant,
+  ProgressType,
+  ProgressSize,
+  ProgressColor,
+} from "./components/Progress/Progress.types";

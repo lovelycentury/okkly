@@ -1672,6 +1672,28 @@ passes through as any CSS length) — no Vue-forced difference here, same as
 React. Always `aria-hidden`; announce the wait once, on the container, with
 `aria-busy="true"`.
 
+## Progress
+
+Reports how far along a task is, as a linear bar or a circular ring. Props
+mirror `@okkly/react`'s `<Progress>` name-for-name: `value`/`variant`/
+`type`/`color`/`size`/`showLabel` — no Vue-forced differences, it's purely
+presentational.
+
+```vue
+<script setup lang="ts">
+import { Progress } from "@okkly/vue";
+</script>
+
+<template>
+  <Progress :value="64" aria-label="Upload progress" />
+</template>
+```
+
+The element carries `role="progressbar"` but no accessible name of its own
+— pass `aria-label` (or point `aria-labelledby` at a heading) so it
+announces what it is measuring. `variant="indeterminate"` omits
+`aria-valuenow`, since there's nothing truthful to report.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
