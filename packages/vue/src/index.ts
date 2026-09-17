@@ -78,6 +78,13 @@ export type {
   JSONContent,
 } from "./components/RichEditor/RichEditor.types";
 
+export { default as SegmentedToggle } from "./components/SegmentedToggle/SegmentedToggle.vue";
+export type {
+  SegmentedToggleProps,
+  SegmentedToggleItem,
+  SegmentedToggleColor,
+} from "./components/SegmentedToggle/SegmentedToggle.types";
+
 export { default as Ripple } from "./components/Ripple/Ripple.vue";
 export type { RippleProps } from "./components/Ripple/Ripple.types";
 

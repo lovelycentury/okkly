@@ -382,6 +382,50 @@ mount when nothing is bound. `label`/`helperText` (both `ReactNode` in
 React) become the `label`/`helper-text` slots. `className`/`id` are dropped
 — Vue's own fallthrough (`class`) and `useId()` (`id`) handle them.
 
+## SegmentedToggle
+
+Exclusive segments in one control — view modes, filters, or short option
+sets. Props follow MUI's `ToggleButtonGroup` API loosely, mirroring
+`@okkly/react`'s `<SegmentedToggle>` name-for-name.
+
+| Prop           | Type                                                   | Default     |
+| -------------- | ------------------------------------------------------ | ----------- |
+| `items`        | `SegmentedToggleItem[]`                                | —           |
+| `defaultValue` | `string \| string[]`                                   | `undefined` |
+| `exclusive`    | `boolean`                                              | `true`      |
+| `color`        | `primary \| dante \| indigo \| violet \| ember \| ice` | `"primary"` |
+| `disabled`     | `boolean`                                              | `false`     |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { SegmentedToggle } from "@okkly/vue";
+
+const value = ref("week");
+const items = [
+  { label: "Day", value: "day" },
+  { label: "Week", value: "week" },
+  { label: "Month", value: "month" },
+];
+</script>
+
+<template>
+  <SegmentedToggle v-model="value" :items="items" />
+</template>
+```
+
+The controlled `value`/`onChange` pair becomes an unnamed
+`defineModel<string | string[]>()`; `v-model` is always typed that way
+regardless of `exclusive` — React discriminates `onChange`'s signature on
+`exclusive` via a value that can be either shape, which `defineProps` can't
+express either, so check `exclusive` yourself if the branch matters.
+`defaultValue` still seeds it once on mount when nothing is bound. Each
+item's `label` and `icon` (both `ReactNode` in React) narrow to `string` —
+`icon` is raw SVG markup, rendered the way `Icon`'s own `icon` prop is,
+since `items` is a plain data prop rather than something a slot can reach
+into. `className` is dropped — a consumer's `class` merges onto the root
+automatically.
+
 ## Checkbox
 
 Binary or indeterminate choice. Props mirror `@okkly/react`'s `<Checkbox>`
