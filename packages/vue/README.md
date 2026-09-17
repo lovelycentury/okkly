@@ -1769,6 +1769,32 @@ import { Logo } from "@okkly/vue";
 </template>
 ```
 
+## StaticBackground
+
+SSR-safe atmospheric scene for dark canvases — nebulae, stars and grain,
+frozen on their resting frame. Props mirror `@okkly/react`'s
+`<StaticBackground>` name-for-name: `preset`/`quality`/`scrim`.
+
+```vue
+<script setup lang="ts">
+import { StaticBackground } from "@okkly/vue";
+</script>
+
+<template>
+  <div style="position: relative; height: 100vh">
+    <StaticBackground preset="aurora" scrim>
+      <h1>Hero copy</h1>
+    </StaticBackground>
+  </div>
+</template>
+```
+
+`children` becomes the default slot — content rendered above the scene,
+since Vue has no `ReactNode`. The star field is seeded with a deterministic
+PRNG (module-level, computed once), so it's stable across re-renders and
+identical whether rendered on the server or the client — no motion pass, no
+hydration flash. See `AnimatedBackground` for the animated sibling.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

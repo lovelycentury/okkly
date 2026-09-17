@@ -409,3 +409,12 @@ export type { OnlyProps, OnlyBreakpoint } from "./components/Only/Only.types";
 
 export { default as Logo } from "./components/Logo/Logo.vue";
 export type { LogoProps, LogoLayout, LogoTone, LogoVariant } from "./components/Logo/Logo.types";
+
+export { default as StaticBackground } from "./components/StaticBackground/StaticBackground.vue";
+export type {
+  StaticBackgroundProps,
+  StaticBackgroundPreset,
+  StaticBackgroundQuality,
+  Star,
+  Nebula,
+} from "./components/StaticBackground/StaticBackground.types";
