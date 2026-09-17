@@ -376,3 +376,11 @@ export type {
   BadgeOverlap,
   BadgeAnchorOrigin,
 } from "./components/Badge/Badge.types";
+
+export { default as SeverityIcon } from "./components/SeverityIcon/SeverityIcon.vue";
+export type {
+  SeverityIconProps,
+  SeverityIconSeverity,
+  SeverityIconSize,
+  SeverityIconShape,
+} from "./components/SeverityIcon/SeverityIcon.types";

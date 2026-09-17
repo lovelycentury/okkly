@@ -1629,6 +1629,27 @@ label. `badgeContent` narrows from `ReactNode` to `string | number` rather
 than becoming a slot, since its value is read back for the max-overflow and
 zero-hiding logic, not just rendered.
 
+## SeverityIcon
+
+A small tinted status badge for alerts, dialogs, and list rows. Props
+mirror `@okkly/react`'s `<SeverityIcon>` name-for-name: `severity`/`size`/
+`shape`/`label`.
+
+```vue
+<script setup lang="ts">
+import { SeverityIcon } from "@okkly/vue";
+</script>
+
+<template>
+  <SeverityIcon severity="danger" label="Failed" />
+</template>
+```
+
+React's `icon` becomes the default slot, since Vue has no `ReactNode` — fill
+it to override the built-in severity glyph. An icon without a `label` is
+decoration and hidden from assistive tech, since colour alone says nothing
+to a screen reader.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
