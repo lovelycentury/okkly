@@ -241,3 +241,10 @@ export type {
   DateFieldSize,
   DateFieldColor,
 } from "./components/DateField/DateField.types";
+
+export { default as TimeField } from "./components/TimeField/TimeField.vue";
+export type {
+  TimeFieldProps,
+  TimeFieldSize,
+  TimeFieldColor,
+} from "./components/TimeField/TimeField.types";

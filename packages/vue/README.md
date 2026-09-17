@@ -685,6 +685,34 @@ unnamed `defineModel<Date | null>()`; the controlled `open`/`onOpenChange`
 pair becomes the named `defineModel<boolean>("open")`. `className` is
 dropped — a consumer's `class` merges onto the field automatically.
 
+## TimeField
+
+Masked `HH:mm` text input with a `TimePicker` popover, built on
+`@maskito/vue`'s `v-maskito` directive. Closest MUI counterpart is MUI X's
+`TimeField`/`TimePicker`. Props mirror `@okkly/react`'s `<TimeField>`
+name-for-name: `size`/`color`/`error`/`fullWidth`/`disabled`/`placeholder`/
+`id`/`required`.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { TimeField } from "@okkly/vue";
+
+const value = ref<Date | null>(null);
+</script>
+
+<template>
+  <TimeField v-model="value">
+    <template #label>Time</template>
+  </TimeField>
+</template>
+```
+
+Same slot/model mapping as `DateField`: `label`/`helperText` become the
+`label`/`helper-text` slots, the controlled `value`/`onChange` pair becomes
+an unnamed `defineModel<Date | null>()` (time-of-day on a fixed base day),
+and `open`/`onOpenChange` becomes the named `defineModel<boolean>("open")`.
+
 ## Box
 
 The layout primitive: a `div` — or any element, through `as` — that takes
