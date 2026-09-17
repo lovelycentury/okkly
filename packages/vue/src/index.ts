@@ -353,3 +353,8 @@ export type {
   TabsVariant,
   TabsOrientation,
 } from "./components/Tabs/Tabs.types";
+
+export { default as Accordion } from "./components/Accordion/Accordion.vue";
+export { default as AccordionSummary } from "./components/Accordion/AccordionSummary.vue";
+export { default as AccordionDetails } from "./components/Accordion/AccordionDetails.vue";
+export type { AccordionProps } from "./components/Accordion/Accordion.types";

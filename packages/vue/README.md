@@ -1541,12 +1541,40 @@ const tab = ref("overview");
 Tabs come from an `items` array rather than `Tab` children composition;
 `label`/`icon` narrow from React's `ReactNode` to `string` — `icon` is raw
 SVG markup, rendered the way `Icon`'s own `icon` prop is, since the whole
-object is a plain data prop with no slot equivalent. The controlled `value`
+object is a plain data prop with no slot equivalent. The controlled
+`value`/`onChange` pair becomes an unnamed `defineModel<string>()`;
+`defaultValue` still seeds it once while unbound, falling back further to
+the first tab's value. Tab panels are left to the consumer, same as React —
+`Tabs` owns only the strip.
 
-- `onChange` pair becomes an unnamed `defineModel<string>()`; `defaultValue`
-  still seeds it once while unbound, falling back further to the first tab's
-  value. Tab panels are left to the consumer, same as React — `Tabs` owns only
-  the strip.
+## Accordion
+
+Expandable section built from three parts: `Accordion` owns the open state,
+`AccordionSummary` is the button that toggles it, `AccordionDetails` is the
+content — the panel animates its height in both directions and leaves the
+DOM once collapsed. Props mirror `@okkly/react`'s `<Accordion>`
+name-for-name: `disabled`.
+
+```vue
+<script setup lang="ts">
+import { Accordion, AccordionSummary, AccordionDetails } from "@okkly/vue";
+</script>
+
+<template>
+  <Accordion default-expanded>
+    <AccordionSummary>Section title</AccordionSummary>
+    <AccordionDetails>Panel content.</AccordionDetails>
+  </Accordion>
+</template>
+```
+
+The controlled `expanded`/`onChange` pair becomes an unnamed
+`defineModel<boolean>()`; `defaultExpanded` still seeds it once while
+unbound. `AccordionSummary`'s `expandIcon` becomes the `#expand-icon` slot,
+defaulting to a built-in chevron. `AccordionSummary`/`AccordionDetails` read
+the parent's state through Vue's `provide`/`inject` — the same mechanism
+`RadioGroup` uses for its `Radio` children — so, like React's context, each
+must render inside an `Accordion`.
 
 ## Workbench
 
