@@ -1603,6 +1603,32 @@ whole object is a plain data prop with no slot equivalent. `activeStep`
 stays a plain required prop — there's no controlled/uncontrolled
 distinction to make idiomatic here, same as React.
 
+## Badge
+
+A count or status dot pinned to the corner of another element. Props mirror
+`@okkly/react`'s `<Badge>` name-for-name: `color`/`variant`/`max`/
+`invisible`/`overlap`/`anchorOrigin`.
+
+```vue
+<script setup lang="ts">
+import { Badge, IconButton } from "@okkly/vue";
+</script>
+
+<template>
+  <Badge :badge-content="4" color="dante">
+    <IconButton variant="glass" aria-label="Notifications, 4 unread">
+      <span v-html="bellIcon" />
+    </IconButton>
+  </Badge>
+</template>
+```
+
+React's `children` (the anchor) becomes the default slot — the badge is
+standalone when it's empty, which is what you want in a list row or a tab
+label. `badgeContent` narrows from `ReactNode` to `string | number` rather
+than becoming a slot, since its value is read back for the max-overflow and
+zero-hiding logic, not just rendered.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

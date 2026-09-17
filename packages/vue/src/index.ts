@@ -367,3 +367,12 @@ export type {
   StepperOrientation,
   StepState,
 } from "./components/Stepper/Stepper.types";
+
+export { default as Badge } from "./components/Badge/Badge.vue";
+export type {
+  BadgeProps,
+  BadgeColor,
+  BadgeVariant,
+  BadgeOverlap,
+  BadgeAnchorOrigin,
+} from "./components/Badge/Badge.types";
