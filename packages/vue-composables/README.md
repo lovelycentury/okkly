@@ -151,3 +151,48 @@ const autocomplete = useAutocomplete(() => ({ options: ["Paris", "Tokyo", "Kyiv"
 
 See `@okkly/vue`'s `Autocomplete.vue` for the full composition, including
 tags, grouping and the customization slots.
+
+## useSelect
+
+Headless select/combobox behavior — closed-list keyboard navigation,
+typeahead, grouping, single & multi value — the Vue port of
+`@okkly/react-hooks`'s `useSelect`, and what `Select` from `@okkly/vue` is
+built on. Reuses `useAutocomplete`'s own grouping/normalization utilities
+rather than duplicating them, since `SelectOption<T>` is structurally what
+they already expect.
+
+```vue
+<script setup lang="ts">
+import { useSelect } from "@okkly/vue-composables";
+
+const select = useSelect(() => ({
+  options: [
+    { value: "paris", label: "Paris" },
+    { value: "tokyo", label: "Tokyo" },
+  ],
+}));
+</script>
+
+<template>
+  <div
+    :ref="(el) => (select.triggerRef.value = el as HTMLElement | null)"
+    v-bind="select.triggerAttrs.value"
+    v-on="select.triggerEvents"
+  >
+    {{ select.selectedOptions.value[0]?.label ?? "Select…" }}
+  </div>
+  <ul v-if="select.isOpen.value" v-bind="select.listboxAttrs.value">
+    <li
+      v-for="(option, index) in select.flatOptions.value"
+      :key="option.value"
+      v-bind="select.optionAttrs(index)"
+      v-on="select.optionEvents(index)"
+    >
+      {{ option.label }}
+    </li>
+  </ul>
+</template>
+```
+
+See `@okkly/vue`'s `Select.vue` for the full composition, including grouping
+and the customization slots.

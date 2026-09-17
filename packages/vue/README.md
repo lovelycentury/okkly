@@ -800,6 +800,51 @@ It's built on the new `useAutocomplete` composable from
 `@okkly/vue-composables`, itself built on the new `useControllableState`
 composable — see that package's README for both.
 
+## Select
+
+Closed list of options in a field — prefer `Autocomplete` when the list is
+long or searchable. Props follow `@okkly/react`'s `<Select>` (and through it
+MUI's `Select`) name-for-name where Vue lets it; see the doc comment on
+`SelectProps` in `Select.types.ts` for the full list of Vue-forced
+differences. The highlights:
+
+- The controlled `value`/`onChange` pair becomes the primary `v-model`;
+  `open`/`onOpenChange` becomes the named model `v-model:open`. A `change`
+  emit still carries MUI's full `(event, value, reason, details)` signature
+  for callers that need the reason a plain `v-model` drops.
+- `renderOption`/`renderInput`/`renderValue`/`renderGroup`/`renderNoOptions`/
+  `renderLoading` become the scoped slots `#option`, `#trigger`, `#value`,
+  `#group`, `#no-options` and `#loading`. `#trigger` is named for what it
+  rebuilds — a `div[role="combobox"]` trigger, not a text `<input>` — rather
+  than reusing `Autocomplete`'s own `#input` name. `#group` is narrower than
+  React's `renderGroup`: it replaces only the header, since Vue's template
+  model has no equivalent for "hand over pre-rendered content to reposition"
+  without dropping to manual render functions.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Select } from "@okkly/vue";
+import type { SelectOption } from "@okkly/vue";
+
+const options: SelectOption[] = [
+  { value: "design", label: "Product design" },
+  { value: "engineering", label: "Engineering" },
+];
+const team = ref<string | null>(null);
+</script>
+
+<template>
+  <Select v-model="team" :options="options">
+    <template #label>Team</template>
+  </Select>
+</template>
+```
+
+It's built on the new `useSelect` composable from `@okkly/vue-composables`,
+which reuses the same grouping/normalization utilities `useAutocomplete`
+built — see that package's README for both.
+
 ## Icon
 
 Renders any glyph from `@okkly/icons`, painted with `currentColor` so it

@@ -165,6 +165,16 @@ export type {
   SelectionChangeHandler,
 } from "./components/Autocomplete/Autocomplete.types";
 
+export { default as Select } from "./components/Select/Select.vue";
+export type {
+  SelectProps,
+  SelectSize,
+  SelectColor,
+  SelectOption,
+  SelectOptionState,
+  SelectGroupSlotScope,
+} from "./components/Select/Select.types";
+
 export { default as Box } from "./components/Box/Box.vue";
 export type {
   BoxProps,

@@ -41,3 +41,6 @@ export type {
   FileType,
   FileUploadIssue,
 } from "./useFileUpload";
+
+export { useSelect } from "./useSelect";
+export type { SelectOption, UseSelectOptions, UseSelectReturn } from "./useSelect";
