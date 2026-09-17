@@ -1650,6 +1650,28 @@ it to override the built-in severity glyph. An icon without a `label` is
 decoration and hidden from assistive tech, since colour alone says nothing
 to a screen reader.
 
+## Skeleton
+
+A grey stand-in for content that hasn't arrived, holding the exact space the
+real thing will take. Props mirror `@okkly/react`'s `<Skeleton>`
+name-for-name: `variant`/`width`/`height`/`animation`.
+
+```vue
+<script setup lang="ts">
+import { Skeleton } from "@okkly/vue";
+</script>
+
+<template>
+  <Skeleton variant="circular" :width="40" :height="40" />
+</template>
+```
+
+`width`/`height` become `--okkly-skeleton-width`/`--okkly-skeleton-height`
+CSS variables (a number is treated as px and converted to rem; a string
+passes through as any CSS length) — no Vue-forced difference here, same as
+React. Always `aria-hidden`; announce the wait once, on the container, with
+`aria-busy="true"`.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

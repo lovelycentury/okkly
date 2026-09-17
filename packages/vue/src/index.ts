@@ -384,3 +384,10 @@ export type {
   SeverityIconSize,
   SeverityIconShape,
 } from "./components/SeverityIcon/SeverityIcon.types";
+
+export { default as Skeleton } from "./components/Skeleton/Skeleton.vue";
+export type {
+  SkeletonProps,
+  SkeletonVariant,
+  SkeletonAnimation,
+} from "./components/Skeleton/Skeleton.types";
