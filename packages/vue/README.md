@@ -1455,6 +1455,38 @@ const { ripples, events, hideRipple } = useRipple(root);
 
 [vue-composables]: https://github.com/lovelycentury/okkly/tree/main/packages/vue-composables#readme
 
+## Breadcrumbs
+
+Trail of parent pages ending at the current location. Props mirror
+`@okkly/react`'s `<Breadcrumbs>` name-for-name: `items`/`maxItems`/
+`itemsBeforeCollapse`/`itemsAfterCollapse`/`expandAriaLabel`.
+
+```vue
+<script setup lang="ts">
+import { Breadcrumbs } from "@okkly/vue";
+import type { BreadcrumbItem } from "@okkly/vue";
+
+const items: BreadcrumbItem[] = [
+  { label: "Home", href: "/" },
+  { label: "Projects", href: "/projects" },
+  { label: "Settings" },
+];
+</script>
+
+<template>
+  <Breadcrumbs :items="items" />
+</template>
+```
+
+Crumbs come from an `items` array (`{label, href, icon}`) rather than
+`children` composition; the last one always renders as the current page,
+never as a link. `label`/`icon` narrow from React's `ReactNode` to `string`
+— `icon` is raw SVG markup, rendered the way `Icon`'s own `icon` prop is,
+since the whole object is a plain data prop with no slot equivalent.
+`separator` becomes the `separator` slot, defaulting to a built-in chevron
+when left empty. Past `maxItems` crumbs, the middle collapses behind a "…"
+button that expands to the full path in place.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

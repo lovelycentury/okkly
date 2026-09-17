@@ -333,3 +333,6 @@ export type {
   DateTimeFieldSize,
   DateTimeFieldColor,
 } from "./components/DateTimeField/DateTimeField.types";
+
+export { default as Breadcrumbs } from "./components/Breadcrumbs/Breadcrumbs.vue";
+export type { BreadcrumbsProps, BreadcrumbItem } from "./components/Breadcrumbs/Breadcrumbs.types";
