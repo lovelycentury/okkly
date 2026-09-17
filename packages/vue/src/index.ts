@@ -135,6 +135,14 @@ export type {
   TextFieldColor,
 } from "./components/TextField/TextField.types";
 
+export { default as TextArea } from "./components/TextArea/TextArea.vue";
+export type {
+  TextAreaProps,
+  TextAreaSize,
+  TextAreaColor,
+  TextAreaResize,
+} from "./components/TextArea/TextArea.types";
+
 export { default as Spinner } from "./components/Spinner/Spinner.vue";
 export type { SpinnerProps, SpinnerSize, SpinnerColor } from "./components/Spinner/Spinner.types";
 

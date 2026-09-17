@@ -734,6 +734,55 @@ wrapper instead, matching React's `className`.
 `color` tints the focus ring/glow — `dante` is a rare, deliberate accent
 moment; the rest are for matching a field to surrounding brand/section color.
 
+## TextArea
+
+Multi-line text field for notes and descriptions. Prefer RichEditor when
+formatting is required. Props mirror `@okkly/react`'s `<TextArea>`
+name-for-name.
+
+| Prop        | Type                       | Default        |
+| ----------- | -------------------------- | -------------- |
+| `hideLabel` | `boolean`                  | `false`        |
+| `size`      | `small \| medium \| large` | `medium`       |
+| `color`     | `primary \| dante`         | `primary`      |
+| `error`     | `boolean`                  | `false`        |
+| `fullWidth` | `boolean`                  | `false`        |
+| `disabled`  | `boolean`                  | `false`        |
+| `rows`      | `number`                   | `3`            |
+| `maxRows`   | `number`                   | `undefined`    |
+| `autosize`  | `boolean`                  | `false`        |
+| `maxLength` | `number`                   | `undefined`    |
+| `resize`    | `none \| vertical \| both` | `vertical`     |
+| `required`  | `boolean`                  | `false`        |
+| `id`        | `string`                   | auto-generated |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { TextArea } from "@okkly/vue";
+
+const message = ref("");
+</script>
+
+<template>
+  <TextArea v-model="message" required>
+    <template #label>Message</template>
+    <template #helper-text>Markdown supported</template>
+  </TextArea>
+</template>
+```
+
+`label` and `helper-text` are slots rather than props, since Vue has no
+`ReactNode`; each renders only when filled. The controlled value is
+`v-model`. Anything else the `<textarea>` itself understands (`placeholder`,
+`name`, `@input`, `@change`…) falls through to it — `class` is the one
+exception, which lands on the outer wrapper instead, matching React's
+`className`.
+
+Set `maxLength` to show an "n / max" character counter next to the helper
+text. `autosize` grows the field with its content up to `maxRows`; `resize`
+controls the manual resize handle and is ignored while `autosize` is on.
+
 ## Spinner
 
 An indeterminate loading ring. Props mirror `@okkly/react`'s `<Spinner>`
