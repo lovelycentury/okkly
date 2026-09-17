@@ -656,6 +656,35 @@ the `timezone-label`/`summary-label`/`empty-label`/`confirm-label` slots —
 each falls back to React's own default text when left unfilled, and the
 timezone chip renders only when that slot is filled.
 
+## DateField
+
+Masked `dd.mm.yyyy` text input with a `Calendar` popover, built on
+`@maskito/vue`'s `v-maskito` directive. Closest MUI counterpart is MUI X's
+`DateField`/`DatePicker`. Props mirror `@okkly/react`'s `<DateField>`
+name-for-name: `size`/`color`/`error`/`fullWidth`/`disabled`/`min`/`max`/
+`placeholder`/`id`/`required`.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { DateField } from "@okkly/vue";
+
+const value = ref<Date | null>(null);
+</script>
+
+<template>
+  <DateField v-model="value">
+    <template #label>Date</template>
+  </DateField>
+</template>
+```
+
+`label`/`helperText` (both `ReactNode` in React) become the `label`/
+`helper-text` slots. The controlled `value`/`onChange` pair becomes an
+unnamed `defineModel<Date | null>()`; the controlled `open`/`onOpenChange`
+pair becomes the named `defineModel<boolean>("open")`. `className` is
+dropped — a consumer's `class` merges onto the field automatically.
+
 ## Box
 
 The layout primitive: a `div` — or any element, through `as` — that takes

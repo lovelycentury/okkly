@@ -234,3 +234,10 @@ export type {
   DateTimePickerProps,
   DateTimePickerColor,
 } from "./components/DateTimePicker/DateTimePicker.types";
+
+export { default as DateField } from "./components/DateField/DateField.vue";
+export type {
+  DateFieldProps,
+  DateFieldSize,
+  DateFieldColor,
+} from "./components/DateField/DateField.types";
