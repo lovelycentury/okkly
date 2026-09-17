@@ -32,3 +32,12 @@ export type {
   SelectionChangeHandler,
   SelectionChangeReason,
 } from "./useAutocomplete.utils";
+
+export { useFileUpload, formatFileSize, matchesFileType, parseFileSize } from "./useFileUpload";
+export type {
+  UseFileUploadOptions,
+  UseFileUploadReturn,
+  BinaryPrefixedSize,
+  FileType,
+  FileUploadIssue,
+} from "./useFileUpload";

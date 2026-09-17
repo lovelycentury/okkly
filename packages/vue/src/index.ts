@@ -28,6 +28,18 @@ export type {
 export { default as Fab } from "./components/Fab/Fab.vue";
 export type { FabProps, FabVariant, FabColor, FabSize } from "./components/Fab/Fab.types";
 
+export { default as FileUpload } from "./components/FileUpload/FileUpload.vue";
+export type {
+  FileUploadProps,
+  FileUploadSize,
+  FileUploadListType,
+  FileUploadStatusColor,
+  FileUploadStatus,
+  FileUploadLabels,
+  FileUploadValue,
+  FileUploadFileSlotScope,
+} from "./components/FileUpload/FileUpload.types";
+
 export { default as Ripple } from "./components/Ripple/Ripple.vue";
 export type { RippleProps } from "./components/Ripple/Ripple.types";
 

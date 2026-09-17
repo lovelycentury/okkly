@@ -146,6 +146,62 @@ understands — `class`, `@click`, `aria-*` — falls through to the rendered
 `<button>`/`<a>`. A disabled `<a>` drops its href and reports
 `aria-disabled`. No built-in `SpeedDial` — compose plain `Fab`s instead.
 
+## FileUpload
+
+Drop zone for selecting files — click or drag & drop, with per-file
+validation and a list of the current selection. Files that violate a
+constraint are kept and marked instead of being dropped silently, so the
+user can see what went wrong and remove them deliberately. Props mirror
+`@okkly/react`'s `<FileUpload>` name-for-name.
+
+| Prop            | Type                                                           | Default     |
+| --------------- | -------------------------------------------------------------- | ----------- |
+| `multiple`      | `boolean`                                                      | `false`     |
+| `accept`        | `FileType[]`                                                   | `undefined` |
+| `maxSize`       | `number \| BinaryPrefixedSize`                                 | `undefined` |
+| `maxTotalSize`  | `number \| BinaryPrefixedSize`                                 | `undefined` |
+| `maxCount`      | `number`                                                       | `undefined` |
+| `replace`       | `boolean`                                                      | `false`     |
+| `size`          | `large \| medium \| small`                                     | `large`     |
+| `listType`      | `list \| maxHeight \| button \| hidden`                        | `list`      |
+| `required`      | `boolean`                                                      | `false`     |
+| `error`         | `boolean`                                                      | `undefined` |
+| `showError`     | `boolean`                                                      | `undefined` |
+| `name`          | `string`                                                       | `undefined` |
+| `disabled`      | `boolean`                                                      | `false`     |
+| `labels`        | `Partial<FileUploadLabels>`                                    | `undefined` |
+| `locale`        | `string`                                                       | `undefined` |
+| `getFileStatus` | `(file: File, index: number) => FileUploadStatus \| undefined` | `undefined` |
+| `fullWidth`     | `boolean`                                                      | `false`     |
+| `id`            | `string`                                                       | `undefined` |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { FileUpload } from "@okkly/vue";
+
+const files = ref<File[]>([]);
+</script>
+
+<template>
+  <FileUpload v-model="files" multiple max-size="10MiB">
+    <template #label>Attachments</template>
+  </FileUpload>
+</template>
+```
+
+The controlled `value`/`onChange` pair becomes an unnamed
+`defineModel<File | File[] | null>()`; `v-model` is always typed that way
+regardless of `multiple` — React discriminates `onChange`'s signature on a
+generic type param, which `defineProps` can't express, so check `multiple`
+yourself if the branch matters. `label` becomes the `label` slot. React's
+`renderFile` render prop becomes the `file` scoped slot, receiving
+`{ file, index, status, disabled, remove }`. `onValidityChange` becomes the
+`validity-change` emit. `inputRef` is dropped — use `defineExpose`'s own
+`inputRef` (a template ref on the component instance) instead. There is no
+`Tooltip` in `@okkly/vue` yet, so the `size="small"` error surfaces via the
+native `title` attribute instead of a floating tooltip.
+
 ## Checkbox
 
 Binary or indeterminate choice. Props mirror `@okkly/react`'s `<Checkbox>`
