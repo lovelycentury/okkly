@@ -1576,6 +1576,33 @@ the parent's state through Vue's `provide`/`inject` — the same mechanism
 `RadioGroup` uses for its `Radio` children — so, like React's context, each
 must render inside an `Accordion`.
 
+## Stepper
+
+Progress through an ordered flow — everything before `activeStep` renders
+done, the step itself is current, the rest are pending. Purely
+presentational — advancing is the consumer's job. Props mirror
+`@okkly/react`'s `<Stepper>` name-for-name: `activeStep`/`orientation`/
+`alternativeLabel`/`color`.
+
+```vue
+<script setup lang="ts">
+import { Stepper } from "@okkly/vue";
+import type { StepperStep } from "@okkly/vue";
+
+const steps: StepperStep[] = [{ label: "Cart" }, { label: "Delivery" }, { label: "Payment" }];
+</script>
+
+<template>
+  <Stepper :steps="steps" :active-step="1" />
+</template>
+```
+
+Steps come from a `steps` array rather than `Step` children composition;
+`label`/`description` narrow from React's `ReactNode` to `string`, since the
+whole object is a plain data prop with no slot equivalent. `activeStep`
+stays a plain required prop — there's no controlled/uncontrolled
+distinction to make idiomatic here, same as React.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

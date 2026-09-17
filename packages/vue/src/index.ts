@@ -358,3 +358,12 @@ export { default as Accordion } from "./components/Accordion/Accordion.vue";
 export { default as AccordionSummary } from "./components/Accordion/AccordionSummary.vue";
 export { default as AccordionDetails } from "./components/Accordion/AccordionDetails.vue";
 export type { AccordionProps } from "./components/Accordion/Accordion.types";
+
+export { default as Stepper } from "./components/Stepper/Stepper.vue";
+export type {
+  StepperProps,
+  StepperStep,
+  StepperColor,
+  StepperOrientation,
+  StepState,
+} from "./components/Stepper/Stepper.types";
