@@ -344,3 +344,12 @@ export type {
   PaginationSize,
   PaginationShape,
 } from "./components/Pagination/Pagination.types";
+
+export { default as Tabs } from "./components/Tabs/Tabs.vue";
+export type {
+  TabsProps,
+  TabItem,
+  TabsColor,
+  TabsVariant,
+  TabsOrientation,
+} from "./components/Tabs/Tabs.types";

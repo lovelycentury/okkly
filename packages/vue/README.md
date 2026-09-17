@@ -1513,6 +1513,41 @@ unnamed `defineModel<number>({ default: 1 })`, so consumers can `v-model`
 it. The click event `onChange` also carried is dropped, matching
 `Rating`/`Checkbox`/`Switch` — nothing here needs it.
 
+## Tabs
+
+Switch between peer views inside one panel — keyboard follows the WAI-ARIA
+tabs pattern (roving tabindex, arrows move and activate, Home/End jump to
+the ends). Props mirror `@okkly/react`'s `<Tabs>` name-for-name:
+`variant`/`orientation`.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Tabs } from "@okkly/vue";
+import type { TabItem } from "@okkly/vue";
+
+const items: TabItem[] = [
+  { label: "Overview", value: "overview" },
+  { label: "Activity", value: "activity" },
+];
+const tab = ref("overview");
+</script>
+
+<template>
+  <Tabs v-model="tab" :items="items" />
+</template>
+```
+
+Tabs come from an `items` array rather than `Tab` children composition;
+`label`/`icon` narrow from React's `ReactNode` to `string` — `icon` is raw
+SVG markup, rendered the way `Icon`'s own `icon` prop is, since the whole
+object is a plain data prop with no slot equivalent. The controlled `value`
+
+- `onChange` pair becomes an unnamed `defineModel<string>()`; `defaultValue`
+  still seeds it once while unbound, falling back further to the first tab's
+  value. Tab panels are left to the consumer, same as React — `Tabs` owns only
+  the strip.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
