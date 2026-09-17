@@ -415,6 +415,11 @@ export type {
   StaticBackgroundProps,
   StaticBackgroundPreset,
   StaticBackgroundQuality,
-  Star,
-  Nebula,
 } from "./components/StaticBackground/StaticBackground.types";
+
+export { default as AnimatedBackground } from "./components/AnimatedBackground/AnimatedBackground.vue";
+export type {
+  AnimatedBackgroundProps,
+  BackgroundPreset,
+  BackgroundQuality,
+} from "./components/AnimatedBackground/AnimatedBackground.types";

@@ -1795,6 +1795,37 @@ PRNG (module-level, computed once), so it's stable across re-renders and
 identical whether rendered on the server or the client — no motion pass, no
 hydration flash. See `AnimatedBackground` for the animated sibling.
 
+## AnimatedBackground
+
+Layered deep-space background — nebulae, twinkling stars, a falling dante
+spark, a distant flaring beacon, micro-fireworks and film grain, all
+animated with CSS keyframes. Props mirror `@okkly/react`'s
+`<AnimatedBackground>` name-for-name: `preset`/`quality`/`parallax`/
+`fireworks`/`respectReducedMotion`/`scrim`.
+
+```vue
+<script setup lang="ts">
+import { AnimatedBackground } from "@okkly/vue";
+</script>
+
+<template>
+  <div style="position: relative; height: 100vh">
+    <AnimatedBackground preset="aurora" scrim>
+      <h1>Hero copy</h1>
+    </AnimatedBackground>
+  </div>
+</template>
+```
+
+`children` becomes the default slot, since Vue has no `ReactNode`. The
+scene renders nothing until `onMounted` — it's decorative chrome with no
+business in server output, and the parallax pointer listener needs a
+client anyway — so the server-rendered markup stays empty and the SVG
+populates once mounted, same as React's `useEffect`-gated `mounted` state.
+`prefers-reduced-motion` settles it on a calm still frame unless
+`respectReducedMotion` is `false`. See `StaticBackground` for the SSR-safe,
+unanimated sibling.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
