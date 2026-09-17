@@ -66,6 +66,18 @@ export type {
   RatingPrecision,
 } from "./components/Rating/Rating.types";
 
+export { default as RichEditor } from "./components/RichEditor/RichEditor.vue";
+export type {
+  RichEditorProps,
+  RichEditorColor,
+  RichEditorFormat,
+  RichEditorToolbar,
+  RichEditorValue,
+  SaveStatus,
+  SlashItem,
+  JSONContent,
+} from "./components/RichEditor/RichEditor.types";
+
 export { default as Ripple } from "./components/Ripple/Ripple.vue";
 export type { RippleProps } from "./components/Ripple/Ripple.types";
 

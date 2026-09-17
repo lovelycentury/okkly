@@ -338,6 +338,50 @@ for every star — full, half, and empty differ only by wrapping CSS, same as
 the built-in star/heart). `label` (`ReactNode` in React) becomes the `label`
 slot.
 
+## RichEditor
+
+TipTap-based rich text with toolbar, slash menu, and word count. Prefer
+`TextArea` for plain notes. Built on `@tiptap/vue-3` instead of
+`@tiptap/react` — the same framework-agnostic `@tiptap/core`/`@tiptap/pm`/
+`@tiptap/starter-kit`/extension packages underneath. Props mirror
+`@okkly/react`'s `<RichEditor>` name-for-name.
+
+| Prop          | Type                      | Default              |
+| ------------- | ------------------------- | -------------------- |
+| `format`      | `html \| json`            | `"html"`             |
+| `toolbar`     | `full \| compact \| none` | `"full"`             |
+| `placeholder` | `string`                  | `"Write something…"` |
+| `maxLength`   | `number`                  | `undefined`          |
+| `autosave`    | `number \| false`         | `5000`               |
+| `slashMenu`   | `boolean`                 | `true`               |
+| `readonly`    | `boolean`                 | `false`              |
+| `disabled`    | `boolean`                 | `false`              |
+| `error`       | `boolean`                 | `false`              |
+| `fullWidth`   | `boolean`                 | `true`               |
+| `color`       | `primary \| dante`        | `"primary"`          |
+| `id`          | `string`                  | `undefined`          |
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { RichEditor } from "@okkly/vue";
+
+const value = ref("<p>Write something…</p>");
+</script>
+
+<template>
+  <RichEditor v-model="value">
+    <template #label>Description</template>
+  </RichEditor>
+</template>
+```
+
+The controlled `value`/`onChange` pair becomes an unnamed
+`defineModel<RichEditorValue>()`; `defaultValue` still seeds it once on
+mount when nothing is bound. `label`/`helperText` (both `ReactNode` in
+React) become the `label`/`helper-text` slots. `className`/`id` are dropped
+— Vue's own fallthrough (`class`) and `useId()` (`id`) handle them.
+
 ## Checkbox
 
 Binary or indeterminate choice. Props mirror `@okkly/react`'s `<Checkbox>`
