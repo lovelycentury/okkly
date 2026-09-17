@@ -44,3 +44,6 @@ export type {
 
 export { useSelect } from "./useSelect";
 export type { SelectOption, UseSelectOptions, UseSelectReturn } from "./useSelect";
+
+export { useMediaQuery } from "./useMediaQuery";
+export type { UseMediaQueryOptions } from "./useMediaQuery";

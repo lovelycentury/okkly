@@ -403,3 +403,9 @@ export type {
 
 export { default as Alert } from "./components/Alert/Alert.vue";
 export type { AlertProps, AlertSeverity, AlertVariant } from "./components/Alert/Alert.types";
+
+export { default as Only } from "./components/Only/Only.vue";
+export type { OnlyProps, OnlyBreakpoint } from "./components/Only/Only.types";
+
+export { default as Logo } from "./components/Logo/Logo.vue";
+export type { LogoProps, LogoLayout, LogoTone, LogoVariant } from "./components/Logo/Logo.types";

@@ -1728,6 +1728,47 @@ lets it decide whether to render the dismiss button from whether a
 listener is present at all — the same thing React's `onClose && <button>`
 gate does.
 
+## Only
+
+Mounts its default slot only while the viewport falls within `[from, to)`
+— `from` is inclusive, `to` is exclusive, and both are optional. Props
+mirror `@okkly/react`'s `<Only>` name-for-name: `from`/`to`.
+
+```vue
+<script setup lang="ts">
+import { Only } from "@okkly/vue";
+</script>
+
+<template>
+  <Only from="lg">
+    <p>Shown from lg and up.</p>
+  </Only>
+</template>
+```
+
+`children` becomes the default slot, since Vue has no `ReactNode`. Built on
+a new `useMediaQuery` composable in `@okkly/vue-composables` — the Vue
+counterpart of `@okkly/react-hooks`'s `useMediaQuery` — which subscribes to
+a real `matchMedia` listener rather than polling, so content outside the
+range is never mounted, same as React.
+
+## Logo
+
+Static brand lockup — the disc mark in three treatments. Props mirror
+`@okkly/react`'s `<Logo>` name-for-name: `layout`/`variant`/`tone`/
+`label`/`showLabel`/`size`. Purely presentational, no Vue-forced
+differences.
+
+```vue
+<script setup lang="ts">
+import { Logo } from "@okkly/vue";
+</script>
+
+<template>
+  <Logo layout="compact" />
+</template>
+```
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
