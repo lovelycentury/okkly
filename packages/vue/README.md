@@ -592,8 +592,8 @@ always typed `Date | [Date, Date] | null` regardless of `mode` — React
 discriminates `onSelect`'s signature on `mode` via a union prop type, which
 `defineProps` can't express, so check `mode` yourself if the branch matters.
 `calendarToneStyle` (the `color` → `--okkly-calendar-tone` mapping) is
-exported alongside the component, same as React, for `DateField`/
-`DateTimePicker`-style consumers once those are ported.
+exported alongside the component, same as React, for `DateField`-style
+consumers once those are ported.
 
 ## TimePicker
 
@@ -622,6 +622,39 @@ consumers `v-model` it; `defaultValue` still seeds it once on mount when
 nothing is bound. `value.h` is always canonical 24-hour (0–23) regardless of
 `format` — the AM/PM wheel is purely a 12-hour selection helper layered on
 top of it.
+
+## DateTimePicker
+
+A fixed inline card composed from `Calendar` + `TimePicker` — pick a day on
+the left, dial in a time on the right, then Confirm. No MUI equivalent as a
+fixed surface (MUI X's `DateTimePicker` is a masked text input with a
+popover); there's no shortcut-preset sidebar either — a preset is one line
+against `v-model`. Props mirror `@okkly/react`'s `<DateTimePicker>`
+name-for-name: `min`/`max`/`timeStep`/`format`/`weekStart`/`color`/`locale`/
+`previousMonthLabel`/`nextMonthLabel`.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { DateTimePicker } from "@okkly/vue";
+
+const value = ref<Date | null>(null);
+</script>
+
+<template>
+  <DateTimePicker v-model="value" @confirm="onConfirm">
+    <template #timezone-label>GMT+2</template>
+  </DateTimePicker>
+</template>
+```
+
+The controlled `value`/`onChange` pair becomes an unnamed `defineModel`;
+`onConfirm` becomes the `confirm` emit, firing with the current value when
+Confirm is clicked (disabled until a day is picked). `timezoneLabel`/
+`summaryLabel`/`emptyLabel`/`confirmLabel` (all `ReactNode` in React) become
+the `timezone-label`/`summary-label`/`empty-label`/`confirm-label` slots —
+each falls back to React's own default text when left unfilled, and the
+timezone chip renders only when that slot is filled.
 
 ## Box
 

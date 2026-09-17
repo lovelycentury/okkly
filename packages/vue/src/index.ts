@@ -228,3 +228,9 @@ export type {
   TimePickerColor,
   TimePickerFormat,
 } from "./components/TimePicker/TimePicker.types";
+
+export { default as DateTimePicker } from "./components/DateTimePicker/DateTimePicker.vue";
+export type {
+  DateTimePickerProps,
+  DateTimePickerColor,
+} from "./components/DateTimePicker/DateTimePicker.types";
