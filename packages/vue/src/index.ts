@@ -220,3 +220,11 @@ export type {
   CalendarWeekStart,
   CalendarDay,
 } from "./components/Calendar/Calendar.types";
+
+export { default as TimePicker } from "./components/TimePicker/TimePicker.vue";
+export type {
+  TimePickerProps,
+  TimePickerValue,
+  TimePickerColor,
+  TimePickerFormat,
+} from "./components/TimePicker/TimePicker.types";

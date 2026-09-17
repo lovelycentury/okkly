@@ -595,6 +595,34 @@ discriminates `onSelect`'s signature on `mode` via a union prop type, which
 exported alongside the component, same as React, for `DateField`/
 `DateTimePicker`-style consumers once those are ported.
 
+## TimePicker
+
+Scrollable hour/minute (and, for `format="12h"`, AM/PM) wheels — a plain,
+MUI `MultiSectionDigitalClock`-style column list, not a masked text input.
+Props mirror `@okkly/react`'s `<TimePicker>` name-for-name:
+`step`/`format`/`color`/`hoursAriaLabel`/`minutesAriaLabel`/
+`meridiemAriaLabel`.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { TimePicker } from "@okkly/vue";
+import type { TimePickerValue } from "@okkly/vue";
+
+const value = ref<TimePickerValue>({ h: 9, m: 30 });
+</script>
+
+<template>
+  <TimePicker v-model="value" format="12h" />
+</template>
+```
+
+The controlled `value`/`onChange` pair becomes an unnamed `defineModel`, so
+consumers `v-model` it; `defaultValue` still seeds it once on mount when
+nothing is bound. `value.h` is always canonical 24-hour (0–23) regardless of
+`format` — the AM/PM wheel is purely a 12-hour selection helper layered on
+top of it.
+
 ## Box
 
 The layout primitive: a `div` — or any element, through `as` — that takes

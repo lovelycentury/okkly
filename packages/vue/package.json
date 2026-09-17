@@ -40,6 +40,9 @@
     "test:playwright:update": "PW_UPDATE_SNAPSHOTS=true CI=true playwright test"
   },
   "dependencies": {
+    "@maskito/core": "^5.3.1",
+    "@maskito/kit": "^5.3.1",
+    "@maskito/vue": "^5.3.1",
     "@okkly/design-system": "workspace:*",
     "@okkly/icons": "workspace:*",
     "@okkly/shared": "workspace:*",
