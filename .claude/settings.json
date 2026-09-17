@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_response.filePath // .tool_input.file_path // empty' | { read -r f; case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*) pnpm exec prettier --write --ignore-unknown \"$f\";; esac; } 2>/dev/null || true",
+            "statusMessage": "Formatting with prettier...",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": ["Bash(node tools/storybook-ensure.mjs:*)", "Bash(node tools/storybook-audit.mjs:*)"]
+  }
+}
