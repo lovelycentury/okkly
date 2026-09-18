@@ -111,14 +111,12 @@ test("should describe its trigger while open", async ({ mount, page }) => {
   await expect(page.getByRole("tooltip")).toHaveAttribute("id", describedBy!);
 });
 
-test("should name a trigger that has no name of its own", async ({ mount }) => {
+test("should name a trigger that has no name of its own", async ({ mount, page }) => {
   // ARRANGE — an icon button used to be announced as a bare "button": all the
   // tooltip contributed was `aria-describedby`, and only while it was open. The
   // name has to be there before anyone hovers.
-  const component = await mount(TooltipIconButtonTrigger, {
-    props: { title: "Settings" },
-  });
-  const trigger = component.getByRole("button");
+  await mount(TooltipIconButtonTrigger, { props: { title: "Settings" } });
+  const trigger = page.getByRole("button");
 
   // ASSERT
   await expect(trigger).toHaveAccessibleName("Settings");
@@ -159,14 +157,14 @@ test("should anchor to a component trigger, not just a plain element", async ({ 
   expect(tooltipBox.y).toBeGreaterThan(20);
 });
 
-test("should describe rather than name when asked to", async ({ mount }) => {
+test("should describe rather than name when asked to", async ({ mount, page }) => {
   // ARRANGE
-  const component = await mount(TooltipIconButtonTrigger, {
+  await mount(TooltipIconButtonTrigger, {
     props: { title: "Settings", describeChild: true, ariaLabel: "Open settings" },
   });
 
   // ASSERT
-  await expect(component.getByRole("button")).toHaveAccessibleName("Open settings");
+  await expect(page.getByRole("button")).toHaveAccessibleName("Open settings");
 });
 
 test("should support a controlled open state", async ({ mount, page }) => {
