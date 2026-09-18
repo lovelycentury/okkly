@@ -435,3 +435,9 @@ export type {
   DrawerVariant,
   DrawerState,
 } from "./components/Drawer/Drawer.types";
+
+export { default as SwipeableDrawer } from "./components/SwipeableDrawer/SwipeableDrawer.vue";
+export type {
+  SwipeableDrawerProps,
+  SwipeableDrawerHandlePosition,
+} from "./components/SwipeableDrawer/SwipeableDrawer.types";

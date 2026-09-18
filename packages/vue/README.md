@@ -1897,6 +1897,41 @@ React context, the same mechanism `RadioGroup`/`Accordion` use; it throws
 if called outside a `Drawer`, matching React's version. For a `temporary`
 drawer that also opens and closes on an edge swipe, see `SwipeableDrawer`.
 
+## SwipeableDrawer
+
+`Drawer` plus an edge swipe to open it and a drag on the paper to close it,
+the panel tracking the pointer live instead of jumping once the gesture
+ends. Optionally peeks (a sliver stays on screen while closed) and carries
+a grab handle. Props mirror `@okkly/react`'s `<SwipeableDrawer>`
+name-for-name: `open`/`disableSwipeToOpen`/`swipeAreaWidth`/`hysteresis`/
+`minFlingVelocity`/`peekSize`/`disableDiscovery`/`showHandle`/
+`handleDragOnly`/`handleLength`/`handleThickness`/`handlePosition`/
+`handleColor`, plus every other `Drawer` prop forwarded. It only ever
+renders `variant="temporary"` — nothing to swipe open on a
+`persistent`/`permanent` sidebar, since those are always in the layout.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { SwipeableDrawer } from "@okkly/vue";
+
+const open = ref(false);
+</script>
+
+<template>
+  <SwipeableDrawer :open="open" anchor="left" @open="open = true" @close="open = false">
+    <nav>…</nav>
+  </SwipeableDrawer>
+</template>
+```
+
+`onOpen`/`onClose` become `open`/`close` emits. `Drawer` exposes the
+paper's DOM element (`defineExpose({ paper })`) so this component can
+measure how far a drag has to travel by reading the rendered size off it,
+the same way React's version reads it off a forwarded ref — Vue has no
+direct equivalent of forwarding a DOM ref through a child component, so
+`Drawer` hands it out explicitly instead.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

@@ -24,7 +24,16 @@ function dragTransform(anchor: DrawerAnchor, progress: number, peekSize: number)
 </script>
 
 <script setup lang="ts">
-import { computed, normalizeClass, provide, reactive, ref, useAttrs, watch } from "vue";
+import {
+  computed,
+  normalizeClass,
+  provide,
+  reactive,
+  ref,
+  useAttrs,
+  useTemplateRef,
+  watch,
+} from "vue";
 import "@okkly/design-system/components/Drawer/Drawer.scss";
 import Modal from "../Modal/Modal.vue";
 import { DrawerStateKey } from "./DrawerContext";
@@ -158,11 +167,20 @@ const rootStyle = computed(() => [
   props.peekSize ? { "--okkly-drawer-peek": `${props.peekSize}px` } : undefined,
   attrs.style,
 ]);
+
+// The same `ref` name on all three (mutually exclusive) `.okkly-drawer__paper`
+// branches below — whichever one actually renders sets it. `SwipeableDrawer`
+// reads the paper's own size off the DOM through this, since the drag needs
+// to know how far it travels before either prop threading it through or the
+// design changes.
+const paper = useTemplateRef<HTMLDivElement>("paper");
+
+defineExpose({ paper });
 </script>
 
 <template>
   <div v-if="isPermanent" :class="classes" :style="attrs.style" v-bind="restAttrs">
-    <div class="okkly-drawer__paper"><slot /></div>
+    <div ref="paper" class="okkly-drawer__paper"><slot /></div>
   </div>
 
   <template v-else-if="isTemporary">
@@ -185,6 +203,7 @@ const rootStyle = computed(() => [
       @close="handleModalClose"
     >
       <div
+        ref="paper"
         class="okkly-drawer__paper"
         role="dialog"
         aria-modal="true"
@@ -198,6 +217,6 @@ const rootStyle = computed(() => [
 
   <!-- persistent — always mounted; its own width/height carries the animation. -->
   <div v-else :class="classes" :style="attrs.style" v-bind="restAttrs">
-    <div class="okkly-drawer__paper"><slot /></div>
+    <div ref="paper" class="okkly-drawer__paper"><slot /></div>
   </div>
 </template>
