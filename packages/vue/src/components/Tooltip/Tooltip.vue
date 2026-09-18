@@ -85,6 +85,11 @@ function clearTimers() {
 }
 
 function setOpen(next: boolean) {
+  // Committing a state change now makes any scheduled one stale. Without
+  // this, a hover-open still inside its `enterDelay` when focus/blur decides
+  // the matter fires afterwards and reopens a tooltip the blur just closed —
+  // which is what a pointer resting on the trigger does.
+  clearTimers();
   openModel.value = next;
   if (next) emit("open");
   else emit("close");

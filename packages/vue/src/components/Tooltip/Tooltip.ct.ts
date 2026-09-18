@@ -90,6 +90,26 @@ test("should open on focus and close on blur", async ({ mount, page }) => {
   await expect(page.getByRole("tooltip")).toHaveCount(0);
 });
 
+test("should not let a pending hover-open reopen it after a blur", async ({ mount, page }) => {
+  // ARRANGE — a pointer resting on the trigger (where CI's cursor starts) puts
+  // an open on the clock for `enterDelay`. Focus and blur then settle the
+  // matter within that window, so the stale timer must not fire afterwards.
+  await mount(Tooltip, {
+    props: { title: "Keyboard reachable" } as never,
+    slots: { default: `<button type="button">Focus me</button>` },
+  });
+  const trigger = page.getByRole("button", { name: "Focus me" });
+
+  // ACT
+  await trigger.hover();
+  await trigger.focus();
+  await expect(page.getByRole("tooltip")).toBeVisible();
+  await trigger.blur();
+
+  // ASSERT
+  await expect(page.getByRole("tooltip")).toHaveCount(0);
+});
+
 test("should describe its trigger while open", async ({ mount, page }) => {
   // ARRANGE
   await mount(Tooltip, {
