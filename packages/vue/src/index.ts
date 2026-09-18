@@ -426,3 +426,12 @@ export type {
 
 export { default as Tooltip } from "./components/Tooltip/Tooltip.vue";
 export type { TooltipProps, TooltipPlacement } from "./components/Tooltip/Tooltip.types";
+
+export { default as Drawer } from "./components/Drawer/Drawer.vue";
+export { useDrawerState } from "./components/Drawer/DrawerContext";
+export type {
+  DrawerProps,
+  DrawerAnchor,
+  DrawerVariant,
+  DrawerState,
+} from "./components/Drawer/Drawer.types";

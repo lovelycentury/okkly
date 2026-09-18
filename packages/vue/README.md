@@ -1864,6 +1864,39 @@ prop type compiles to a `Boolean`-typed prop, which Vue resolves to
 `false` rather than `undefined` when absent and no default is declared —
 fixed here with an explicit `{ default: undefined }` on the `open` model.
 
+## Drawer
+
+A panel that slides in from an edge and takes the page with it — navigation
+on narrow screens, a filter rail, a bottom sheet. Built on `Modal` for
+`variant="temporary"` (the default); `"persistent"` and `"permanent"` skip
+the portal/backdrop/focus-trap entirely and render in the normal document
+flow. Props mirror `@okkly/react`'s `<Drawer>` name-for-name: `open`/
+`anchor`/`variant`/`dragProgress`/`peekSize`/`mini`, plus the `Modal`
+pass-throughs for `temporary`.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Drawer } from "@okkly/vue";
+
+const open = ref(false);
+</script>
+
+<template>
+  <Drawer :open="open" anchor="left" @close="open = false">
+    <nav>…</nav>
+  </Drawer>
+</template>
+```
+
+`children` becomes the default slot. `onClose` becomes the `close` emit,
+still carrying `(event, reason)`. `useDrawerState()` — for content that
+reads the enclosing drawer's `open`/`mini`/`variant`/`anchor`, e.g. to swap
+labels for tooltips in a `mini` rail — is Vue `provide`/`inject` instead of
+React context, the same mechanism `RadioGroup`/`Accordion` use; it throws
+if called outside a `Drawer`, matching React's version. For a `temporary`
+drawer that also opens and closes on an edge swipe, see `SwipeableDrawer`.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
