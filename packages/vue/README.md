@@ -1826,6 +1826,44 @@ populates once mounted, same as React's `useEffect`-gated `mounted` state.
 `respectReducedMotion` is `false`. See `StaticBackground` for the SSR-safe,
 unanimated sibling.
 
+## Tooltip
+
+A short label that appears on hover or focus and says what a control is.
+Built on `Popper`, so it flips near a viewport edge and puts its arrow on
+the side it actually landed on. Props mirror `@okkly/react`'s `<Tooltip>`
+name-for-name: `placement`/`enterDelay`/`leaveDelay`/`arrow`/
+`disableHoverListener`/`disableFocusListener`/`interactive`/
+`describeChild`/`transitionDuration`.
+
+```vue
+<script setup lang="ts">
+import { Tooltip, IconButton } from "@okkly/vue";
+</script>
+
+<template>
+  <Tooltip title="Settings">
+    <IconButton aria-label="Settings"><span v-html="gearIcon" /></IconButton>
+  </Tooltip>
+</template>
+```
+
+The trigger (React's single-child `children`) becomes the default slot.
+The component clones the slot's single vnode with `cloneVNode` — Vue's
+counterpart of `cloneElement` — to merge its listeners and ARIA attributes
+directly onto it, so no extra wrapper element is introduced, same as
+React. `title` narrows from `ReactNode` to `string` for the common case;
+fill the `#title` slot instead for rich content. The controlled
+`open`/`onOpen`/`onClose` triad becomes a named
+`open` model (`v-model:open`) with `defaultOpen` still seeding it once
+while unbound, plus separate `@open`/`@close` emits for the two
+notifications React keeps distinct.
+
+Like `Alert`'s `severity` icon and `Accordion`'s `expanded`, this ported
+component hit the same Vue quirk: a literal-`false` or plain-`boolean`
+prop type compiles to a `Boolean`-typed prop, which Vue resolves to
+`false` rather than `undefined` when absent and no default is declared —
+fixed here with an explicit `{ default: undefined }` on the `open` model.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

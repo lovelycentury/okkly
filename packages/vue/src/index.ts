@@ -423,3 +423,6 @@ export type {
   BackgroundPreset,
   BackgroundQuality,
 } from "./components/AnimatedBackground/AnimatedBackground.types";
+
+export { default as Tooltip } from "./components/Tooltip/Tooltip.vue";
+export type { TooltipProps, TooltipPlacement } from "./components/Tooltip/Tooltip.types";
