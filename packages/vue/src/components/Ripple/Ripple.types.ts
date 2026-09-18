@@ -1,4 +1,4 @@
-import type { UseRippleReturn } from "../../composables/useRipple";
+import type { UseRippleReturn } from "@okkly/vue-composables";
 
 export interface RippleProps {
   /** Ripples currently painted, keyed by id. */

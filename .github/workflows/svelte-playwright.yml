@@ -46,11 +46,13 @@ jobs:
       - name: Build the workspace dependencies
         run: pnpm --filter "@okkly/svelte^..." --if-present run build
 
-      # Behaviour tests gate the job. The screenshot matrices — everything under
-      # `test.describe("Screenshot tests")` — run as their own step that reports
-      # without failing the job, so a pixel diff never blocks a PR on its own.
-      # (The axe scans ride along with the matrices, so they report the same
-      # way.) Each run writes to its own folders: Playwright empties its output
+      # Behaviour tests are the whole job on a PR. The screenshot matrices —
+      # everything under `test.describe("Screenshot tests")` — only run when
+      # this workflow is called with `update-snapshots`, i.e. from
+      # `svelte-playwright-screenshots.yml`, which regenerates the baselines on
+      # this pinned image and opens a PR with them. Note the axe scans ride
+      # along with the matrices, so they run there and not on a PR either.
+      # Each run writes to its own folders: Playwright empties its output
       # directories when it starts. The browsers ship with the container image,
       # so both skip the download step `test:playwright` performs locally.
       - name: Run behaviour tests
@@ -60,21 +62,16 @@ jobs:
           PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/behaviour
         run: pnpm exec playwright test --grep-invert "Screenshot tests" --output test-results/behaviour
 
-      - name: Run screenshot tests
-        id: screenshots
-        if: ${{ !cancelled() }}
-        # Refreshing the baselines must not swallow a failure.
-        continue-on-error: ${{ !inputs.update-snapshots }}
+      # Only reached via `update-snapshots`, so a failure here is a real
+      # failure of the refresh and must not be swallowed.
+      - name: Refresh screenshot baselines
+        if: ${{ inputs.update-snapshots && !cancelled() }}
         working-directory: packages/svelte
         env:
           CI: "true"
-          PW_UPDATE_SNAPSHOTS: ${{ inputs.update-snapshots && 'true' || '' }}
+          PW_UPDATE_SNAPSHOTS: "true"
           PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/screenshots
         run: pnpm exec playwright test --grep "Screenshot tests" --output test-results/screenshots
-
-      - name: Flag failed screenshots
-        if: ${{ steps.screenshots.outcome == 'failure' }}
-        run: echo "::warning title=Screenshot tests failed::A matrix no longer matches its baseline — see the svelte-playwright-results artifact for the diffs."
 
       # Under CI the config reports as `dot` + `blob`, so there is no HTML report
       # to upload. `test-results` holds the expected/actual/diff images of a

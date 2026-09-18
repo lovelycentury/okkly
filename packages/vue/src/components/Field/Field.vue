@@ -9,7 +9,7 @@ export function getFieldIds(id: string, hasLabel: boolean, hasHelperText: boolea
 </script>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useTemplateRef } from "vue";
 import type { FieldProps } from "./Field.types";
 
 const props = withDefaults(defineProps<FieldProps>(), {
@@ -22,6 +22,11 @@ const props = withDefaults(defineProps<FieldProps>(), {
   fullWidth: false,
   htmlFor: undefined,
 });
+
+const emit = defineEmits<{
+  /** A click landed inside the control box — Select/Autocomplete use it to focus their input and open the popup. */
+  "control-click": [event: MouseEvent];
+}>();
 
 const slots = defineSlots<{
   /** Content of the field — the control itself. */
@@ -63,6 +68,10 @@ const labelClasses = computed(() =>
     .filter(Boolean)
     .join(" "),
 );
+
+const controlRef = useTemplateRef<HTMLDivElement>("control");
+
+defineExpose({ controlRef });
 </script>
 
 <template>
@@ -72,7 +81,7 @@ const labelClasses = computed(() =>
       <span v-if="required" :class="`${block}__required`" aria-hidden="true">*</span>
     </label>
 
-    <div :class="`${block}__control`">
+    <div ref="control" :class="`${block}__control`" @click="emit('control-click', $event)">
       <span v-if="slots['start-adornment']" :class="`${block}__adornment`">
         <slot name="start-adornment" />
       </span>

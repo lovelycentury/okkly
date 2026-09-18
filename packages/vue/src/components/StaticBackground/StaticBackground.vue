@@ -1,0 +1,159 @@
+<script lang="ts">
+import type { Nebula, Star, StaticBackgroundQuality } from "./StaticBackground.types";
+
+/** Element budget per quality tier: [far stars, near stars]. */
+const BUDGET: Record<StaticBackgroundQuality, [number, number]> = {
+  low: [55, 14],
+  medium: [90, 24],
+  high: [140, 36],
+};
+
+/** Mulberry32 — a tiny deterministic PRNG; identical star fields on every render. */
+function mulberry32(seed: number) {
+  let a = seed;
+  return () => {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const round = (n: number) => Math.round(n * 100) / 100;
+
+function makeStars(count: number, seed: number, minR: number, maxR: number): Star[] {
+  const rng = mulberry32(seed);
+  return Array.from({ length: count }, () => ({
+    cx: round(rng() * 1000),
+    cy: round(rng() * 1000),
+    r: round(minR + rng() * (maxR - minR)),
+  }));
+}
+
+// Same seeds and radii as AnimatedBackground, so the two backgrounds' star
+// fields line up if a page swaps one for the other.
+const FAR_STARS = makeStars(BUDGET.high[0], 0x5eed, 0.5, 1.1);
+const NEAR_STARS = makeStars(BUDGET.high[1], 0xd00d, 1.2, 1.36);
+
+// Same placement as AnimatedBackground's NEBULAE, minus the drift/veil fields
+// that only matter once the scene is animated.
+const NEBULAE: Nebula[] = [
+  { x: 95, y: -12, w: 104, ar: 1.3, hue: 1 },
+  { x: 4, y: 82, w: 90, ar: 1.05, hue: 2 },
+  { x: 76, y: -10, w: 48, ar: 1.1, hue: 1 },
+  { x: 30, y: 47, w: 76, ar: 1.2, hue: 3 },
+  { x: 100, y: 108, w: 80, ar: 1.05, hue: 4 },
+  { x: 18, y: 126, w: 88, ar: 1.35, hue: 5 },
+  { x: 48, y: -34, w: 60, ar: 1.2, hue: 2 },
+  { x: -2, y: -2, w: 64, ar: 1.1, hue: 3 },
+];
+</script>
+
+<script setup lang="ts">
+import { computed, useId } from "vue";
+import "@okkly/design-system/components/StaticBackground/StaticBackground.scss";
+import type { StaticBackgroundProps } from "./StaticBackground.types";
+
+const props = withDefaults(defineProps<StaticBackgroundProps>(), {
+  preset: "aurora",
+  quality: "medium",
+  scrim: false,
+});
+
+defineSlots<{
+  /** Rendered above the scene — e.g. a hero section's headline. */
+  default?: () => unknown;
+}>();
+
+const rawId = useId().replace(/:/g, "");
+const grainId = `okkly-static-bg-grain-${rawId}`;
+const starGlowId = `okkly-static-bg-star-${rawId}`;
+
+const farCount = computed(() => BUDGET[props.quality][0]);
+const nearCount = computed(() => BUDGET[props.quality][1]);
+const farStars = computed(() => FAR_STARS.slice(0, farCount.value));
+const nearStars = computed(() => NEAR_STARS.slice(0, nearCount.value));
+
+const classes = computed(() =>
+  [
+    "okkly-component",
+    "okkly-static-background",
+    props.preset !== "aurora" && `okkly-static-background--${props.preset}`,
+  ]
+    .filter(Boolean)
+    .join(" "),
+);
+
+function cloudStyle(nebula: Nebula) {
+  return {
+    "--okkly-static-background-hue": `var(--okkly-static-background-n${nebula.hue})`,
+    "--okkly-static-background-x": `${nebula.x}%`,
+    "--okkly-static-background-y": `${nebula.y}%`,
+    "--okkly-static-background-w": `${nebula.w}%`,
+    "--okkly-static-background-ar": `${nebula.ar}`,
+  };
+}
+</script>
+
+<template>
+  <div :class="classes">
+    <div class="okkly-static-background__clouds" aria-hidden="true">
+      <div
+        v-for="(nebula, index) in NEBULAE"
+        :key="index"
+        class="okkly-static-background__cloud"
+        :style="cloudStyle(nebula)"
+      />
+    </div>
+
+    <svg
+      class="okkly-static-background__svg"
+      viewBox="0 0 1000 1000"
+      preserveAspectRatio="xMidYMid slice"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <filter :id="grainId" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="4" />
+        </filter>
+
+        <radialGradient :id="starGlowId">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+          <stop offset="12%" stop-color="#ffffff" stop-opacity="0.85" />
+          <stop offset="30%" stop-color="var(--okkly-static-background-star)" stop-opacity="0.28" />
+          <stop offset="100%" stop-color="var(--okkly-static-background-star)" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+
+      <g class="okkly-static-background__stars">
+        <circle
+          v-for="(star, index) in farStars"
+          :key="`f${index}`"
+          class="okkly-static-background__star"
+          :cx="star.cx"
+          :cy="star.cy"
+          :r="star.r"
+        />
+        <circle
+          v-for="(star, index) in nearStars"
+          :key="`n${index}`"
+          class="okkly-static-background__star okkly-static-background__star--near"
+          :cx="star.cx"
+          :cy="star.cy"
+          :r="star.r"
+          :fill="`url(#${starGlowId})`"
+        />
+      </g>
+
+      <g class="okkly-static-background__grain">
+        <rect x="-5%" y="-5%" width="110%" height="110%" :filter="`url(#${grainId})`" />
+      </g>
+    </svg>
+
+    <div v-if="scrim" class="okkly-static-background__scrim" aria-hidden="true" />
+    <div class="okkly-static-background__bloom" aria-hidden="true" />
+    <slot />
+  </div>
+</template>

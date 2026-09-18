@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useTemplateRef } from "vue";
 import "@okkly/design-system/components/Button/Button.scss";
-import { useRipple } from "../../composables/useRipple";
+import { useRipple } from "@okkly/vue-composables";
 import Ripple from "../Ripple/Ripple.vue";
 import Spinner from "./Spinner.vue";
 import type { ButtonProps } from "./Button.types";

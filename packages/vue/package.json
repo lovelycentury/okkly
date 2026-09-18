@@ -40,8 +40,21 @@
     "test:playwright:update": "PW_UPDATE_SNAPSHOTS=true CI=true playwright test"
   },
   "dependencies": {
+    "@maskito/core": "^5.3.1",
+    "@maskito/kit": "^5.3.1",
+    "@maskito/vue": "^5.3.1",
     "@okkly/design-system": "workspace:*",
-    "@okkly/shared": "workspace:*"
+    "@okkly/icons": "workspace:*",
+    "@okkly/shared": "workspace:*",
+    "@okkly/vue-composables": "workspace:*",
+    "@popperjs/core": "^2.11.8",
+    "@tiptap/core": "3.29.2",
+    "@tiptap/extension-link": "3.29.2",
+    "@tiptap/extension-placeholder": "3.29.2",
+    "@tiptap/extension-underline": "3.29.2",
+    "@tiptap/pm": "3.29.2",
+    "@tiptap/starter-kit": "3.29.2",
+    "@tiptap/vue-3": "3.29.2"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",

@@ -1,0 +1,193 @@
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { ref } from "vue";
+import Button from "../Button/Button.vue";
+import Stepper from "./Stepper.vue";
+import type { StepperColor, StepperProps } from "./Stepper.types";
+
+const surface = {
+  background: "var(--okkly-bg-surface-raised)",
+  border: "1px solid var(--okkly-border-subtle)",
+  borderRadius: "12px",
+  padding: "24px",
+  width: "560px",
+  fontFamily: "var(--okkly-font-family-sans)",
+  color: "var(--okkly-text-primary)",
+};
+
+/**
+ * Progress through an ordered flow. `activeStep` is a plain index: everything
+ * before it renders as done, the step itself is current, the rest are pending.
+ *
+ * The component is presentational — advancing is your flow's job, as in the
+ * checkout story below.
+ */
+const meta: Meta<StepperProps> = {
+  title: "Navigation/Stepper",
+  component: Stepper,
+  args: {
+    steps: [
+      { label: "Cart" },
+      { label: "Delivery" },
+      { label: "Payment" },
+      { label: "Confirmation" },
+    ],
+    activeStep: 1,
+    orientation: "horizontal",
+    alternativeLabel: true,
+    color: "primary",
+  },
+  argTypes: {
+    steps: { control: false },
+    activeStep: { control: { type: "number", min: 0, max: 4 } },
+    orientation: { control: "inline-radio", options: ["horizontal", "vertical"] },
+    color: { control: "select", options: ["primary", "dante", "indigo", "violet", "ember", "ice"] },
+  },
+  render: (args) => ({
+    components: { Stepper },
+    setup: () => ({ args, surface }),
+    template: `<div :style="surface"><Stepper v-bind="args" /></div>`,
+  }),
+};
+
+export default meta;
+type Story = StoryObj<StepperProps>;
+
+const checkoutSteps = [
+  { label: "Cart", description: "3 items" },
+  { label: "Delivery", description: "Address & courier" },
+  { label: "Payment", description: "Card or invoice" },
+  { label: "Confirmation" },
+];
+
+/**
+ * Play with every prop from the controls panel.
+ */
+export const Playground: Story = {};
+
+/**
+ * A checkout wizard driving the stepper from real navigation buttons — the
+ * usual way it appears in a product.
+ */
+export const CheckoutWizard: Story = {
+  render: () => ({
+    components: { Stepper, Button },
+    setup() {
+      const step = ref(0);
+      const last = checkoutSteps.length - 1;
+      return { surface, checkoutSteps, step, last };
+    },
+    template: `
+      <div :style="{ ...surface, display: 'grid', gap: '24px' }">
+        <Stepper :steps="checkoutSteps" :active-step="step" />
+        <div style="font-size: var(--okkly-font-size-sm); color: var(--okkly-text-secondary); text-align: center">
+          {{ step === last ? "All done — the order is on its way." : \`Step \${step + 1} of \${last + 1}\` }}
+        </div>
+        <div style="display: flex; gap: 12px; justify-content: center">
+          <Button variant="ghost" :disabled="step === 0" @click="step -= 1">Back</Button>
+          <Button :disabled="step === last" @click="step += 1">{{ step === last - 1 ? "Place order" : "Continue" }}</Button>
+        </div>
+      </div>`,
+  }),
+};
+
+/**
+ * Vertical layout fits a sidebar and gives each step room for a description.
+ */
+export const Vertical: Story = {
+  render: () => ({
+    components: { Stepper },
+    setup: () => ({
+      surface,
+      steps: [
+        { label: "Repository connected", description: "github.com/lovelycentury/orbit" },
+        { label: "Pipeline configured", description: "Build, test, and lint stages" },
+        { label: "Environment variables", description: "3 of 5 secrets provided" },
+        {
+          label: "First deploy",
+          description: "Runs once the steps above are green",
+          optional: true,
+        },
+      ],
+    }),
+    template: `
+      <div :style="{ ...surface, width: '360px' }">
+        <Stepper orientation="vertical" :active-step="2" :steps="steps" />
+      </div>`,
+  }),
+};
+
+/**
+ * `alternativeLabel={false}` puts the label beside the dot instead of under it
+ * — a compact header strip for narrow layouts.
+ */
+export const InlineLabels: Story = {
+  render: () => ({
+    components: { Stepper },
+    setup: () => ({
+      surface,
+      steps: [{ label: "Draft" }, { label: "In review" }, { label: "Published" }],
+    }),
+    template: `
+      <div :style="surface">
+        <Stepper :alternative-label="false" :active-step="1" :steps="steps" />
+      </div>`,
+  }),
+};
+
+/**
+ * How the three step states read: everything before `activeStep` is checked
+ * off, the active one is highlighted, the rest stay muted.
+ */
+export const States: Story = {
+  render: () => ({
+    components: { Stepper },
+    setup: () => ({ surface, checkoutSteps, activeSteps: [0, 2, 4] }),
+    template: `
+      <div :style="{ ...surface, display: 'grid', gap: '28px' }">
+        <Stepper v-for="activeStep in activeSteps" :key="activeStep" :steps="checkoutSteps" :active-step="activeStep" />
+        <span style="font-size: var(--okkly-font-size-sm); color: var(--okkly-text-secondary); text-align: center">
+          start · mid-flow · finished (activeStep past the last index)
+        </span>
+      </div>`,
+  }),
+};
+
+/**
+ * Optional steps are marked in the label so users know they can skip them.
+ */
+export const OptionalSteps: Story = {
+  render: () => ({
+    components: { Stepper },
+    setup: () => ({
+      surface,
+      steps: [{ label: "Account" }, { label: "Company", optional: true }, { label: "Billing" }],
+    }),
+    template: `
+      <div :style="surface">
+        <Stepper :active-step="1" :steps="steps" />
+      </div>`,
+  }),
+};
+
+/**
+ * Every accent tone the dots and connectors support.
+ */
+export const Colors: Story = {
+  render: () => ({
+    components: { Stepper },
+    setup: () => ({
+      surface,
+      colors: ["primary", "dante", "indigo", "violet", "ember", "ice"] as StepperColor[],
+      stepsFor: (color: StepperColor) => [
+        { label: color },
+        { label: "Second" },
+        { label: "Third" },
+        { label: "Fourth" },
+      ],
+    }),
+    template: `
+      <div :style="{ ...surface, display: 'grid', gap: '28px' }">
+        <Stepper v-for="color in colors" :key="color" :color="color" :active-step="2" :steps="stepsFor(color)" />
+      </div>`,
+  }),
+};

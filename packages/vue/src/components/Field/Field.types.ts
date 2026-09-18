@@ -13,12 +13,14 @@ export type FieldAccentColor = FieldColor | "secondary" | "violet" | "ember" | "
  * differences, because Vue has no `ReactNode`: `label`, `helperText`,
  * `startAdornment` and `endAdornment` arrive as the `label`, `helper-text`,
  * `start-adornment` and `end-adornment` slots, and `children` is the default
- * slot. `controlProps` and `className` are dropped — nothing yet needs to
- * reach the inner control box, and Vue merges a consumer's `class` onto the
- * root on its own.
+ * slot. `className` is dropped — Vue merges a consumer's `class` onto the
+ * root on its own. React's `controlProps={{ ref, onClick }}` becomes a
+ * `control-click` emit plus a `controlRef` exposed via `defineExpose` — what
+ * Autocomplete (and later Select) use to focus their input, anchor their
+ * popup and open on a click anywhere in the control box.
  *
  * Internal on purpose — not exported from the package. It is the shared shell
- * TextField (and, later, Select/Autocomplete) render inside; its styling
+ * TextField and Autocomplete (and, later, Select) render inside; its styling
  * counterpart is the `field.shell` SCSS mixin, included by each consumer's own
  * stylesheet under its own BEM block.
  */
