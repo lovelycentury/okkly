@@ -49,6 +49,7 @@
   "dependencies": {
     "@okkly/design-system": "workspace:*",
     "@okkly/shared": "workspace:*",
+    "@popperjs/core": "^2.11.8",
     "tslib": "^2.8.1"
   },
   "devDependencies": {

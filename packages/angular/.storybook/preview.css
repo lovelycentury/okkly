@@ -20,3 +20,16 @@
   min-height: 0;
   padding: 2rem;
 }
+
+/*
+ * Story-only backdrop demos, applied through `OkklyModal`'s `backdropClass` in
+ * the Modal stories. Unlayered, so they outrank the design system's own
+ * `.okkly-modal__backdrop` rule without a specificity contest.
+ */
+.okkly-story-backdrop--lightbox {
+  background: rgba(0, 0, 0, 0.88);
+}
+
+.okkly-story-backdrop--tinted {
+  background: color-mix(in srgb, var(--okkly-accent-secondary) 30%, rgba(0, 0, 0, 0.7));
+}

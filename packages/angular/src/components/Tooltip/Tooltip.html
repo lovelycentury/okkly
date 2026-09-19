@@ -1,0 +1,35 @@
+<okkly-popper
+  [open]="open()"
+  [anchorEl]="anchorEl()"
+  [placement]="placement()"
+  transition
+  role="presentation"
+  [popperClass]="popperClasses()"
+  [modifiers]="modifiers()"
+>
+  @if (popupMounted()) {
+    <div
+      #popup
+      [class]="popupClasses()"
+      [attr.data-popper-placement]="currentPlacement()"
+      (mouseenter)="pointerEnter.emit()"
+      (mouseleave)="pointerLeave.emit()"
+    >
+      <span class="okkly-tooltip__bubble" role="tooltip" [id]="tooltipId()">
+        @if (titleTemplate(); as template) {
+          <ng-container [ngTemplateOutlet]="template" />
+        } @else {
+          {{ title() }}
+        }
+      </span>
+      @if (arrow()) {
+        <span
+          #arrowElement
+          class="okkly-tooltip__arrow"
+          data-popper-arrow
+          aria-hidden="true"
+        ></span>
+      }
+    </div>
+  }
+</okkly-popper>
