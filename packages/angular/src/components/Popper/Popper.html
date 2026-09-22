@@ -1,0 +1,15 @@
+@if (shouldRender()) {
+  <!--
+    Moved into the portal container by the component; Angular keeps owning the
+    node and removes it from wherever it sits once this block goes away.
+  -->
+  <div
+    #popperElement
+    class="okkly-component okkly-popper"
+    [class]="popperClass()"
+    [attr.role]="role()"
+    [style]="rootStyle()"
+  >
+    <ng-content />
+  </div>
+}

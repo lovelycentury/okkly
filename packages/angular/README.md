@@ -177,6 +177,153 @@ own `class` and `style` merge with the directive's.
 
 It stays quiet on a host that is `:disabled` or `aria-disabled="true"`.
 
+## Popper
+
+`OkklyPopper` (`okkly-popper`) is positioning and nothing else: it puts an element
+next to another element and keeps it there through scrolling, resizing, and the
+edges of the viewport. It draws no surface — the projected content brings its own.
+
+| Input              | Type                                                 | Default     |
+| ------------------ | ---------------------------------------------------- | ----------- |
+| `open`             | `boolean` (required)                                 | —           |
+| `anchorEl`         | `HTMLElement \| VirtualElement \| (() => …) \| null` | `undefined` |
+| `placement`        | Popper.js `Placement`                                | `bottom`    |
+| `keepMounted`      | `boolean`                                            | `false`     |
+| `disablePortal`    | `boolean`                                            | `false`     |
+| `container`        | `Element \| DocumentFragment \| null`                | the body    |
+| `modifiers`        | Popper.js modifiers                                  | `undefined` |
+| `popperOptions`    | `Partial<Options>`                                   | `{}`        |
+| `transition`       | `boolean`                                            | `false`     |
+| `matchAnchorWidth` | `boolean \| "min"`                                   | `false`     |
+| `minWidth`         | `number \| string`                                   | `undefined` |
+| `role`             | `string`                                             | `tooltip`   |
+| `popperClass`      | `string`                                             | `""`        |
+
+```html
+<button #trigger type="button" (click)="open.set(!open())">Details</button>
+<okkly-popper [open]="open()" [anchorEl]="trigger" placement="bottom-start">
+  <div class="my-card">…</div>
+</okkly-popper>
+```
+
+React's render-prop `children({ placement, TransitionProps })` has no Angular
+counterpart, so the same three values are public component state: read
+`resolvedPlacement()` off a template reference variable, and drive a transition with
+`notifyEnter()` and `notifyExited()` — the latter is what keeps the popper mounted
+for the whole way out. `growSurface()` wires both to a Grow animation, which is what
+`OkklyPopover` and `OkklyTooltip` use.
+
+The popper is moved into the portal container, which leaves `<okkly-popper>` itself
+holding nothing — so it is `display: contents`, and `popperClass` is how classes
+reach the surface a stylesheet targets. The same applies to `popoverClass`,
+`modalClass` and `backdropClass` below.
+
+## Popover
+
+`OkklyPopover` (`okkly-popover`) is Popper plus dismissal: Escape, click-outside, a
+paper surface, and a Grow transition. It is **not** modal and has no scrim by
+default.
+
+| Input                | Type                                  | Default     |
+| -------------------- | ------------------------------------- | ----------- |
+| `open`               | `boolean` (required)                  | —           |
+| `anchorEl`           | `HTMLElement \| null`                 | `undefined` |
+| `anchorPosition`     | `{ top: number; left: number }`       | `undefined` |
+| `placement`          | Popper.js `Placement`                 | `bottom`    |
+| `transitionDuration` | `number \| { enter, exit } \| "auto"` | `auto`      |
+| `disablePortal`      | `boolean`                             | `false`     |
+| `hideBackdrop`       | `boolean`                             | `true`      |
+| `matchAnchorWidth`   | `boolean`                             | `false`     |
+| `minWidth`           | `number \| string`                    | `undefined` |
+| `popoverClass`       | `string`                              | `""`        |
+| `paperClass`         | `string`                              | `""`        |
+
+```html
+<button #trigger okklyButton (click)="anchor.set(trigger)">Actions</button>
+<okkly-popover [open]="!!anchor()" [anchorEl]="anchor()" (close)="anchor.set(null)">
+  …
+</okkly-popover>
+```
+
+`close` emits `{ event, reason }`, where `reason` is `"backdropClick"` or
+`"escapeKeyDown"` — the pair React passes as two arguments, since an `output()`
+carries a single value. `anchorPosition` anchors to coordinates instead of an
+element, for a context menu.
+
+## Tooltip
+
+`OkklyTooltip` (`[okklyTooltip]`) is a directive on the trigger itself, as Angular
+Material's `matTooltip` is, so its listeners and ARIA attributes land on the real
+control with no wrapper. Every input is namespaced for the same reason Material's
+are: a trigger usually carries other directives too.
+
+| Input                              | Type                                  | Default |
+| ---------------------------------- | ------------------------------------- | ------- |
+| `okklyTooltip`                     | `string \| TemplateRef`               | `""`    |
+| `okklyTooltipPlacement`            | Popper.js `Placement`                 | `top`   |
+| `okklyTooltipOpen`                 | `boolean` (two-way)                   | unbound |
+| `okklyTooltipDefaultOpen`          | `boolean`                             | `false` |
+| `okklyTooltipEnterDelay`           | `number`                              | `200`   |
+| `okklyTooltipLeaveDelay`           | `number`                              | `0`     |
+| `okklyTooltipArrow`                | `boolean`                             | `true`  |
+| `okklyTooltipInteractive`          | `boolean`                             | `true`  |
+| `okklyTooltipDescribeChild`        | `boolean`                             | `false` |
+| `okklyTooltipDisableHoverListener` | `boolean`                             | `false` |
+| `okklyTooltipDisableFocusListener` | `boolean`                             | `false` |
+| `okklyTooltipTransitionDuration`   | `number \| { enter, exit } \| "auto"` | `auto`  |
+| `okklyTooltipClass`                | `string`                              | `""`    |
+
+```html
+<button type="button" okklyTooltip="Delete — this cannot be undone">
+  <svg viewBox="0 0 24 24"><!-- … --></svg>
+</button>
+```
+
+It decides whether to name or to describe from the trigger, not from an input. A
+trigger with a name of its own — visible text or its own `aria-label` — gets the
+tooltip as `aria-describedby` while it is open. A trigger with no name at all, as an
+icon button has none, gets it as `aria-label`, permanently.
+`okklyTooltipDescribeChild` forces the description side.
+
+Pass a `TemplateRef` for content richer than a line of text — that is the Angular
+counterpart of React's `ReactNode` title. The outputs are `okklyTooltipOpened` and
+`okklyTooltipClosed`.
+
+## Modal
+
+`OkklyModal` (`okkly-modal`) is the plumbing behind every modal overlay and nothing
+else: a portal, a backdrop, a focus trap, a scroll lock, Escape handling, and focus
+put back where it came from. **It draws no surface of its own** — the projected
+content brings the panel, the centring and the dialog semantics.
+
+| Input                  | Type                 | Default  |
+| ---------------------- | -------------------- | -------- |
+| `open`                 | `boolean` (required) | —        |
+| `container`            | `Element \| null`    | the body |
+| `disablePortal`        | `boolean`            | `false`  |
+| `disableEscapeKeyDown` | `boolean`            | `false`  |
+| `disableAutoFocus`     | `boolean`            | `false`  |
+| `disableEnforceFocus`  | `boolean`            | `false`  |
+| `disableRestoreFocus`  | `boolean`            | `false`  |
+| `disableScrollLock`    | `boolean`            | `false`  |
+| `hideBackdrop`         | `boolean`            | `false`  |
+| `keepMounted`          | `boolean`            | `false`  |
+| `modalClass`           | `string`             | `""`     |
+| `backdropClass`        | `string`             | `""`     |
+
+```html
+<okkly-modal [open]="open()" (close)="open.set(false)">
+  <div class="my-centring-layer">
+    <div class="my-panel" role="dialog" aria-modal="true" aria-labelledby="title">…</div>
+  </div>
+</okkly-modal>
+```
+
+`close` emits `{ event, reason }`, as `OkklyPopover`'s does. `keepMounted` hides the
+subtree with `visibility` rather than removing it, which is what lets a consumer
+animate the modal out — there is no `closeAfterTransition`, because with no built-in
+transition to wait on, that decision belongs to whoever owns the animation.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

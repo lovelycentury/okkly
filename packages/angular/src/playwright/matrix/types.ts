@@ -53,6 +53,16 @@ export type MatrixScreenshotTestOptions<
   context?: TContext;
   /** Forwarded to Playwright's `.screenshot()`. Animations are disabled by default. */
   screenshotOptions?: LocatorScreenshotOptions;
+  /**
+   * What to photograph for each cell.
+   *
+   * `"component"` (the default) captures the mounted element. Use `"page"` for
+   * a component that portals its content to `document.body` — an overlay is not
+   * inside the mount root, so capturing the component would photograph an empty
+   * box. Only meaningful without `fastNoIsolation`, since every cell needs the
+   * viewport to itself.
+   */
+  screenshotTarget?: "component" | "page";
 };
 
 export type ScreenshotTestHook<

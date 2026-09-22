@@ -8,8 +8,12 @@ import "@okkly/design-system/styles/index.scss";
 // paths here so Vite resolves them; the build reads them off disk instead.
 import "@okkly/design-system/components/Box/Box.scss";
 import "@okkly/design-system/components/Button/Button.scss";
+import "@okkly/design-system/components/Modal/Modal.scss";
+import "@okkly/design-system/components/Popover/Popover.scss";
+import "@okkly/design-system/components/Popper/Popper.scss";
 import "@okkly/design-system/components/Ripple/Ripple.scss";
 import "@okkly/design-system/components/TextField/TextField.scss";
+import "@okkly/design-system/components/Tooltip/Tooltip.scss";
 import "./preview.css";
 import { okklyTheme } from "./theme";
 // Angular has no react-docgen equivalent: Compodoc reads the inputs' types,
