@@ -109,7 +109,7 @@ const meta: Meta<PopoverArgs> = {
     props: { ...args, anchor: signal<HTMLElement | null>(null) },
     template: `
       <div style="${surface}">
-        <button okklyButton size="small" #trigger (click)="anchor.set(trigger)">
+        <button okklyButton size="small" (click)="anchor.set($event.currentTarget)">
           Open the popover
         </button>
         <okkly-popover
@@ -159,7 +159,7 @@ export const AMenu: Story = {
     template: `
       <div style="${surface}">
         <div style="display: flex; justify-content: flex-end; width: 420px">
-          <button okklyButton size="small" variant="secondary" #trigger (click)="anchor.set(trigger)">
+          <button okklyButton size="small" variant="secondary" (click)="anchor.set($event.currentTarget)">
             Actions
           </button>
         </div>
@@ -206,15 +206,13 @@ export const MatchingTheAnchor: Story = {
           okklyButton
           size="small"
           variant="secondary"
-          #matched
-          (click)="which.set('matched'); anchor.set(matched)"
+          (click)="which.set('matched'); anchor.set($event.currentTarget)"
         >A wide trigger — matched width</button>
         <button
           okklyButton
           size="small"
           variant="ghost"
-          #free
-          (click)="which.set('free'); anchor.set(free)"
+          (click)="which.set('free'); anchor.set($event.currentTarget)"
         >A wide trigger — natural width</button>
         <okkly-popover
           [open]="which() !== null"
@@ -289,8 +287,7 @@ export const Placements: Story = {
             okklyButton
             size="small"
             variant="ghost"
-            #button
-            (click)="placement.set(option); anchor.set(button)"
+            (click)="placement.set(option); anchor.set($event.currentTarget)"
           >{{ option }}</button>
         }
         <okkly-popover
@@ -331,7 +328,7 @@ export const AFilterPanel: Story = {
       },
       template: `
         <div style="${surface}">
-          <button okklyButton size="small" variant="secondary" #trigger (click)="anchor.set(trigger)">
+          <button okklyButton size="small" variant="secondary" (click)="anchor.set($event.currentTarget)">
             Filters ({{ active().length }})
           </button>
           <okkly-popover
@@ -389,15 +386,13 @@ export const WithABackdrop: Story = {
             okklyButton
             size="small"
             variant="secondary"
-            #bare
-            (click)="which.set('bare'); anchor.set(bare)"
+            (click)="which.set('bare'); anchor.set($event.currentTarget)"
           >Open without a scrim</button>
           <button
             okklyButton
             size="small"
             variant="secondary"
-            #scrim
-            (click)="which.set('scrim'); anchor.set(scrim)"
+            (click)="which.set('scrim'); anchor.set($event.currentTarget)"
           >Open with a scrim</button>
           <button okklyButton size="small" variant="ghost" (click)="bump()">
             A button behind it ({{ clicks() }})
@@ -438,8 +433,7 @@ export const TransitionDuration: Story = {
             okklyButton
             size="small"
             variant="ghost"
-            #button
-            (click)="duration.set(option); anchor.set(button)"
+            (click)="duration.set(option); anchor.set($event.currentTarget)"
           >{{ option }}</button>
         }
         <okkly-popover
@@ -471,7 +465,7 @@ export const AnchorMustBeState: Story = {
     props: { anchor: signal<HTMLElement | null>(null) },
     template: `
       <div style="${surface}">
-        <button okklyButton size="small" variant="secondary" #trigger (click)="anchor.set(trigger)">
+        <button okklyButton size="small" variant="secondary" (click)="anchor.set($event.currentTarget)">
           Correct — anchor in a signal
         </button>
         <okkly-popover [open]="!!anchor()" [anchorEl]="anchor()" (close)="anchor.set(null)">

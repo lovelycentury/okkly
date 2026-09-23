@@ -114,8 +114,7 @@ const meta: Meta<PopperArgs> = {
         <button
           okklyButton
           size="small"
-          #trigger
-          (click)="anchor.set(anchor() ? null : trigger)"
+          (click)="anchor.set(anchor() ? null : $event.currentTarget)"
         >{{ anchor() ? "Hide" : "Show" }} the popper</button>
         <okkly-popper [open]="!!anchor()" [anchorEl]="anchor()"${bindings}>
           <div style="${paper}">
@@ -190,8 +189,7 @@ export const Placements: Story = {
             okklyButton
             size="small"
             variant="ghost"
-            #button
-            (click)="placement.set(option); anchor.set(button)"
+            (click)="placement.set(option); anchor.set($event.currentTarget)"
           >{{ option }}</button>
         }
         <okkly-popper #popper [open]="!!anchor()" [anchorEl]="anchor()" [placement]="placement()">
@@ -275,8 +273,7 @@ export const WithATransition: Story = {
           okklyButton
           size="small"
           variant="secondary"
-          #trigger
-          (click)="anchor.set(anchor() ? null : trigger)"
+          (click)="anchor.set(anchor() ? null : $event.currentTarget)"
         >{{ anchor() ? "Hide" : "Show" }}</button>
         <okkly-popper
           #popper
@@ -319,8 +316,7 @@ export const MatchingTheAnchor: Story = {
             okklyButton
             size="small"
             variant="ghost"
-            #button
-            (click)="mode.set(option.value); anchor.set(button)"
+            (click)="mode.set(option.value); anchor.set($event.currentTarget)"
           >matchAnchorWidth = {{ option.label }}</button>
         }
         <okkly-popper
@@ -357,8 +353,7 @@ export const MountingAndPortals: Story = {
           okklyButton
           size="small"
           variant="secondary"
-          #trigger
-          (click)="anchor.set(anchor() ? null : trigger)"
+          (click)="anchor.set(anchor() ? null : $event.currentTarget)"
         >Toggle a kept-mounted popper</button>
         <okkly-popper [open]="!!anchor()" [anchorEl]="anchor()" keepMounted>
           <div style="${paper}">Still in the DOM when hidden — inspect it.</div>
@@ -369,8 +364,7 @@ export const MountingAndPortals: Story = {
             okklyButton
             size="small"
             variant="ghost"
-            #clippedTrigger
-            (click)="clipped.set(clipped() ? null : clippedTrigger)"
+            (click)="clipped.set(clipped() ? null : $event.currentTarget)"
           >Open inside an overflow:hidden box</button>
           <okkly-popper
             [open]="!!clipped()"
@@ -408,8 +402,7 @@ export const Offset: Story = {
               okklyButton
               size="small"
               variant="ghost"
-              #button
-              (click)="distance.set(value); anchor.set(button)"
+              (click)="distance.set(value); anchor.set($event.currentTarget)"
             >offset {{ value }}px</button>
           }
           <okkly-popper
@@ -442,8 +435,7 @@ export const YouOwnTheDismissal: Story = {
           okklyButton
           size="small"
           variant="secondary"
-          #trigger
-          (click)="anchor.set(anchor() ? null : trigger)"
+          (click)="anchor.set(anchor() ? null : $event.currentTarget)"
         >Open</button>
         <okkly-popper [open]="!!anchor()" [anchorEl]="anchor()" placement="bottom-start">
           <div style="${paper}">
