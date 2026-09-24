@@ -3,6 +3,7 @@
   "dest": "./dist",
   "allowedNonPeerDependencies": [
     "@okkly/design-system",
+    "@okkly/icons",
     "@okkly/shared",
     "@popperjs/core",
     "tslib"

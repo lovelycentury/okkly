@@ -7,6 +7,9 @@ export type {
   ButtonLoadingPosition,
 } from "./components/Button/Button";
 
+export { OkklyIcon, ICON_NAMES } from "./components/Icon/Icon";
+export type { IconName, IconSource, IconSize, IconColor } from "./components/Icon/Icon";
+
 export { OkklyIconButton } from "./components/IconButton/IconButton";
 export type {
   IconButtonVariant,

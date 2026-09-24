@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@okkly/design-system": "workspace:*",
+    "@okkly/icons": "workspace:*",
     "@okkly/shared": "workspace:*",
     "@popperjs/core": "^2.11.8",
     "tslib": "^2.8.1"
@@ -81,7 +82,8 @@
   },
   "peerDependencies": {
     "@angular/common": ">=20",
-    "@angular/core": ">=20"
+    "@angular/core": ">=20",
+    "@angular/platform-browser": ">=20"
   },
   "engines": {
     "node": ">=20"

@@ -72,6 +72,35 @@ Anchors cannot be disabled natively, so `<a okklyButton disabled>` gets
 `aria-disabled="true"`, `tabindex="-1"`, and swallowed clicks; its `href` is
 left untouched.
 
+## Icon
+
+`OkklyIcon` (`okkly-icon`) renders a glyph from `@okkly/icons`. Pick one by
+`name`, or pass markup you already imported via `icon` — the tree-shakeable
+form to prefer in application code. Inputs mirror `@okkly/react`'s `<Icon>`
+name-for-name.
+
+```ts
+import { iconStar } from "@okkly/icons";
+```
+
+```html
+<okkly-icon name="iconSearch" />
+<okkly-icon [icon]="iconStar" color="primary" titleAccess="Favourite" />
+<p>Starred <okkly-icon [icon]="iconStar" fontSize="inherit" /> items stay pinned.</p>
+```
+
+| Input         | Values                                                                                                               |
+| ------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `name`        | Any `@okkly/icons` export name (`IconName`); bundles the whole set                                                   |
+| `icon`        | Imported SVG markup; wins over `name`                                                                                |
+| `color`       | `inherit` (default), `primary`, `dante`, `indigo`, `violet`, `ember`, `ice`, `success`, `warning`, `danger`, `muted` |
+| `fontSize`    | `small`, `medium` (default), `large`, `inherit` (tracks the text size)                                               |
+| `titleAccess` | Accessible name; without it the icon is `aria-hidden` decoration                                                     |
+
+The markup is injected as trusted HTML, so it must be markup you control at
+build time — never a string from a user, an API or a URL. `ICON_NAMES` lists
+every name, for pickers.
+
 ## IconButton
 
 `OkklyIconButton` (`button[okklyIconButton]`, `a[okklyIconButton]`) is an
