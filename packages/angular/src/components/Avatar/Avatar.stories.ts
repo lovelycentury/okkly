@@ -1,9 +1,7 @@
 import { moduleMetadata, type Meta, type StoryObj } from "@storybook/angular";
 import { OkklyAvatar } from "./Avatar";
+import oleksiiInParis from "../Photo/assets/oleksii-paris.jpg";
 import type { AvatarColor, AvatarShape, AvatarSize, AvatarStatus } from "./Avatar";
-
-/** Served from `@okkly/react`'s Photo assets through Storybook's `staticDirs`. */
-const oleksiiInParis = "photos/oleksii-paris.jpg";
 
 /** Every input the Playground binds. */
 type AvatarArgs = {

@@ -11,10 +11,8 @@ import {
   OkklyCardHeader,
   OkklyCardMedia,
 } from "./Card";
+import oleksiiInParis from "../Photo/assets/oleksii-paris.jpg";
 import type { CardColor, CardPadding, CardVariant } from "./Card";
-
-/** Served from `@okkly/react`'s Photo assets through Storybook's `staticDirs`. */
-const oleksiiInParis = "photos/oleksii-paris.jpg";
 
 /** `iconMoreHorizontal` from `@okkly/icons`, inlined. */
 const moreIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>`;

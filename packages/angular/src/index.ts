@@ -105,6 +105,9 @@ export {
 } from "./components/Card/Card";
 export type { CardVariant, CardColor, CardPadding } from "./components/Card/Card";
 
+export { OkklyPhoto, OkklyPhotoFallback } from "./components/Photo/Photo";
+export type { PhotoVariant, PhotoSize, PhotoRadius } from "./components/Photo/Photo";
+
 export { OkklyBadge } from "./components/Badge/Badge";
 export type {
   BadgeAnchorOrigin,

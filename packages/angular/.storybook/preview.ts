@@ -16,6 +16,7 @@ import "@okkly/design-system/components/Chip/Chip.scss";
 import "@okkly/design-system/components/Divider/Divider.scss";
 import "@okkly/design-system/components/IconButton/IconButton.scss";
 import "@okkly/design-system/components/Modal/Modal.scss";
+import "@okkly/design-system/components/Photo/Photo.scss";
 import "@okkly/design-system/components/Popover/Popover.scss";
 import "@okkly/design-system/components/Popper/Popper.scss";
 import "@okkly/design-system/components/Progress/Progress.scss";

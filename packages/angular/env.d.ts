@@ -3,3 +3,9 @@
 // type-check needs no bundler types.
 declare module "*.css";
 declare module "*.scss";
+
+// Image imports in stories resolve to the asset's URL, as Vite serves it.
+declare module "*.jpg" {
+  const src: string;
+  export default src;
+}

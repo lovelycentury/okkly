@@ -8,11 +8,7 @@ const config: StorybookConfig = {
    * copied — one set of binaries, one place to update them. Paths are relative
    * to this directory.
    */
-  staticDirs: [
-    "../../react/.storybook/favicon",
-    { from: "./brand", to: "/brand" },
-    { from: "../../react/src/components/Photo/assets", to: "/photos" },
-  ],
+  staticDirs: ["../../react/.storybook/favicon", { from: "./brand", to: "/brand" }],
   /**
    * The Vite builder, not the Angular CLI's webpack one: it needs no
    * `angular.json`, and it reuses `@analogjs/vite-plugin-angular` — the same

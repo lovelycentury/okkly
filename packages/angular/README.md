@@ -357,6 +357,30 @@ ones you need, in the order you need them. Inputs mirror `@okkly/react`'s
 `interactive` only adds the hover lift: wrap the card in, or put inside it, a
 real link or button so it is reachable by keyboard.
 
+## Photo
+
+`OkklyPhoto` (`okkly-photo`) is a framed portrait or hero cutout on a dark
+surface. Inputs mirror `@okkly/react`'s `<Photo>` name-for-name.
+
+```html
+<okkly-photo [image]="member.photo" [alt]="member.name" variant="scrim" [caption]="member.name" />
+<okkly-photo alt="Anna Berg"><span okklyPhotoFallback>AB</span></okkly-photo>
+```
+
+| Input         | Values                                                               |
+| ------------- | -------------------------------------------------------------------- |
+| `image`       | Source URL; falls back to a silhouette when unset or broken          |
+| `alt`         | Required — names the image, or the placeholder when there is none    |
+| `variant`     | `plain` (default), `framed`, `scrim`, `noir`, `cutout`               |
+| `scrim`       | Adds the bottom gradient; implied by `scrim`/`noir` and by `caption` |
+| `transparent` | Alias for `variant="cutout"`                                         |
+| `size`        | `sm`, `md` (default), `lg`                                           |
+| `caption`     | Name or role over the scrim                                          |
+| `radius`      | `none`, `sm`, `md`, `lg`, `xl` (default); ignored on a cutout        |
+| `loading`     | Shows a skeleton until the image loads                               |
+
+Project an `okklyPhotoFallback` to replace the silhouette.
+
 ## Badge
 
 `OkklyBadge` (`okkly-badge`) pins a count or status dot to the corner of
