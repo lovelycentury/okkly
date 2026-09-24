@@ -14,7 +14,7 @@
     The message renders unconditionally and collapses through `display` when
     nothing was projected, since it is what the component inspects for content.
   -->
-  <p #message class="okkly-alert__message" [style.display]="hasMessage() ? null : 'none'">
+  <p #messageSlot class="okkly-alert__message" [style.display]="hasMessage() ? null : 'none'">
     <ng-content />
   </p>
 </div>

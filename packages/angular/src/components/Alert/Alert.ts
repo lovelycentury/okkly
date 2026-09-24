@@ -99,11 +99,11 @@ export class OkklyAlert {
 
   private readonly customIcon = contentChild(OkklyAlertIcon);
   private readonly action = contentChild(OkklyAlertAction);
-  private readonly message = viewChild.required<ElementRef<HTMLElement>>("message");
+  private readonly messageSlot = viewChild.required<ElementRef<HTMLElement>>("messageSlot");
 
   protected readonly hasCustomIcon = computed(() => !!this.customIcon());
   protected readonly hasAction = computed(() => !!this.action());
-  protected readonly hasMessage = projectedContent(() => this.message().nativeElement);
+  protected readonly hasMessage = projectedContent(() => this.messageSlot().nativeElement);
   protected readonly iconSeverity = computed(() => SEVERITY_ICON_MAP[this.severity()]);
 
   protected readonly modifiers = computed(() =>

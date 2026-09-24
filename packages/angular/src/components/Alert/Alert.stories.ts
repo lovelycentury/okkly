@@ -3,9 +3,9 @@ import { OkklyButton } from "../Button/Button";
 import { OkklyAlert, OkklyAlertAction, OkklyAlertIcon } from "./Alert";
 import type { AlertSeverity, AlertVariant } from "./Alert";
 
-/** Every input the Playground binds, plus `message` for the projected content. */
+/** Every input the Playground binds, plus `label` for the projected message. */
 type AlertArgs = {
-  message: string;
+  label: string;
   severity: AlertSeverity;
   variant: AlertVariant;
   title: string;
@@ -35,7 +35,7 @@ const meta: Meta<AlertArgs> = {
     moduleMetadata({ imports: [OkklyAlert, OkklyAlertIcon, OkklyAlertAction, OkklyButton] }),
   ],
   args: {
-    message: "A new version of the design system is available.",
+    label: "A new version of the design system is available.",
     severity: "info",
     variant: "standard",
     title: "Heads up",
@@ -43,7 +43,7 @@ const meta: Meta<AlertArgs> = {
     closable: false,
   },
   argTypes: {
-    message: { control: "text", description: "Projected content — the alert's message." },
+    label: { control: "text", description: "Projected content — the alert's message." },
     severity: { control: "select", options: ["success", "info", "warning", "danger", "dante"] },
     variant: { control: "inline-radio", options: ["standard", "outlined", "filled"] },
     icon: { control: "boolean", table: { defaultValue: { summary: "true" } } },
@@ -54,7 +54,7 @@ const meta: Meta<AlertArgs> = {
     template: `
       <div style="${surface}">
         <okkly-alert [severity]="severity" [variant]="variant" [title]="title" [icon]="icon" [closable]="closable">
-          {{ message }}
+          {{ label }}
         </okkly-alert>
       </div>`,
   }),
