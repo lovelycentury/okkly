@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   ViewEncapsulation,
   booleanAttribute,
@@ -42,7 +43,6 @@ export type IconButtonSize = "small" | "medium" | "large";
     "[attr.disabled]": "isNativeButton && disabled() ? '' : null",
     "[attr.aria-disabled]": "!isNativeButton && disabled() ? 'true' : null",
     "[attr.tabindex]": "!isNativeButton && disabled() ? '-1' : null",
-    "(click)": "onClickCapture($event)",
   },
   template: `<span class="okkly-icon-button__icon" aria-hidden="true"><ng-content /></span>`,
 })
@@ -72,8 +72,24 @@ export class OkklyIconButton {
    */
   readonly disabled = input(false, { transform: booleanAttribute });
 
-  protected readonly isNativeButton =
-    inject<ElementRef<HTMLElement>>(ElementRef).nativeElement.tagName === "BUTTON";
+  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  protected readonly isNativeButton = this.element.tagName === "BUTTON";
+
+  constructor() {
+    // A native `<button disabled>` never fires a click; an `<a>` would. This
+    // has to be a capture listener: the consumer's `(click)` on the same
+    // element is registered before any host listener, and only capture-phase
+    // listeners run ahead of it at the target.
+    const swallowWhileDisabled = (event: Event) => {
+      if (!this.disabled()) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    };
+    this.element.addEventListener("click", swallowWhileDisabled, { capture: true });
+    inject(DestroyRef).onDestroy(() =>
+      this.element.removeEventListener("click", swallowWhileDisabled, { capture: true }),
+    );
+  }
 
   protected readonly modifiers = computed(() =>
     [
@@ -84,11 +100,4 @@ export class OkklyIconButton {
       .filter(Boolean)
       .join(" "),
   );
-
-  protected onClickCapture(event: Event): void {
-    // A native `<button disabled>` never fires this; an `<a>` would.
-    if (!this.disabled()) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-  }
 }

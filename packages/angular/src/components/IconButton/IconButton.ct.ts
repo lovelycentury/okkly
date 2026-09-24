@@ -232,10 +232,11 @@ test.describe("as a link", () => {
   test("should mark a disabled link aria-disabled and swallow clicks", async ({
     mountTemplate,
     page,
+    recordedEvents,
   }) => {
     // ARRANGE
     const component = await mountTemplate(
-      `<a okklyIconButton aria-label="Add" href="#test-section" disabled>${glyph()}</a>`,
+      `<a okklyIconButton aria-label="Add" href="#test-section" disabled (click)="record('click')">${glyph()}</a>`,
     );
 
     // ASSERT
@@ -247,5 +248,6 @@ test.describe("as a link", () => {
 
     // ASSERT
     expect(new URL(page.url()).hash).toBe("");
+    expect(await recordedEvents("click")).toHaveLength(0);
   });
 });
