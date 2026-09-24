@@ -19,6 +19,7 @@ import "@okkly/design-system/components/Popover/Popover.scss";
 import "@okkly/design-system/components/Popper/Popper.scss";
 import "@okkly/design-system/components/Progress/Progress.scss";
 import "@okkly/design-system/components/Ripple/Ripple.scss";
+import "@okkly/design-system/components/SeverityIcon/SeverityIcon.scss";
 import "@okkly/design-system/components/Skeleton/Skeleton.scss";
 import "@okkly/design-system/components/Spinner/Spinner.scss";
 import "@okkly/design-system/components/TextField/TextField.scss";

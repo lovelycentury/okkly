@@ -73,6 +73,13 @@ export type {
 export { OkklySpinner } from "./components/Spinner/Spinner";
 export type { SpinnerSize, SpinnerColor } from "./components/Spinner/Spinner";
 
+export { OkklySeverityIcon, OkklySeverityIconGlyph } from "./components/SeverityIcon/SeverityIcon";
+export type {
+  SeverityIconSeverity,
+  SeverityIconSize,
+  SeverityIconShape,
+} from "./components/SeverityIcon/SeverityIcon";
+
 export { OkklySkeleton } from "./components/Skeleton/Skeleton";
 export type { SkeletonVariant, SkeletonAnimation } from "./components/Skeleton/Skeleton";
 

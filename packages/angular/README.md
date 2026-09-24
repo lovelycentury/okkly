@@ -226,6 +226,28 @@ label. The host is always `<okkly-divider role="separator">` (with
 replaces the default rather than competing with it. Inside a control that
 already names the wait, hide the ring with `aria-hidden="true"`.
 
+## SeverityIcon
+
+`OkklySeverityIcon` (`okkly-severity-icon`) is a tinted chip holding a status
+glyph. Inputs mirror `@okkly/react`'s `<SeverityIcon>` name-for-name.
+
+```html
+<okkly-severity-icon severity="danger" size="small" label="Failed" />
+<okkly-severity-icon severity="danger" size="large">
+  <svg okklySeverityIconGlyph>…</svg>
+</okkly-severity-icon>
+```
+
+| Input      | Values                                                                 |
+| ---------- | ---------------------------------------------------------------------- |
+| `severity` | `success`, `info` (default), `warning`, `danger`, `primary`, `neutral` |
+| `size`     | `small`, `medium` (default), `large`                                   |
+| `shape`    | `circle` (default), `rounded`                                          |
+| `label`    | Text equivalent of the tone; without it the icon is `aria-hidden`      |
+
+A projected `okklySeverityIconGlyph` replaces the built-in glyph and keeps the
+tint.
+
 ## Skeleton
 
 `OkklySkeleton` (`okkly-skeleton`) is a placeholder that holds the space
