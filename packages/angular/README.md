@@ -226,6 +226,31 @@ label. The host is always `<okkly-divider role="separator">` (with
 replaces the default rather than competing with it. Inside a control that
 already names the wait, hide the ring with `aria-hidden="true"`.
 
+## Alert
+
+`OkklyAlert` (`okkly-alert`) is an inline banner rendered as a `role="alert"`
+live region. The message is the projected content. Inputs mirror
+`@okkly/react`'s `<Alert>` name-for-name.
+
+```html
+<okkly-alert severity="danger" title="Couldn't save the draft" closable (close)="dismiss()">
+  Your connection dropped while uploading. Nothing was lost.
+  <button okklyButton okklyAlertAction variant="ghost" size="small">Retry</button>
+</okkly-alert>
+```
+
+| Input      | Values                                                                    |
+| ---------- | ------------------------------------------------------------------------- |
+| `severity` | `success`, `info` (default), `warning`, `danger`, `dante`                 |
+| `variant`  | `standard` (default), `outlined`, `filled`                                |
+| `title`    | Bold headline above the message                                           |
+| `icon`     | `false` hides the icon; project an `okklyAlertIcon` to replace it         |
+| `closable` | Renders a dismiss button that emits `close` — removing the alert is yours |
+
+Project the recovery control tagged `okklyAlertAction`. React shows the close
+button when `onClose` is set; Angular cannot see whether a `(close)` listener
+exists, so `closable` turns it on.
+
 ## SeverityIcon
 
 `OkklySeverityIcon` (`okkly-severity-icon`) is a tinted chip holding a status

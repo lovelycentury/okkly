@@ -2,15 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
-  afterEveryRender,
   booleanAttribute,
   computed,
   input,
   numberAttribute,
-  signal,
   viewChild,
   type ElementRef,
 } from "@angular/core";
+import { projectedContent } from "../../helpers/content";
 
 export type BadgeColor =
   "primary" | "dante" | "indigo" | "violet" | "ember" | "ice" | "success" | "warning" | "danger";
@@ -25,12 +24,6 @@ export interface BadgeAnchorOrigin {
 /** A numeric attribute (`badgeContent="4"`) reads as the count a binding (`[badgeContent]="4"`) passes. */
 function numeric(value: number | string | null | undefined): number | string | null | undefined {
   return typeof value === "string" && /^\d+$/.test(value) ? Number(value) : value;
-}
-
-/** Whether a node is something the consumer projected, rather than whitespace or a control-flow anchor. */
-function isContent(node: Node): boolean {
-  if (node.nodeType === Node.ELEMENT_NODE) return true;
-  return node.nodeType === Node.TEXT_NODE && !!node.textContent?.trim();
 }
 
 /**
@@ -110,16 +103,7 @@ export class OkklyBadge {
   private readonly anchor = viewChild.required<ElementRef<HTMLElement>>("anchor");
 
   /** Whether the consumer projected an anchor — refreshed after every render. */
-  protected readonly hasAnchor = signal(false);
-
-  constructor() {
-    afterEveryRender({
-      read: () => {
-        const hasAnchor = Array.from(this.anchor().nativeElement.childNodes).some(isContent);
-        if (hasAnchor !== this.hasAnchor()) this.hasAnchor.set(hasAnchor);
-      },
-    });
-  }
+  protected readonly hasAnchor = projectedContent(() => this.anchor().nativeElement);
 
   /** The text the pill prints, or `null` when there is nothing to show. */
   protected readonly formatted = computed(() => {

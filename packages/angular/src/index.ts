@@ -73,6 +73,9 @@ export type {
 export { OkklySpinner } from "./components/Spinner/Spinner";
 export type { SpinnerSize, SpinnerColor } from "./components/Spinner/Spinner";
 
+export { OkklyAlert, OkklyAlertIcon, OkklyAlertAction } from "./components/Alert/Alert";
+export type { AlertSeverity, AlertVariant } from "./components/Alert/Alert";
+
 export { OkklySeverityIcon, OkklySeverityIconGlyph } from "./components/SeverityIcon/SeverityIcon";
 export type {
   SeverityIconSeverity,
