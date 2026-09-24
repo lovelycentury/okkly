@@ -194,6 +194,37 @@ once on the container with `aria-busy="true"`. Inputs mirror `@okkly/react`'s
 | `height`    | Same as `width`                                                    |
 | `animation` | `pulse` (default), `wave`, `false` (`animation="false"` works too) |
 
+## Progress
+
+`OkklyProgress` (`okkly-progress`) reports how far along a task is, as a
+linear bar or a circular ring. The host is the `role="progressbar"` element;
+give it a name with `aria-label` or `aria-labelledby`. Inputs mirror
+`@okkly/react`'s `<Progress>` name-for-name.
+
+```html
+<okkly-progress [value]="uploaded" aria-label="Uploading report.pdf" />
+<okkly-progress
+  type="circular"
+  value="74"
+  color="warning"
+  showLabel
+  aria-label="Build minutes used"
+/>
+<okkly-progress variant="indeterminate" aria-label="Searching" />
+```
+
+| Input       | Values                                                                                           |
+| ----------- | ------------------------------------------------------------------------------------------------ |
+| `value`     | 0–100, clamped (default `0`); ignored while indeterminate                                        |
+| `variant`   | `determinate` (default), `indeterminate`                                                         |
+| `type`      | `linear` (default), `circular`                                                                   |
+| `size`      | `small`, `medium` (default), `large`                                                             |
+| `color`     | `primary` (default), `dante`, `indigo`, `violet`, `ember`, `ice`, `success`, `warning`, `danger` |
+| `showLabel` | Prints the percentage inside a determinate circular ring                                         |
+
+Where Angular Material has `mat-progress-bar` and `mat-progress-spinner` with a
+`mode`, this is one element with a `type` switch and React's `variant`.
+
 ## Box
 
 `OkklyBox` (`[okklyBox]`) is the layout primitive, as a directive: MUI-style

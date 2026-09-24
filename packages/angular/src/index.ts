@@ -66,6 +66,14 @@ export type { SpinnerSize, SpinnerColor } from "./components/Spinner/Spinner";
 export { OkklySkeleton } from "./components/Skeleton/Skeleton";
 export type { SkeletonVariant, SkeletonAnimation } from "./components/Skeleton/Skeleton";
 
+export { OkklyProgress } from "./components/Progress/Progress";
+export type {
+  ProgressVariant,
+  ProgressType,
+  ProgressSize,
+  ProgressColor,
+} from "./components/Progress/Progress";
+
 export type {
   OverlayCloseEvent,
   OverlayCloseReason,
