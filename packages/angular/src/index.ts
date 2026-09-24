@@ -60,6 +60,9 @@ export type {
   TypographyAlign,
 } from "./directives/Typography/Typography";
 
+export { OkklySpinner } from "./components/Spinner/Spinner";
+export type { SpinnerSize, SpinnerColor } from "./components/Spinner/Spinner";
+
 export type {
   OverlayCloseEvent,
   OverlayCloseReason,

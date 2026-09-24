@@ -152,6 +152,27 @@ label. The host is always `<okkly-divider role="separator">` (with
 `<hr>` and a `<div role="separator">`. Restyle it through the
 `--okkly-divider-*` variables, set on the divider itself.
 
+## Spinner
+
+`OkklySpinner` (`okkly-spinner`) is an indeterminate loading ring, a
+`role="status"` region labelled "Loading". Inputs mirror `@okkly/react`'s
+`<Spinner>` name-for-name.
+
+```html
+<okkly-spinner size="large" aria-label="Loading your projects" />
+<okkly-spinner size="small" aria-hidden="true" />
+```
+
+| Input       | Values                                                                                           |
+| ----------- | ------------------------------------------------------------------------------------------------ |
+| `size`      | `small`, `medium` (default), `large`                                                             |
+| `color`     | `primary` (default), `dante`, `indigo`, `violet`, `ember`, `ice`, `success`, `warning`, `danger` |
+| `thickness` | Ring stroke width in pixels, overriding the size preset                                          |
+
+`aria-label` is an input: set it on the element to say what is loading, and it
+replaces the default rather than competing with it. Inside a control that
+already names the wait, hide the ring with `aria-hidden="true"`.
+
 ## Box
 
 `OkklyBox` (`[okklyBox]`) is the layout primitive, as a directive: MUI-style
