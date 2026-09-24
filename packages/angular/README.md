@@ -173,6 +173,27 @@ label. The host is always `<okkly-divider role="separator">` (with
 replaces the default rather than competing with it. Inside a control that
 already names the wait, hide the ring with `aria-hidden="true"`.
 
+## Skeleton
+
+`OkklySkeleton` (`okkly-skeleton`) is a placeholder that holds the space
+content will take while it loads. It is always `aria-hidden`; announce the wait
+once on the container with `aria-busy="true"`. Inputs mirror `@okkly/react`'s
+`<Skeleton>` name-for-name.
+
+```html
+<div aria-busy="true" aria-label="Loading comments">
+  <okkly-skeleton variant="circular" width="40" height="40" />
+  <okkly-skeleton width="35%" />
+</div>
+```
+
+| Input       | Values                                                             |
+| ----------- | ------------------------------------------------------------------ |
+| `variant`   | `text` (default), `circular`, `rectangular`, `rounded`             |
+| `width`     | A number is pixels (`width="40"` too), a string any CSS length     |
+| `height`    | Same as `width`                                                    |
+| `animation` | `pulse` (default), `wave`, `false` (`animation="false"` works too) |
+
 ## Box
 
 `OkklyBox` (`[okklyBox]`) is the layout primitive, as a directive: MUI-style
