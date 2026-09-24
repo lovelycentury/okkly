@@ -66,6 +66,14 @@ export type { SpinnerSize, SpinnerColor } from "./components/Spinner/Spinner";
 export { OkklySkeleton } from "./components/Skeleton/Skeleton";
 export type { SkeletonVariant, SkeletonAnimation } from "./components/Skeleton/Skeleton";
 
+export { OkklyAvatar } from "./components/Avatar/Avatar";
+export type {
+  AvatarSize,
+  AvatarShape,
+  AvatarStatus,
+  AvatarColor,
+} from "./components/Avatar/Avatar";
+
 export { OkklyProgress } from "./components/Progress/Progress";
 export type {
   ProgressVariant,

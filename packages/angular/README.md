@@ -225,6 +225,30 @@ give it a name with `aria-label` or `aria-labelledby`. Inputs mirror
 Where Angular Material has `mat-progress-bar` and `mat-progress-spinner` with a
 `mode`, this is one element with a `type` switch and React's `variant`.
 
+## Avatar
+
+`OkklyAvatar` (`okkly-avatar`) shows a person's image, or their initials when
+there is no image or it fails to load. Inputs mirror `@okkly/react`'s
+`<Avatar>` name-for-name.
+
+```html
+<okkly-avatar [src]="user.photo" initials="OK" status="online" />
+<okkly-avatar initials="AB" color="dante" alt="Anna Berg" />
+```
+
+| Input      | Values                                                             |
+| ---------- | ------------------------------------------------------------------ |
+| `src`      | Image URL; falls back to `initials` when unset or broken           |
+| `alt`      | Accessible name — also makes the host `role="img"`                 |
+| `initials` | Fallback letters; only the first two are shown                     |
+| `status`   | `online`, `offline`, or unset for no presence dot                  |
+| `shape`    | `circle` (default), `rounded`                                      |
+| `size`     | `sm`, `md` (default), `lg`                                         |
+| `color`    | `mint` (default), `dante`, `indigo` — the gradient behind initials |
+
+Leave `alt` unset when a name sits next to the avatar: it is then decoration,
+and announcing the name twice is noise.
+
 ## Box
 
 `OkklyBox` (`[okklyBox]`) is the layout primitive, as a directive: MUI-style
