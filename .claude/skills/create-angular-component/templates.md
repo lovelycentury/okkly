@@ -1,6 +1,6 @@
 # Templates
 
-Skeletons for a component called `Example` (`okkly-example`, class `OkklyExample`). Replace the placeholder inputs with the real API, and keep only what the component needs. `packages/angular/src/components/Button/` is the fuller reference — including the attribute-selector shape for components that decorate a native `<button>`/`<a>`; where it differs from these templates, follow the existing code.
+Skeletons for a component called `Example` (`okkly-example`, class `OkklyExample`), under `packages/angular/src/components/Example/` — see SKILL.md's "Components vs. directives" for when `Example` belongs in `src/directives/` instead: drop `Example.html` and the `templateUrl`, and use `packages/angular/src/directives/Box/Box.ts` as the reference instead of the templates below. Replace the placeholder inputs with the real API, and keep only what the component needs. `packages/angular/src/components/Button/` is the fuller reference — including the attribute-selector shape for components that decorate a native `<button>`/`<a>`; where it differs from these templates, follow the existing code.
 
 The stylesheet — `packages/design-system/src/components/Example/Example.scss` — comes from the `create-design-component` skill, and is registered in `src/styles.scss` and `.storybook/preview.ts` rather than imported here (see SKILL.md). The class names and `--okkly-example-*` variables assume its template.
 

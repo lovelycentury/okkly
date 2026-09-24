@@ -11,7 +11,7 @@ import {
   inject,
   input,
 } from "@angular/core";
-import { OkklyRipple } from "../Ripple/Ripple";
+import { OkklyRipple } from "../../directives/Ripple/Ripple";
 
 export type ButtonVariant = "primary" | "gradient" | "secondary" | "soft" | "ghost" | "glass";
 export type ButtonColor = "primary" | "dante" | "indigo" | "violet" | "ember" | "ice";

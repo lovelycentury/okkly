@@ -8,6 +8,15 @@ argument-hint: <ComponentName> [what it does / which @okkly/react or Angular Mat
 
 Build `$ARGUMENTS` as a new component in `packages/angular`, matching how the existing components are laid out. If no name was given, ask for one (PascalCase) and a one-line description before starting.
 
+## Components vs. directives
+
+The package splits its source in two, by what the class's _public_ API is:
+
+- `packages/angular/src/components/<Name>/` — the class is (or its public export centers on) an `@Component`: it owns its markup, whether that's a `templateUrl` (`Button`, `Field`, `Modal`, `Popover`, `Popper`, `TextField`) or, for one that decorates a native element, the content the host already renders (`Button` again — `button[okklyButton]`). Marker directives a component projects through (`OkklyButtonStartIcon`…) stay in its file and folder; they don't move it to `directives/`.
+- `packages/angular/src/directives/<Name>/` — the public export is an `@Directive` with no template of its own: it puts classes/bindings on whatever element the consumer already wrote, the way `okklyBox` does. Precedent: `Box`, `Ripple`, `Tooltip` (its `[okklyTooltip]` directive is the public API; the `OkklyTooltipPanel` component it opens is an internal implementation detail that stays in the same folder), `Typography`.
+
+Decide this before step 1 below — it picks which of the two paths every other instruction in this file means by `packages/angular/src/components/<Name>/` or `.../directives/<Name>/`. When unsure, check whether `@okkly/react`'s version needs `as`/polymorphism (`Box`, `Typography` do — no Angular `as`, so the consumer picks the element, so it's a directive) or owns real markup (most components do).
+
 ## Styles come first
 
 The component's look lives in `@okkly/design-system`, not in this package. If `packages/design-system/src/components/<Name>/<Name>.scss` does not exist yet, run the **`create-design-component`** skill for it first, then continue here. The Angular component only decides which `okkly-<kebab>` classes go on which element.
@@ -24,25 +33,27 @@ The component's look lives in `@okkly/design-system`, not in this package. If `p
 
 ## Read before writing
 
-1. Confirm the name is free: `packages/angular/src/components/<Name>/` must not exist.
-2. Read `packages/angular/src/components/Button/` — `Button.ts`, `Button.html`, `Button.stories.ts`, `Button.ct.ts` — and `Ripple/Ripple.ts`, the reference for every convention below. [templates.md](templates.md) is a starting point, not a substitute; where they differ, follow the existing code.
+1. Confirm the name is free: neither `packages/angular/src/components/<Name>/` nor `packages/angular/src/directives/<Name>/` must exist.
+2. Read `packages/angular/src/components/Button/` — `Button.ts`, `Button.html`, `Button.stories.ts`, `Button.ct.ts` — the reference for every component convention below, and `packages/angular/src/directives/Box/Box.ts` for the directive shape if this one has no `as` and needs it. [templates.md](templates.md) is a starting point, not a substitute; where they differ, follow the existing code.
 3. Read the component's stylesheet to learn its block, element and modifier classes and its `--okkly-<kebab>-*` variables.
 4. If porting, read the React component, its stories and its `.ct.tsx`, and fetch the matching Angular Material API page if there is one.
-5. Reuse before inventing: existing directives (`OkklyRipple`) and `@okkly/shared` — the framework-neutral half every package shares (a component's prop types and prop-to-class logic, as for Box, plus `bem`/`clamp`/`uniqueId`/`debounce`); anything the four framework packages would each repeat belongs there. Behaviour React attaches through a hook becomes a **directive** in `src/components/<Name>/<Name>.ts`, applied as a `hostDirectives` entry where a component needs it.
+5. Reuse before inventing: existing directives (`OkklyRipple`) and `@okkly/shared` — the framework-neutral half every package shares (a component's prop types and prop-to-class logic, as for Box, plus `bem`/`clamp`/`uniqueId`/`debounce`); anything the four framework packages would each repeat belongs there. Behaviour React attaches through a hook becomes a **directive** in `src/directives/<Name>/<Name>.ts`, applied as a `hostDirectives` entry where a component needs it.
 
 ## Files to create
 
-| File                                                       | Purpose                                               |
-| ---------------------------------------------------------- | ----------------------------------------------------- |
-| `packages/angular/src/components/<Name>/<Name>.ts`         | The component (and any marker directives it projects) |
-| `packages/angular/src/components/<Name>/<Name>.html`       | Its template (`templateUrl`)                          |
-| `packages/angular/src/components/<Name>/<Name>.stories.ts` | Storybook stories = the component's docs page         |
-| `packages/angular/src/components/<Name>/<Name>.ct.ts`      | Playwright component tests + matrix screenshots       |
-| `packages/angular/src/styles.scss`                         | `@use` the component's stylesheet                     |
-| `packages/angular/.storybook/preview.ts`                   | Import the same stylesheet for the workbench          |
-| `packages/angular/src/index.ts`                            | Append the export block                               |
-| `packages/angular/README.md`                               | A `## <Name>` section, like `## Button`               |
-| `.changeset/angular-<kebab-name>.md`                       | `minor` bump for `@okkly/angular`                     |
+Below, `<dir>` is `components` or `directives`, per the split above.
+
+| File                                                  | Purpose                                                                   |
+| ----------------------------------------------------- | ------------------------------------------------------------------------- |
+| `packages/angular/src/<dir>/<Name>/<Name>.ts`         | The component or directive (and any marker directives it projects)        |
+| `packages/angular/src/<dir>/<Name>/<Name>.html`       | Its template (`templateUrl`) — components only; a pure directive has none |
+| `packages/angular/src/<dir>/<Name>/<Name>.stories.ts` | Storybook stories = the docs page                                         |
+| `packages/angular/src/<dir>/<Name>/<Name>.ct.ts`      | Playwright component tests + matrix screenshots                           |
+| `packages/angular/src/styles.scss`                    | `@use` the component's stylesheet                                         |
+| `packages/angular/.storybook/preview.ts`              | Import the same stylesheet for the workbench                              |
+| `packages/angular/src/index.ts`                       | Append the export block                                                   |
+| `packages/angular/README.md`                          | A `## <Name>` section, like `## Button`                                   |
+| `.changeset/angular-<kebab-name>.md`                  | `minor` bump for `@okkly/angular`                                         |
 
 A template of a few lines may stay inline (`template:`), but anything with control flow goes in `<Name>.html`. Tests and stories never ship — `tsconfig.build.json` excludes them, from the build and from Compodoc alike.
 
@@ -69,8 +80,9 @@ Also add the stylesheet of every design-system component this one renders (e.g. 
 - Standalone (the default — no `standalone: true`), `ChangeDetectionStrategy.OnPush`, and `ViewEncapsulation.None` with Button's comment: every rule lives in the design system as a global BEM class, so scoping attributes only add noise.
 - The package is **zoneless**. All state is signals: `input()` / `input.required()`, `computed()`, `signal()`, `model()`, `output()`, `contentChild()`/`viewChild()`. No decorators (`@Input`, `@HostBinding`…), no `NgZone`, no `ChangeDetectorRef.markForCheck` workarounds.
 - Naming: the class is `Okkly<Name>`; union types stay unprefixed (`<Name>Variant`). Selector:
-  - a component that **decorates a native interactive element** uses an attribute selector, as Angular Material does — `button[okkly<Name>], a[okkly<Name>]` (see `Button.ts`);
-  - a component that owns its markup uses an element selector — `okkly-<kebab>`.
+  - a component that **decorates a native interactive element** uses an attribute selector, as Angular Material does — `button[okkly<Name>], a[okkly<Name>]` (see `Button.ts`), and lives in `components/`;
+  - a component that owns its markup uses an element selector — `okkly-<kebab>` — and lives in `components/`;
+  - a directive with no markup of its own, applied to whatever element the consumer wrote, uses `[okkly<Name>]` and lives in `directives/` (see `Box.ts`).
 - Classes go on the host through `host`: `class: "okkly-component okkly-<kebab>"` for the static ones, `"[class]": "modifiers()"` for a `computed` string of modifiers, emitted only for **non-default** values. A consumer's own `class` merges with both. Use only class names the stylesheet defines.
 - Put a doc comment on the class naming the APIs it follows (Angular Material where they overlap, `@okkly/react` otherwise) and listing the **deliberate gaps**.
 - Every input gets a JSDoc block with a one-line description and `@default` — Compodoc reads them into the docs page. Boolean inputs use `input(false, { transform: booleanAttribute })` so `<okkly-x disabled>` works.
@@ -108,8 +120,8 @@ Tests run in a real Chromium through Playwright, against the stylesheet the pack
 ### Export (`src/index.ts`)
 
 ```ts
-export { Okkly<Name> } from "./components/<Name>/<Name>";
-export type { <Name>Variant, <Name>Size } from "./components/<Name>/<Name>";
+export { Okkly<Name> } from "./<dir>/<Name>/<Name>";
+export type { <Name>Variant, <Name>Size } from "./<dir>/<Name>/<Name>";
 ```
 
 Export marker directives next to the component (`export { Okkly<Name>, Okkly<Name>StartIcon } …`).
@@ -132,7 +144,7 @@ Run from the repo root and fix everything before reporting done:
 
 ```bash
 pnpm --filter @okkly/angular typecheck
-pnpm --filter @okkly/angular exec playwright test src/components/<Name>
+pnpm --filter @okkly/angular exec playwright test src/<dir>/<Name>
 pnpm --filter @okkly/angular build
 pnpm lint
 pnpm exec prettier --check packages/angular .changeset

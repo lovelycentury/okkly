@@ -1,7 +1,7 @@
 import { signal } from "@angular/core";
 import { moduleMetadata, type Meta, type StoryObj } from "@storybook/angular";
 import type { TransitionTimeoutWithAuto } from "../../types";
-import { OkklyButton } from "../Button/Button";
+import { OkklyButton } from "../../components/Button/Button";
 import { OkklyTooltip, type TooltipPlacement } from "./Tooltip";
 
 /** Every input the templates below bind, plus `label` for the trigger's text. */

@@ -7,7 +7,7 @@ export type {
   ButtonLoadingPosition,
 } from "./components/Button/Button";
 
-export { OkklyRipple } from "./components/Ripple/Ripple";
+export { OkklyRipple } from "./directives/Ripple/Ripple";
 
 export {
   OkklyTextField,
@@ -16,7 +16,7 @@ export {
 } from "./components/TextField/TextField";
 export type { TextFieldSize, TextFieldColor } from "./components/TextField/TextField";
 
-export { OkklyBox } from "./components/Box/Box";
+export { OkklyBox } from "./directives/Box/Box";
 export type {
   BoxAlign,
   BoxColor,
@@ -29,7 +29,7 @@ export type {
   BoxSize,
   BoxSpacing,
   BoxSystemProps,
-} from "./components/Box/Box";
+} from "./directives/Box/Box";
 
 export { OkklyPopper } from "./components/Popper/Popper";
 export type {
@@ -41,10 +41,17 @@ export type {
 export { OkklyPopover } from "./components/Popover/Popover";
 export type { PopoverAnchorPosition } from "./components/Popover/Popover";
 
-export { OkklyTooltip } from "./components/Tooltip/Tooltip";
-export type { TooltipPlacement, TooltipTitle } from "./components/Tooltip/Tooltip";
+export { OkklyTooltip } from "./directives/Tooltip/Tooltip";
+export type { TooltipPlacement, TooltipTitle } from "./directives/Tooltip/Tooltip";
 
 export { OkklyModal } from "./components/Modal/Modal";
+
+export { OkklyTypography } from "./directives/Typography/Typography";
+export type {
+  TypographyVariant,
+  TypographyColor,
+  TypographyAlign,
+} from "./directives/Typography/Typography";
 
 export type {
   OverlayCloseEvent,

@@ -25,7 +25,7 @@ import {
 import type { Modifier } from "@popperjs/core";
 import { growSurface } from "../../helpers/transitions";
 import type { TransitionTimeoutWithAuto } from "../../types";
-import { OkklyPopper, type PopperPlacement } from "../Popper/Popper";
+import { OkklyPopper, type PopperPlacement } from "../../components/Popper/Popper";
 
 export type TooltipPlacement = PopperPlacement;
 

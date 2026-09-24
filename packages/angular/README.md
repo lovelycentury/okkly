@@ -165,6 +165,33 @@ number, as `[p]="4"` does; a static attribute also stays on the element, as
 with any Angular input, while a binding leaves nothing behind. The element's
 own `class` and `style` merge with the directive's.
 
+## Typography
+
+`OkklyTypography` (`[okklyTypography]`) is the editorial type scale, as a
+directive: it puts a `variant`'s size, line height, weight and tracking on
+whatever element it decorates. Inputs mirror `@okkly/react`'s `<Typography>`
+name-for-name.
+
+```html
+<h1 okklyTypography variant="display-lg" gutterBottom>Orbit</h1>
+<p okklyTypography variant="body-lg" color="secondary">
+  Approve CV downloads by location and radius.
+</p>
+```
+
+| Inputs         | Value                                                                                                                                                              |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `variant`      | `display-2xl` `display-xl` `display-lg` `h1` `h2` `h3` `h4` `body-lg` `body-md` `body-sm` `label-md` `label-sm` `caption` `overline` `mono-sm` (default `body-md`) |
+| `color`        | `inherit` (default) `primary` `secondary` `muted` `accent` `success` `warning` `danger`                                                                            |
+| `align`        | `inherit` (default) `left` `center` `right` `justify`                                                                                                              |
+| `gutterBottom` | Adds a bottom margin proportional to the step's own font size                                                                                                      |
+| `noWrap`       | Clips overflowing text to one line with an ellipsis                                                                                                                |
+
+There is no `as`: put `okklyTypography` on the element the markup calls for —
+`@okkly/react`'s per-variant default-element map has no Angular equivalent for
+the same reason `okklyBox` has none, since the consumer already picked the
+element by writing it.
+
 ## Ripple
 
 `OkklyRipple` (`[okklyRipple]`) paints the press feedback and is applied to
