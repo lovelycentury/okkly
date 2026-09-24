@@ -97,6 +97,34 @@ Material's icon button where they overlap and mirror `@okkly/react`'s
 
 There is no visible label, so always give it an `aria-label` (or a tooltip).
 
+## Chip
+
+`OkklyChip` (`okkly-chip`) is a compact filter, tag or choice token. Inputs
+mirror `@okkly/react`'s `<Chip>` name-for-name; the remove output is
+`removed`, after Angular Material's `mat-chip`.
+
+```html
+<okkly-chip label="Fintech" variant="accent" dot />
+<okkly-chip label="Remote" clickable [selected]="remote" (click)="remote = !remote" />
+<okkly-chip label="Mobile" removable (removed)="drop('Mobile')" />
+<okkly-chip label="Starred"><svg okklyChipIcon>…</svg></okkly-chip>
+```
+
+| Input         | Values                                                         |
+| ------------- | -------------------------------------------------------------- |
+| `label`       | Chip text                                                      |
+| `variant`     | `glass` (default), `solid`, `outline`, `accent`, `dante`       |
+| `size`        | `small`, `medium` (default), `large`                           |
+| `selected`    | Active/filter state (`aria-pressed` when clickable)            |
+| `dot`         | Leading status dot, unless an `okklyChipIcon` is projected     |
+| `clickable`   | Makes it a focusable toggle button; Enter/Space fire `(click)` |
+| `removable`   | Shows a trailing × that emits `removed`                        |
+| `removeLabel` | Accessible name of the × (default `Remove`)                    |
+| `disabled`    | Blocks clicks and removal                                      |
+
+React infers a clickable chip from `onClick`; Angular cannot see whether a
+`(click)` listener exists, so it takes MUI's explicit `clickable` input.
+
 ## TextField
 
 `OkklyTextField` (`okkly-text-field`) is a single-line text input with label,

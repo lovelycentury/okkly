@@ -14,6 +14,9 @@ export type {
   IconButtonSize,
 } from "./components/IconButton/IconButton";
 
+export { OkklyChip, OkklyChipIcon } from "./components/Chip/Chip";
+export type { ChipVariant, ChipSize } from "./components/Chip/Chip";
+
 export { OkklyRipple } from "./directives/Ripple/Ripple";
 
 export {
