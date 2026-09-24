@@ -84,6 +84,17 @@ export type {
   AvatarColor,
 } from "./components/Avatar/Avatar";
 
+export {
+  OkklyCard,
+  OkklyCardHeader,
+  OkklyCardAvatar,
+  OkklyCardAction,
+  OkklyCardContent,
+  OkklyCardActions,
+  OkklyCardMedia,
+} from "./components/Card/Card";
+export type { CardVariant, CardColor, CardPadding } from "./components/Card/Card";
+
 export { OkklyBadge } from "./components/Badge/Badge";
 export type {
   BadgeAnchorOrigin,

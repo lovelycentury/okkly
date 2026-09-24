@@ -278,6 +278,38 @@ give it a name with `aria-label` or `aria-labelledby`. Inputs mirror
 Where Angular Material has `mat-progress-bar` and `mat-progress-spinner` with a
 `mode`, this is one element with a `type` switch and React's `variant`.
 
+## Card
+
+`OkklyCard` (`okkly-card`) is a surface that groups one thing. Like Angular
+Material's card it is composed from slots, each owning its own padding: use the
+ones you need, in the order you need them. Inputs mirror `@okkly/react`'s
+`<Card>` family name-for-name.
+
+```html
+<okkly-card variant="glass">
+  <img okklyCardMedia [src]="cover" height="180" />
+  <okkly-card-header title="Night drive vol. 2" subheader="Released 14 March">
+    <okkly-avatar okklyCardAvatar initials="OK" size="sm" />
+    <button okklyIconButton okklyCardAction aria-label="More options"><svg>…</svg></button>
+  </okkly-card-header>
+  <okkly-card-content>Eleven tracks recorded over the winter.</okkly-card-content>
+  <okkly-card-actions>
+    <button okklyButton size="small">Play</button>
+  </okkly-card-actions>
+</okkly-card>
+```
+
+| Part                  | Inputs                                                                                                                                                        |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `okkly-card`          | `variant` (`solid` default, `raised`, `glass`, `outline`, `aura`), `raised`, `padding` (`none`, `sm`, `md` default, `lg`), `color` (aura tone), `interactive` |
+| `okkly-card-header`   | `title`, `subheader`; `okklyCardAvatar` and `okklyCardAction` projected slots, anything else goes under the title                                             |
+| `okkly-card-content`  | —                                                                                                                                                             |
+| `okkly-card-actions`  | —                                                                                                                                                             |
+| `img[okklyCardMedia]` | `height` — pixels or any CSS length (default `150`); `alt` defaults to empty                                                                                  |
+
+`interactive` only adds the hover lift: wrap the card in, or put inside it, a
+real link or button so it is reachable by keyboard.
+
 ## Badge
 
 `OkklyBadge` (`okkly-badge`) pins a count or status dot to the corner of
