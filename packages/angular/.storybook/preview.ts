@@ -10,6 +10,7 @@ import "@okkly/design-system/components/Avatar/Avatar.scss";
 import "@okkly/design-system/components/Box/Box.scss";
 import "@okkly/design-system/components/Button/Button.scss";
 import "@okkly/design-system/components/Divider/Divider.scss";
+import "@okkly/design-system/components/IconButton/IconButton.scss";
 import "@okkly/design-system/components/Modal/Modal.scss";
 import "@okkly/design-system/components/Popover/Popover.scss";
 import "@okkly/design-system/components/Popper/Popper.scss";

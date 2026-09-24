@@ -72,6 +72,31 @@ Anchors cannot be disabled natively, so `<a okklyButton disabled>` gets
 `aria-disabled="true"`, `tabindex="-1"`, and swallowed clicks; its `href` is
 left untouched.
 
+## IconButton
+
+`OkklyIconButton` (`button[okklyIconButton]`, `a[okklyIconButton]`) is an
+icon-only control for toolbars and dense UIs. Like `OkklyButton`, it decorates
+a native element; the glyph is the projected content. Inputs follow Angular
+Material's icon button where they overlap and mirror `@okkly/react`'s
+`<IconButton>` otherwise.
+
+```html
+<button okklyIconButton variant="glass" aria-label="Add">
+  <svg>…</svg>
+</button>
+<a okklyIconButton href="/new" aria-label="Create"><svg>…</svg></a>
+```
+
+| Input           | Values                                                           |
+| --------------- | ---------------------------------------------------------------- |
+| `variant`       | `ghost` (default), `glass`, `solid`                              |
+| `color`         | `primary` (default), `dante`, `indigo`, `violet`, `ember`, `ice` |
+| `size`          | `small`, `medium` (default), `large`                             |
+| `disabled`      | Disables the control; a disabled anchor is `aria-disabled`       |
+| `disableRipple` | Turns off the press ripple                                       |
+
+There is no visible label, so always give it an `aria-label` (or a tooltip).
+
 ## TextField
 
 `OkklyTextField` (`okkly-text-field`) is a single-line text input with label,
