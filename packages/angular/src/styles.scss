@@ -2,6 +2,7 @@
 // Mirrors the CSS Vite emits for @okkly/react: one file per component whose
 // markup this package renders, plus the shared overlays those components use.
 @use "@okkly/design-system/src/components/Avatar/Avatar.scss";
+@use "@okkly/design-system/src/components/Badge/Badge.scss";
 @use "@okkly/design-system/src/components/Box/Box.scss";
 @use "@okkly/design-system/src/components/Button/Button.scss";
 @use "@okkly/design-system/src/components/Divider/Divider.scss";

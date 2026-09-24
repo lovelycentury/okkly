@@ -1,0 +1,13 @@
+<!--
+  The anchor slot renders unconditionally and collapses through `display` when
+  nothing was projected — it is what the component inspects to tell an anchored
+  badge from a standalone pill.
+-->
+<span #anchor class="okkly-badge__anchor" [style.display]="hasAnchor() ? null : 'none'"
+  ><ng-content
+/></span>
+<span
+  [class]="contentClasses()"
+  [attr.aria-hidden]="variant() === 'dot' || hidden() ? 'true' : null"
+  >{{ formatted() }}</span
+>

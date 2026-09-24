@@ -250,6 +250,36 @@ give it a name with `aria-label` or `aria-labelledby`. Inputs mirror
 Where Angular Material has `mat-progress-bar` and `mat-progress-spinner` with a
 `mode`, this is one element with a `type` switch and React's `variant`.
 
+## Badge
+
+`OkklyBadge` (`okkly-badge`) pins a count or status dot to the corner of
+whatever is projected into it; with nothing projected it renders a standalone
+pill for list rows and tab labels. Inputs mirror `@okkly/react`'s `<Badge>`
+name-for-name.
+
+```html
+<okkly-badge badgeContent="4" color="dante">
+  <button okklyIconButton aria-label="Notifications, 4 unread"><svg>…</svg></button>
+</okkly-badge>
+<okkly-badge variant="dot" color="success"><okkly-avatar initials="OK" /></okkly-badge>
+<okkly-badge [badgeContent]="count" color="indigo" />
+```
+
+| Input          | Values                                                                                                    |
+| -------------- | --------------------------------------------------------------------------------------------------------- |
+| `badgeContent` | A count or short label; `0` is hidden, and `badgeContent="4"` reads as a number                           |
+| `color`        | `primary`, `dante`, `indigo`, `violet`, `ember`, `ice`, `success`, `warning`, `danger`; unset for neutral |
+| `variant`      | `standard` (default), `dot`                                                                               |
+| `max`          | Counts above it render as `{max}+` (default `99`)                                                         |
+| `invisible`    | Hides the badge, keeping the anchor                                                                       |
+| `overlap`      | `circular` (default), `rectangular`                                                                       |
+| `anchorOrigin` | `{ vertical: "top" \| "bottom", horizontal: "left" \| "right" }` (default top right)                      |
+
+Whether anything was projected is read off the rendered DOM after each render,
+so wrapping the anchor in `@if` switches between the anchored and standalone
+layouts. The pill itself is decoration: put the count in the anchor's
+accessible name.
+
 ## Avatar
 
 `OkklyAvatar` (`okkly-avatar`) shows a person's image, or their initials when

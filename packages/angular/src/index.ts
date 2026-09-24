@@ -81,6 +81,14 @@ export type {
   AvatarColor,
 } from "./components/Avatar/Avatar";
 
+export { OkklyBadge } from "./components/Badge/Badge";
+export type {
+  BadgeAnchorOrigin,
+  BadgeColor,
+  BadgeOverlap,
+  BadgeVariant,
+} from "./components/Badge/Badge";
+
 export { OkklyProgress } from "./components/Progress/Progress";
 export type {
   ProgressVariant,
