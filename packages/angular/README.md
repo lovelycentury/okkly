@@ -126,6 +126,32 @@ it. `required` shows a dante asterisk after the label and marks the native
 `<input required>`. Its label/helper/error chrome comes from the internal
 `Field` shell shared with future field-based controls (Select, Autocomplete).
 
+## Divider
+
+`OkklyDivider` (`okkly-divider`) is a hairline separator for lists, stacks and
+toolbars. Inputs mirror `@okkly/react`'s `<Divider>` name-for-name.
+
+```html
+<okkly-divider />
+<okkly-divider><span okklyDividerLabel>or</span></okkly-divider>
+<okkly-divider orientation="vertical" flexItem />
+```
+
+| Input         | Values                                                     |
+| ------------- | ---------------------------------------------------------- |
+| `orientation` | `horizontal` (default), `vertical`                         |
+| `variant`     | `fullWidth` (default), `inset`, `middle`                   |
+| `flexItem`    | Stretches to fill a flex container's cross axis            |
+| `textAlign`   | `left`, `center` (default), `right` — where the label sits |
+
+The label is projected content tagged `okklyDividerLabel` rather than plain
+children: Angular cannot tell whether a default slot received anything, and the
+label's presence changes the divider's classes. A vertical divider shows no
+label. The host is always `<okkly-divider role="separator">` (with
+`aria-orientation="vertical"` when vertical), where React picks between an
+`<hr>` and a `<div role="separator">`. Restyle it through the
+`--okkly-divider-*` variables, set on the divider itself.
+
 ## Box
 
 `OkklyBox` (`[okklyBox]`) is the layout primitive, as a directive: MUI-style

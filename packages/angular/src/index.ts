@@ -46,6 +46,13 @@ export type { TooltipPlacement, TooltipTitle } from "./directives/Tooltip/Toolti
 
 export { OkklyModal } from "./components/Modal/Modal";
 
+export { OkklyDivider, OkklyDividerLabel } from "./components/Divider/Divider";
+export type {
+  DividerOrientation,
+  DividerVariant,
+  DividerTextAlign,
+} from "./components/Divider/Divider";
+
 export { OkklyTypography } from "./directives/Typography/Typography";
 export type {
   TypographyVariant,
