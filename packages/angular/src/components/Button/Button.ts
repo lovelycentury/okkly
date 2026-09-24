@@ -2,6 +2,7 @@ import { NgTemplateOutlet } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   Directive,
   ElementRef,
   ViewEncapsulation,
@@ -56,7 +57,6 @@ export class OkklyButtonEndIcon {}
     "[attr.disabled]": "isNativeButton && isDisabled() ? '' : null",
     "[attr.aria-disabled]": "!isNativeButton && isDisabled() ? 'true' : null",
     "[attr.tabindex]": "!isNativeButton && isDisabled() ? '-1' : null",
-    "(click)": "onClickCapture($event)",
   },
   templateUrl: "./Button.html",
   styles: `
@@ -122,8 +122,24 @@ export class OkklyButton {
   /** Whether the button is inert, either explicitly or because it is loading. */
   readonly isDisabled = computed(() => this.disabled() || this.loading());
 
-  protected readonly isNativeButton =
-    inject<ElementRef<HTMLElement>>(ElementRef).nativeElement.tagName === "BUTTON";
+  private readonly element = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  protected readonly isNativeButton = this.element.tagName === "BUTTON";
+
+  constructor() {
+    // A native `<button disabled>` never fires a click; an `<a>` would. This
+    // has to be a capture listener: the consumer's `(click)` on the same
+    // element is registered before any host listener, and only capture-phase
+    // listeners run ahead of it at the target.
+    const swallowWhileDisabled = (event: Event) => {
+      if (!this.isDisabled()) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    };
+    this.element.addEventListener("click", swallowWhileDisabled, { capture: true });
+    inject(DestroyRef).onDestroy(() =>
+      this.element.removeEventListener("click", swallowWhileDisabled, { capture: true }),
+    );
+  }
 
   private readonly startIcon = contentChild(OkklyButtonStartIcon);
   private readonly endIcon = contentChild(OkklyButtonEndIcon);
@@ -153,12 +169,4 @@ export class OkklyButton {
       .filter(Boolean)
       .join(" "),
   );
-
-  // Host listeners hand back a bare `Event`; nothing below needs more than that.
-  protected onClickCapture(event: Event): void {
-    // A native `<button disabled>` never fires this; an `<a>` would.
-    if (!this.isDisabled()) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-  }
 }
