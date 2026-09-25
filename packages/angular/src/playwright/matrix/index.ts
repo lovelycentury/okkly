@@ -181,6 +181,19 @@ export const useMatrixScreenshotTest = <TContext extends HookContext = HookConte
   return { executeMatrixScreenshotTest };
 };
 
+/**
+ * Grows a cell's box to its scroll size, so an absolutely positioned part
+ * (a dropdown, say) stays inside the captured frame. Same as `@okkly/react`'s.
+ */
+export const adjustSizeToAbsolutePosition = async (component: Locator) => {
+  await expect(component).toBeVisible();
+
+  await component.evaluate((element) => {
+    (element as HTMLElement).style.height = `${element.scrollHeight}px`;
+    (element as HTMLElement).style.width = `${element.scrollWidth}px`;
+  });
+};
+
 export type UseFocusStateHooksOptions = {
   component: Locator;
   page: Page;

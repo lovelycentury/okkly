@@ -7,6 +7,14 @@ export type {
   ButtonLoadingPosition,
 } from "./components/Button/Button";
 
+export {
+  OkklyButtonGroup,
+  OkklyButtonGroupAction,
+  OkklyButtonGroupIcon,
+  OkklyButtonGroupMenuItem,
+} from "./components/ButtonGroup/ButtonGroup";
+export type { ButtonGroupColor, ButtonGroupVariant } from "./components/ButtonGroup/ButtonGroup";
+
 export { OkklyIcon, ICON_NAMES } from "./components/Icon/Icon";
 export type { IconName, IconSource, IconSize, IconColor } from "./components/Icon/Icon";
 

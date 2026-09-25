@@ -72,6 +72,34 @@ Anchors cannot be disabled natively, so `<a okklyButton disabled>` gets
 `aria-disabled="true"`, `tabindex="-1"`, and swallowed clicks; its `href` is
 left untouched.
 
+## ButtonGroup
+
+`OkklyButtonGroup` (`okkly-button-group`) is a split button: one main action
+plus a chevron menu of variants of that same action. It is composed like
+Angular Material's `mat-menu` — your own buttons, each with its own `(click)` —
+where `@okkly/react`'s `<ButtonGroup>` takes `action`/`menu` data with
+callbacks. Its inputs mirror React's otherwise.
+
+```html
+<okkly-button-group color="indigo">
+  <button okklyButtonGroupAction (click)="send()"><svg okklyButtonGroupIcon>…</svg>Send</button>
+  <button okklyButtonGroupMenuItem (click)="sendLater()">Send later…</button>
+  <button okklyButtonGroupMenuItem (click)="saveDraft()">Save as draft</button>
+</okkly-button-group>
+```
+
+| Input           | Values                                                           |
+| --------------- | ---------------------------------------------------------------- |
+| `variant`       | `primary` (default), `secondary`                                 |
+| `color`         | `primary` (default), `dante`, `indigo`, `violet`, `ember`, `ice` |
+| `disabled`      | Disables the whole split button                                  |
+| `menuAriaLabel` | Accessible name of the chevron (default `Open menu`)             |
+
+The chevron appears once at least one `okklyButtonGroupMenuItem` is projected.
+Picking an item closes the menu and returns focus to the chevron; Escape and an
+outside click close it too. `disabled` on the action button disables just that
+action.
+
 ## Icon
 
 `OkklyIcon` (`okkly-icon`) renders a glyph from `@okkly/icons`. Pick one by
