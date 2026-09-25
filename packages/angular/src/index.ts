@@ -176,3 +176,10 @@ export type {
 
 export { OkklyBreadcrumbs, OkklyBreadcrumbsSeparator } from "./components/Breadcrumbs/Breadcrumbs";
 export type { BreadcrumbItem } from "./components/Breadcrumbs/Breadcrumbs";
+
+export {
+  OkklyEmptyState,
+  OkklyEmptyStateIcon,
+  OkklyEmptyStateAction,
+} from "./components/EmptyState/EmptyState";
+export type { EmptyStateColor, EmptyStateSize } from "./components/EmptyState/EmptyState";

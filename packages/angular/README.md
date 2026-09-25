@@ -973,6 +973,22 @@ link. An item's `icon` is raw SVG markup or a `TemplateRef`; `separator` is
 text, and markup goes in an `okklyBreadcrumbsSeparator` template. The host is
 the navigation landmark.
 
+## EmptyState
+
+`OkklyEmptyState` (`okkly-empty-state`) is the panel that stands in for a list
+with nothing in it. Inputs mirror `@okkly/react`'s `<EmptyState>` name-for-name:
+`title`, `description`, `severity`, `color`, `size`.
+
+```html
+<okkly-empty-state title="No projects yet" description="Projects you create will show up here.">
+  <button okklyButton okklyEmptyStateAction size="small">New project</button>
+</okkly-empty-state>
+```
+
+A custom glyph replaces the default severity icon when projected with
+`okklyEmptyStateIcon`; every control tagged `okklyEmptyStateAction` goes in the
+action row. `severity` picks the default icon's glyph and `color` its tone.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

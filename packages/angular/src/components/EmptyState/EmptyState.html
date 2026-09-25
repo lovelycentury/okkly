@@ -1,0 +1,16 @@
+<div class="okkly-empty-state__visual">
+  <span class="okkly-empty-state__halo" aria-hidden="true"></span>
+  <span class="okkly-empty-state__icon">
+    <ng-content select="[okklyEmptyStateIcon]" />
+    @if (!hasCustomIcon()) {
+      <okkly-severity-icon [severity]="iconSeverity()" [size]="iconSize()" shape="circle" />
+    }
+  </span>
+</div>
+<h4 class="okkly-empty-state__title">{{ title() }}</h4>
+@if (description()) {
+  <p class="okkly-empty-state__description">{{ description() }}</p>
+}
+@if (hasAction()) {
+  <div class="okkly-empty-state__action"><ng-content select="[okklyEmptyStateAction]" /></div>
+}
