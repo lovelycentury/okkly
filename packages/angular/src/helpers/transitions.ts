@@ -7,15 +7,59 @@ import {
   untracked,
   type Signal,
 } from "@angular/core";
-import type { TransitionMode, TransitionTimeoutWithAuto } from "../types";
+import type {
+  TransitionEasing,
+  TransitionMode,
+  TransitionTimeout,
+  TransitionTimeoutWithAuto,
+} from "../types";
 
 /** MUI `theme.transitions.duration.enteringScreen` */
 export const DURATION_ENTERING_SCREEN = 225;
 /** MUI `theme.transitions.duration.leavingScreen` */
 export const DURATION_LEAVING_SCREEN = 195;
 
+/** MUI `theme.transitions.duration.standard` */
+export const DURATION_STANDARD = 300;
+
 /** MUI `theme.transitions.easing.easeInOut` */
 export const EASING_EASE_IN_OUT = "cubic-bezier(0.4, 0, 0.2, 1)";
+/** MUI `theme.transitions.easing.easeOut` */
+export const EASING_EASE_OUT = "cubic-bezier(0.0, 0, 0.2, 1)";
+/** MUI `theme.transitions.easing.sharp` */
+export const EASING_SHARP = "cubic-bezier(0.4, 0, 0.6, 1)";
+
+/** The timeout `Fade`, `Zoom` and `Slide` default to, as in `@okkly/react`. */
+export const DEFAULT_TIMEOUT = {
+  enter: DURATION_ENTERING_SCREEN,
+  exit: DURATION_LEAVING_SCREEN,
+} as const;
+
+/**
+ * A timeout's milliseconds for one direction — `@okkly/react`'s
+ * `getTransitionProps` duration, minus the `style` override. An object
+ * without the direction falls back to `enter`, then 0.
+ */
+export function timeoutFor(timeout: TransitionTimeout, mode: "enter" | "exit"): number {
+  if (typeof timeout === "number") return timeout;
+  return timeout[mode] ?? timeout.enter ?? 0;
+}
+
+/** An easing's timing function for one direction, or `undefined` for the default. */
+export function easingFor(easing: TransitionEasing | undefined, mode: "enter" | "exit") {
+  return typeof easing === "object" ? easing[mode] : easing;
+}
+
+/** `@okkly/react`'s `createCssTransition`: one `transition` entry per property. */
+export function createCssTransition(
+  properties: string | string[],
+  options: { duration?: number; easing?: string; delay?: number } = {},
+): string {
+  const { duration = 0, easing = EASING_EASE_IN_OUT, delay = 0 } = options;
+  return (Array.isArray(properties) ? properties : [properties])
+    .map((property) => `${property} ${duration}ms ${easing} ${delay}ms`)
+    .join(",");
+}
 
 /**
  * MUI-compatible duration for height-based transitions.

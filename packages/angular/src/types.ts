@@ -22,8 +22,11 @@ export interface OverlayCloseEvent {
   reason: OverlayCloseReason;
 }
 
-/** Milliseconds, either for both directions or one per direction. */
-export type TransitionTimeout = number | { enter?: number; exit?: number };
+/** Milliseconds, either for both directions or one per direction (`appear` falls back to `enter`). */
+export type TransitionTimeout = number | { appear?: number; enter?: number; exit?: number };
+
+/** A CSS timing function, either for both directions or one per direction. */
+export type TransitionEasing = string | { enter?: string; exit?: string };
 
 /** A timeout, or `"auto"` to derive one from the element's height, as MUI does. */
 export type TransitionTimeoutWithAuto = TransitionTimeout | "auto";

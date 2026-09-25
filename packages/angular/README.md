@@ -891,6 +891,45 @@ subtree with `visibility` rather than removing it, which is what lets a consumer
 animate the modal out — there is no `closeAfterTransition`, because with no built-in
 transition to wait on, that decision belongs to whoever owns the animation.
 
+## Transitions
+
+The MUI-style transitions of `@okkly/react` are structural directives here:
+each one sits on the element it animates, and the inputs go in the
+microsyntax. Mounting is real — with `unmountOnExit` the element leaves the
+DOM once it has finished leaving, and `mountOnEnter` keeps it out until it is
+first shown.
+
+```html
+<div *okklyFade="open; timeout: 300; unmountOnExit: true">…</div>
+```
+
+Every transition takes the same shared inputs, prefixed with its own name in
+the long form (`[okklyFadeTimeout]`):
+
+| Input           | Values                                                                    |
+| --------------- | ------------------------------------------------------------------------- |
+| (the directive) | Whether the element is shown — MUI's `in`                                 |
+| `appear`        | Animate an element that starts shown on its first render (default `true`) |
+| `timeout`       | Milliseconds, or `{ enter, exit }`                                        |
+| `easing`        | A CSS timing function, or `{ enter, exit }`                               |
+| `delay`         | Milliseconds to wait first — React reads it from `style.transitionDelay`  |
+| `mountOnEnter`  | Keep the element out of the DOM until it is first shown                   |
+| `unmountOnExit` | Take the element out of the DOM once it has left                          |
+
+React's `onEnter` … `onExited` callbacks are the outputs `enter`, `entering`,
+`entered`, `exit`, `exiting` and `exited`, each handed the element. The `*`
+shorthand cannot bind outputs, so listen on the long form:
+
+```html
+<ng-template [okklyFade]="open" (exited)="cleanUp()">
+  <div>…</div>
+</ng-template>
+```
+
+| Directive   | Animates | Default `timeout`           |
+| ----------- | -------- | --------------------------- |
+| `okklyFade` | Opacity  | `{ enter: 225, exit: 195 }` |
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

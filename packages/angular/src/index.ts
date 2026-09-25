@@ -154,9 +154,14 @@ export type {
   ProgressColor,
 } from "./components/Progress/Progress";
 
+export { OkklyFade } from "./directives/Fade/Fade";
+export type { FadeTimeout } from "./directives/Fade/Fade";
+export type { TransitionStatus } from "./helpers/transition";
+
 export type {
   OverlayCloseEvent,
   OverlayCloseReason,
+  TransitionEasing,
   TransitionTimeout,
   TransitionTimeoutWithAuto,
 } from "./types";
