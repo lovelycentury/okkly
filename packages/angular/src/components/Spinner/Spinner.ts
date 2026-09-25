@@ -40,28 +40,7 @@ const SIZE_RADIUS: Record<SpinnerSize, number> = {
     role: "status",
     "[attr.aria-label]": "ariaLabel()",
   },
-  template: `
-    <svg class="okkly-spinner__svg" [attr.viewBox]="geometry().viewBox">
-      <circle
-        class="okkly-spinner__track"
-        [attr.cx]="geometry().radius"
-        [attr.cy]="geometry().radius"
-        [attr.r]="geometry().normalizedRadius"
-        fill="none"
-        [attr.stroke-width]="geometry().stroke"
-      />
-      <circle
-        class="okkly-spinner__arc"
-        [attr.cx]="geometry().radius"
-        [attr.cy]="geometry().radius"
-        [attr.r]="geometry().normalizedRadius"
-        fill="none"
-        [attr.stroke-width]="geometry().stroke"
-        [attr.stroke-dasharray]="geometry().dashArray"
-        [attr.stroke-dashoffset]="geometry().dashOffset"
-      />
-    </svg>
-  `,
+  templateUrl: "./Spinner.html",
 })
 export class OkklySpinner {
   /**

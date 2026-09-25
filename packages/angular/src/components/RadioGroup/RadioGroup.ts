@@ -38,12 +38,7 @@ let nextId = 0;
     // `name` belongs to the nested inputs, not to this element.
     "[attr.name]": "null",
   },
-  template: `
-    @if (label()) {
-      <span class="okkly-radio-group__label">{{ label() }}</span>
-    }
-    <ng-content />
-  `,
+  templateUrl: "./RadioGroup.html",
 })
 export class OkklyRadioGroup implements RadioGroupState {
   /**

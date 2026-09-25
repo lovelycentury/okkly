@@ -44,12 +44,7 @@ let nextId = 0;
     // `name` belongs to the nested inputs, not to this element.
     "[attr.name]": "null",
   },
-  template: `
-    @if (label()) {
-      <span class="okkly-checkbox-group__label">{{ label() }}</span>
-    }
-    <ng-content />
-  `,
+  templateUrl: "./CheckboxGroup.html",
 })
 export class OkklyCheckboxGroup implements CheckboxGroupState {
   /**

@@ -41,28 +41,7 @@ let nextId = 0;
     "[attr.name]": "null",
     "[attr.aria-label]": "null",
   },
-  template: `
-    <span class="okkly-switch__control">
-      <input
-        type="checkbox"
-        role="switch"
-        class="okkly-switch__input"
-        [id]="inputId()"
-        [attr.name]="name() ?? null"
-        [attr.value]="value() ?? null"
-        [attr.aria-label]="ariaLabel() ?? null"
-        [checked]="isChecked()"
-        [disabled]="disabled()"
-        (change)="onChange($event)"
-      />
-      <span class="okkly-switch__track" aria-hidden="true">
-        <span class="okkly-switch__thumb"></span>
-      </span>
-    </span>
-    @if (label()) {
-      <label class="okkly-switch__label" [for]="inputId()">{{ label() }}</label>
-    }
-  `,
+  templateUrl: "./Switch.html",
 })
 export class OkklySwitch {
   /**
