@@ -1115,6 +1115,21 @@ A `button` row renders its content as a real `<button>` and reports it through
 `itemClick`; the `okklyListItemEnd` control stays outside that button so it
 remains reachable.
 
+## Only
+
+`OkklyOnly` (`*okklyOnly`) renders its element only while the viewport is
+within `[from, to)` — the counterpart of `@okkly/react`'s `<Only>`. Breakpoint
+names match `$breakpoints` in the design system.
+
+```html
+<nav *okklyOnly="{ from: 'md' }">Desktop navigation</nav>
+<button *okklyOnly="{ to: 'md' }">Menu</button>
+<ng-template okklyOnly okklyOnlyFrom="sm" okklyOnlyTo="lg">Tablets</ng-template>
+```
+
+It is a structural directive, not a component: content outside the range is
+never created, which projected content could not promise.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

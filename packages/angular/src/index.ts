@@ -214,3 +214,6 @@ export {
   OkklyListItemText,
   OkklyListItemIcon,
 } from "./components/List/List";
+
+export { OkklyOnly } from "./directives/Only/Only";
+export type { OnlyBreakpoint, OnlyRange } from "./directives/Only/Only";
