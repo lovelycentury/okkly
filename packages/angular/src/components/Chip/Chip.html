@@ -13,7 +13,7 @@
   <button
     type="button"
     class="okkly-chip__remove"
-    [disabled]="disabled()"
+    [disabled]="isDisabled()"
     [attr.aria-label]="removeLabel()"
     (click)="remove($event)"
   >

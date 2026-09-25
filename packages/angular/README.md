@@ -182,6 +182,35 @@ mirror `@okkly/react`'s `<Chip>` name-for-name; the remove output is
 React infers a clickable chip from `onClick`; Angular cannot see whether a
 `(click)` listener exists, so it takes MUI's explicit `clickable` input.
 
+## ChipGroup
+
+`OkklyChipGroup` (`okkly-chip-group`) is a wrapping row of chips that manage
+single or multiple selection together. It is shaped like Angular Material's
+`mat-chip-listbox`: bind the selection with `[(value)]` and mark each option
+chip `okklyChipGroupOption` with its value. Its inputs mirror
+`@okkly/react`'s `<ChipGroup>`.
+
+```html
+<okkly-chip-group [(value)]="departments">
+  <okkly-chip okklyChipGroupOption="design" label="Design" />
+  <okkly-chip okklyChipGroupOption="engineering" label="Engineering" />
+</okkly-chip-group>
+
+<okkly-chip-group exclusive [(value)]="view">…</okkly-chip-group>
+```
+
+| Input       | Values                                                           |
+| ----------- | ---------------------------------------------------------------- |
+| `value`     | A string when `exclusive`, a string array otherwise; `[(value)]` |
+| `exclusive` | Single-select mode (default `false`)                             |
+| `color`     | `primary` (default), `dante`, `indigo`, `violet`, `ember`, `ice` |
+| `disabled`  | Disables every chip in the group                                 |
+
+Option chips become toggle buttons driven by the group; while `value` is unset
+each keeps its own `selected`. Chips without the marker are left alone —
+React's `children` escape hatch — and removable tags use the chip's own
+`removable` and `(removed)` where React takes `items` with `onRemove`.
+
 ## TextField
 
 `OkklyTextField` (`okkly-text-field`) is a single-line text input with label,

@@ -4,6 +4,7 @@ import {
   DestroyRef,
   Directive,
   ElementRef,
+  InjectionToken,
   ViewEncapsulation,
   booleanAttribute,
   computed,
@@ -11,10 +12,24 @@ import {
   inject,
   input,
   output,
+  type Signal,
 } from "@angular/core";
 
 export type ChipVariant = "glass" | "solid" | "outline" | "accent" | "dante";
 export type ChipSize = "small" | "medium" | "large";
+
+/**
+ * What an `OkklyChipGroup` option imposes on the chip it sits on: whether the
+ * group has it selected (`undefined` while the group holds no value, so the
+ * chip's own `selected` applies) and whether the group is disabled. Provided
+ * by `okklyChipGroupOption` on the chip's own element.
+ */
+export interface ChipGroupOptionState {
+  selected: Signal<boolean | undefined>;
+  disabled: Signal<boolean>;
+}
+
+export const CHIP_GROUP_OPTION = new InjectionToken<ChipGroupOptionState>("CHIP_GROUP_OPTION");
 
 /** Marks the projected element that renders as the leading icon. */
 @Directive({ selector: "[okklyChipIcon]" })
@@ -45,8 +60,8 @@ export class OkklyChipIcon {}
     "[class]": "modifiers()",
     "[attr.role]": "isInteractive() ? 'button' : null",
     "[attr.tabindex]": "isInteractive() ? '0' : null",
-    "[attr.aria-pressed]": "isInteractive() ? (selected() ? 'true' : 'false') : null",
-    "[attr.aria-disabled]": "disabled() ? 'true' : null",
+    "[attr.aria-pressed]": "isInteractive() ? (isSelected() ? 'true' : 'false') : null",
+    "[attr.aria-disabled]": "isDisabled() ? 'true' : null",
     "(keydown)": "onKeydown($event)",
   },
   templateUrl: "./Chip.html",
@@ -114,16 +129,23 @@ export class OkklyChip {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly icon = contentChild(OkklyChipIcon);
 
+  /** Set when the chip is an option of an `OkklyChipGroup`, which then drives its state. */
+  private readonly option = inject(CHIP_GROUP_OPTION, { self: true, optional: true });
+
   protected readonly hasIcon = computed(() => !!this.icon());
-  protected readonly isInteractive = computed(() => this.clickable() && !this.disabled());
+  protected readonly isSelected = computed(() => this.option?.selected() ?? this.selected());
+  protected readonly isDisabled = computed(() => this.disabled() || !!this.option?.disabled());
+  protected readonly isInteractive = computed(
+    () => (this.clickable() || !!this.option) && !this.isDisabled(),
+  );
 
   protected readonly modifiers = computed(() =>
     [
       this.variant() !== "glass" && `okkly-chip--${this.variant()}`,
       this.size() !== "medium" && `okkly-chip--${this.size()}`,
-      this.selected() && "okkly-chip--selected",
+      this.isSelected() && "okkly-chip--selected",
       this.isInteractive() && "okkly-chip--interactive",
-      this.disabled() && "okkly-chip--disabled",
+      this.isDisabled() && "okkly-chip--disabled",
     ]
       .filter(Boolean)
       .join(" "),
@@ -135,7 +157,7 @@ export class OkklyChip {
     // `(click)` on the same element is registered before any host listener,
     // and only capture-phase listeners run ahead of it at the target.
     const swallowWhileDisabled = (event: Event) => {
-      if (!this.disabled()) return;
+      if (!this.isDisabled()) return;
       event.preventDefault();
       event.stopImmediatePropagation();
     };
@@ -157,7 +179,7 @@ export class OkklyChip {
 
   protected remove(event: Event): void {
     event.stopPropagation();
-    if (this.disabled()) return;
+    if (this.isDisabled()) return;
     this.removed.emit();
   }
 }

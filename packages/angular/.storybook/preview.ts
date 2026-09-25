@@ -15,6 +15,7 @@ import "@okkly/design-system/components/Button/Button.scss";
 import "@okkly/design-system/components/ButtonGroup/ButtonGroup.scss";
 import "@okkly/design-system/components/Card/Card.scss";
 import "@okkly/design-system/components/Chip/Chip.scss";
+import "@okkly/design-system/components/ChipGroup/ChipGroup.scss";
 import "@okkly/design-system/components/Divider/Divider.scss";
 import "@okkly/design-system/components/Icon/Icon.scss";
 import "@okkly/design-system/components/IconButton/IconButton.scss";

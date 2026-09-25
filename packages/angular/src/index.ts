@@ -28,6 +28,9 @@ export type {
 export { OkklyChip, OkklyChipIcon } from "./components/Chip/Chip";
 export type { ChipVariant, ChipSize } from "./components/Chip/Chip";
 
+export { OkklyChipGroup, OkklyChipGroupOption } from "./components/ChipGroup/ChipGroup";
+export type { ChipGroupColor } from "./components/ChipGroup/ChipGroup";
+
 export { OkklyRipple } from "./directives/Ripple/Ripple";
 
 export {
