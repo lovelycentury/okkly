@@ -202,3 +202,6 @@ export { OkklyLogo } from "./components/Logo/Logo";
 export type { LogoLayout, LogoTone, LogoVariant } from "./components/Logo/Logo";
 
 export { OkklyProjectCard, OkklyProjectCardLogo } from "./components/ProjectCard/ProjectCard";
+
+export { OkklyStatCard, OkklyStatCardIcon } from "./components/StatCard/StatCard";
+export type { StatCardColor, StatCardSize, StatCardTrend } from "./components/StatCard/StatCard";

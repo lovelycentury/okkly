@@ -1076,6 +1076,23 @@ ratio. Inputs mirror `@okkly/react`'s `<ProjectCard>` name-for-name: `image`,
 On an anchor the whole tile is one link; on a div it is inert. The brand mark
 is projected content tagged `okklyProjectCardLogo`.
 
+## StatCard
+
+`OkklyStatCard` (`okkly-stat-card`) is a dashboard tile: one number, one label,
+and how that number moved. Inputs mirror `@okkly/react`'s `<StatCard>`
+name-for-name: `label`, `value`, `trend`, `color`, `accent`, `description`,
+`size`.
+
+```html
+<okkly-stat-card label="Monthly listeners" value="48,120" [trend]="{ value: '12.5%', up: true }">
+  <okkly-icon okklyStatCardIcon name="iconHeadphones" />
+</okkly-stat-card>
+```
+
+The trend badge speaks its direction ("Up 12.5%"). A glyph tagged
+`okklyStatCardIcon` goes in the header chip; any other projected content follows
+`value` inside the headline, for a unit or a currency.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
