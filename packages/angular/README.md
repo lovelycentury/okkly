@@ -926,12 +926,22 @@ shorthand cannot bind outputs, so listen on the long form:
 </ng-template>
 ```
 
-| Directive    | Animates                                                              | Default `timeout`                    |
-| ------------ | --------------------------------------------------------------------- | ------------------------------------ |
-| `okklyFade`  | Opacity                                                               | `{ enter: 225, exit: 195 }`          |
-| `okklyGrow`  | Opacity and scale, from the element's own `transform-origin`          | `"auto"` — from the element's height |
-| `okklyZoom`  | Scale from a point, without opacity                                   | `{ enter: 225, exit: 195 }`          |
-| `okklySlide` | Position, in from the `direction` edge of the window or a `container` | `{ enter: 225, exit: 195 }`          |
+| Directive        | Animates                                                              | Default `timeout`                    |
+| ---------------- | --------------------------------------------------------------------- | ------------------------------------ |
+| `okklyFade`      | Opacity                                                               | `{ enter: 225, exit: 195 }`          |
+| `okklyGrow`      | Opacity and scale, from the element's own `transform-origin`          | `"auto"` — from the element's height |
+| `okklyZoom`      | Scale from a point, without opacity                                   | `{ enter: 225, exit: 195 }`          |
+| `okklySlide`     | Position, in from the `direction` edge of the window or a `container` | `{ enter: 225, exit: 195 }`          |
+| `okkly-collapse` | Height (or width), moving what follows — a component, see below       | `300`, or `"auto"`                   |
+
+`OkklyCollapse` (`okkly-collapse`) is the one transition that is a component:
+it renders wrappers of its own to measure its content, so the content goes
+inside it — `<okkly-collapse [in]="open" timeout="auto">…</okkly-collapse>` —
+and its inputs are plain (`[in]`, `orientation`, `collapsedSize`, `timeout`,
+`easing`, `appear`, `mountOnEnter`, `unmountOnExit`), with the same six
+outputs. Projected content is created with its parent and stays mounted; put
+content that should mount on enter and unmount on exit in an
+`<ng-template okklyCollapseContent>`.
 
 ## Workbench
 

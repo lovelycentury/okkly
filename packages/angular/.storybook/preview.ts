@@ -18,6 +18,7 @@ import "@okkly/design-system/components/Checkbox/Checkbox.scss";
 import "@okkly/design-system/components/CheckboxGroup/CheckboxGroup.scss";
 import "@okkly/design-system/components/Chip/Chip.scss";
 import "@okkly/design-system/components/ChipGroup/ChipGroup.scss";
+import "@okkly/design-system/components/Collapse/Collapse.scss";
 import "@okkly/design-system/components/Divider/Divider.scss";
 import "@okkly/design-system/components/Fade/Fade.scss";
 import "@okkly/design-system/components/Grow/Grow.scss";

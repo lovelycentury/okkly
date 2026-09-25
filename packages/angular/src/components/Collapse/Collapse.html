@@ -1,0 +1,8 @@
+<div #wrapper class="okkly-collapse__wrapper">
+  <div class="okkly-collapse__wrapper-inner">
+    <ng-content />
+    @if (contentMounted() && lazyContent(); as lazy) {
+      <ng-container [ngTemplateOutlet]="lazy.template" />
+    }
+  </div>
+</div>
