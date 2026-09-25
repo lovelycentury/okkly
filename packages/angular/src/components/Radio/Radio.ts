@@ -2,7 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   InjectionToken,
+  Injector,
   ViewEncapsulation,
+  afterNextRender,
   booleanAttribute,
   computed,
   inject,
@@ -129,6 +131,7 @@ export class OkklyRadio {
   // through `booleanAttribute`; the user's selection lives here in between.
   private readonly isChecked = linkedSignal(() => this.checked());
 
+  private readonly injector = inject(Injector);
   private readonly generatedId = `okkly-radio-${nextId++}`;
   protected readonly inputId = computed(() => this.id() ?? this.generatedId);
 
@@ -157,8 +160,20 @@ export class OkklyRadio {
   protected onChange(event: Event): void {
     const checked = (event.target as HTMLInputElement).checked;
     const value = this.value();
-    if (this.group && value !== undefined) this.group.select(value);
-    else this.isChecked.set(checked);
+    if (this.group && value !== undefined) {
+      this.group.select(value);
+      // The `[checked]` binding only writes when its value changes. If the group
+      // ends up where it was before this click — the parent kept or reset its
+      // value before the next render — the binding sees no change and would
+      // leave the native input showing the click. Put it back in step.
+      const native = event.target as HTMLInputElement;
+      afterNextRender(
+        { write: () => (native.checked = this.effectiveChecked()) },
+        {
+          injector: this.injector,
+        },
+      );
+    } else this.isChecked.set(checked);
     this.checkedChange.emit(checked);
   }
 }
