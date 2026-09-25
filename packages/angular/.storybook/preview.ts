@@ -11,6 +11,7 @@ import "@okkly/design-system/components/Avatar/Avatar.scss";
 import "@okkly/design-system/components/AvatarGroup/AvatarGroup.scss";
 import "@okkly/design-system/components/Badge/Badge.scss";
 import "@okkly/design-system/components/Box/Box.scss";
+import "@okkly/design-system/components/Breadcrumbs/Breadcrumbs.scss";
 import "@okkly/design-system/components/Button/Button.scss";
 import "@okkly/design-system/components/ButtonGroup/ButtonGroup.scss";
 import "@okkly/design-system/components/Card/Card.scss";

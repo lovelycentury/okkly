@@ -173,3 +173,6 @@ export type {
   TransitionTimeout,
   TransitionTimeoutWithAuto,
 } from "./types";
+
+export { OkklyBreadcrumbs, OkklyBreadcrumbsSeparator } from "./components/Breadcrumbs/Breadcrumbs";
+export type { BreadcrumbItem } from "./components/Breadcrumbs/Breadcrumbs";

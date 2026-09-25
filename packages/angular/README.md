@@ -943,6 +943,36 @@ outputs. Projected content is created with its parent and stays mounted; put
 content that should mount on enter and unmount on exit in an
 `<ng-template okklyCollapseContent>`.
 
+## Breadcrumbs
+
+`OkklyBreadcrumbs` (`okkly-breadcrumbs`) is the trail of parent pages ending at
+the current one. Inputs mirror `@okkly/react`'s `<Breadcrumbs>` name-for-name:
+`items`, `separator`, `maxItems`, `itemsBeforeCollapse`, `itemsAfterCollapse`,
+`expandAriaLabel`.
+
+```ts
+import { iconHome } from "@okkly/icons";
+
+items = [
+  { label: "Home", href: "/", icon: iconHome },
+  { label: "Projects", href: "/projects" },
+  { label: "Settings" },
+];
+```
+
+```html
+<okkly-breadcrumbs [items]="items" [maxItems]="4" />
+
+<okkly-breadcrumbs [items]="items">
+  <ng-template okklyBreadcrumbsSeparator>›</ng-template>
+</okkly-breadcrumbs>
+```
+
+The last crumb is always the current page (`aria-current="page"`), never a
+link. An item's `icon` is raw SVG markup or a `TemplateRef`; `separator` is
+text, and markup goes in an `okklyBreadcrumbsSeparator` template. The host is
+the navigation landmark.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

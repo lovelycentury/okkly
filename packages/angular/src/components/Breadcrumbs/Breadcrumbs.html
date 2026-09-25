@@ -1,0 +1,67 @@
+<ol class="okkly-breadcrumbs__list">
+  @for (crumb of crumbs(); track $index) {
+    @if (!$first) {
+      <li class="okkly-breadcrumbs__separator" aria-hidden="true">
+        @if (separatorTemplate(); as custom) {
+          <ng-container [ngTemplateOutlet]="custom.template" />
+        } @else if (separator() !== undefined) {
+          {{ separator() }}
+        } @else {
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m9 6 6 6-6 6" />
+          </svg>
+        }
+      </li>
+    }
+    @if (crumb) {
+      <li class="okkly-breadcrumbs__item">
+        @if (crumb.last || !crumb.item.href) {
+          <span class="okkly-breadcrumbs__current" [attr.aria-current]="crumb.last ? 'page' : null">
+            <ng-container
+              [ngTemplateOutlet]="inner"
+              [ngTemplateOutletContext]="{ $implicit: crumb.item }"
+            />
+          </span>
+        } @else {
+          <a class="okkly-breadcrumbs__link" [attr.href]="crumb.item.href">
+            <ng-container
+              [ngTemplateOutlet]="inner"
+              [ngTemplateOutletContext]="{ $implicit: crumb.item }"
+            />
+          </a>
+        }
+      </li>
+    } @else {
+      <li>
+        <button
+          type="button"
+          class="okkly-breadcrumbs__ellipsis"
+          [attr.aria-label]="expandAriaLabel()"
+          (click)="expanded.set(true)"
+        >
+          …
+        </button>
+      </li>
+    }
+  }
+</ol>
+
+<ng-template #inner let-item>
+  @if (item.icon) {
+    <span class="okkly-breadcrumbs__icon" aria-hidden="true">
+      @if (isTemplate(item.icon)) {
+        <ng-container [ngTemplateOutlet]="item.icon" />
+      } @else {
+        <okkly-icon [icon]="item.icon" fontSize="inherit" />
+      }
+    </span>
+  }
+  {{ item.label }}
+</ng-template>
