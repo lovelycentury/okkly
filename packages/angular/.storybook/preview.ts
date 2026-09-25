@@ -22,6 +22,7 @@ import "@okkly/design-system/components/ChipGroup/ChipGroup.scss";
 import "@okkly/design-system/components/Collapse/Collapse.scss";
 import "@okkly/design-system/components/Divider/Divider.scss";
 import "@okkly/design-system/components/EmptyState/EmptyState.scss";
+import "@okkly/design-system/components/FAB/FAB.scss";
 import "@okkly/design-system/components/Fade/Fade.scss";
 import "@okkly/design-system/components/Grow/Grow.scss";
 import "@okkly/design-system/components/Icon/Icon.scss";

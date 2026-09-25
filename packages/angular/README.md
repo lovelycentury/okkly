@@ -989,6 +989,21 @@ A custom glyph replaces the default severity icon when projected with
 `okklyEmptyStateIcon`; every control tagged `okklyEmptyStateAction` goes in the
 action row. `severity` picks the default icon's glyph and `color` its tone.
 
+## FAB
+
+`OkklyFab` (`button[okklyFab]`, `a[okklyFab]`) is the floating action button for
+a screen's primary action. It decorates a native `<button>` or `<a>` like
+Angular Material's `mat-fab`; inputs mirror `@okkly/react`'s `<Fab>`: `variant`,
+`color`, `size`, `label`, `disabled`, `disableRipple`.
+
+```html
+<button okklyFab aria-label="Add"><okkly-icon name="iconPlus" /></button>
+<button okklyFab label="New track"><okkly-icon name="iconMusic" /></button>
+```
+
+The glyph is the projected content; a `label` turns the FAB into an extended
+pill. An icon-only FAB has no text, so give it an `aria-label`.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

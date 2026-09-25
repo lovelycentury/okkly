@@ -183,3 +183,6 @@ export {
   OkklyEmptyStateAction,
 } from "./components/EmptyState/EmptyState";
 export type { EmptyStateColor, EmptyStateSize } from "./components/EmptyState/EmptyState";
+
+export { OkklyFab } from "./components/FAB/FAB";
+export type { FabVariant, FabColor, FabSize } from "./components/FAB/FAB";
