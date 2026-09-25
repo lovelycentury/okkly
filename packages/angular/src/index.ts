@@ -186,3 +186,11 @@ export type { EmptyStateColor, EmptyStateSize } from "./components/EmptyState/Em
 
 export { OkklyFab } from "./components/FAB/FAB";
 export type { FabVariant, FabColor, FabSize } from "./components/FAB/FAB";
+
+export { OkklyInlineAction, OkklyInlineActionIcon } from "./components/InlineAction/InlineAction";
+export type {
+  InlineActionSize,
+  InlineActionColor,
+  InlineActionFill,
+  InlineActionState,
+} from "./components/InlineAction/InlineAction";

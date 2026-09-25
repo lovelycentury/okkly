@@ -1004,6 +1004,31 @@ Angular Material's `mat-fab`; inputs mirror `@okkly/react`'s `<Fab>`: `variant`,
 The glyph is the projected content; a `label` turns the FAB into an extended
 pill. An icon-only FAB has no text, so give it an `aria-label`.
 
+## InlineAction
+
+`OkklyInlineAction` (`okkly-inline-action`) is a text field with an action
+button inside it — copy, send, retry — and a feedback caption underneath.
+Inputs mirror `@okkly/react`'s `<InlineAction>` name-for-name: `value`,
+`placeholder`, `action`, `size`, `color`, `fill`, `message`, `state`,
+`readonly`, `loading`, `disabled`.
+
+```html
+<okkly-inline-action
+  aria-label="Email address"
+  [(value)]="email"
+  action="Send"
+  [loading]="sending"
+  [message]="error"
+  [state]="error ? 'error' : 'default'"
+  (actionClick)="send()"
+/>
+```
+
+`value` is two-way bindable; React's `onAction` is the `actionClick` output. A
+glyph projected with `okklyInlineActionIcon` replaces the button's arrow. The
+control has no label of its own, so give it an `aria-label` (set on the native
+input, as are `id`, `name` and `type`).
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
