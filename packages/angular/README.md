@@ -464,6 +464,34 @@ there is no image or it fails to load. Inputs mirror `@okkly/react`'s
 Leave `alt` unset when a name sits next to the avatar: it is then decoration,
 and announcing the name twice is noise.
 
+## AvatarGroup
+
+`OkklyAvatarGroup` (`okkly-avatar-group`) stacks overlapping avatars and
+collapses the rest into a "+N" chip. Each member is an `okkly-avatar` marked
+`*okklyAvatarGroupItem`; the group renders the ones it keeps and overrides
+their size and tone. Inputs mirror `@okkly/react`'s `<AvatarGroup>`
+name-for-name.
+
+```html
+<okkly-avatar-group max="4" [total]="project.memberCount" [hues]="['mint', 'dante', 'indigo']">
+  @for (member of project.members; track member.id) {
+  <okkly-avatar *okklyAvatarGroupItem [initials]="member.initials" [src]="member.photo" />
+  }
+</okkly-avatar-group>
+```
+
+| Input     | Values                                                                               |
+| --------- | ------------------------------------------------------------------------------------ |
+| `max`     | Avatars shown before the chip; at or over it one slot goes to the chip (default `5`) |
+| `total`   | Real member count behind the chip, when higher than the members passed in            |
+| `size`    | `sm` (default), `md`, `lg` — applied to every member                                 |
+| `spacing` | `dense`, `default` (default), `loose`                                                |
+| `ring`    | Canvas-coloured separator ring (default `true`)                                      |
+| `hues`    | Tones cycled across members (default `["mint"]`)                                     |
+
+React clones its `<Avatar>` children to override them; Angular cannot reach
+into projected components, hence the structural marker.
+
 ## Box
 
 `OkklyBox` (`[okklyBox]`) is the layout primitive, as a directive: MUI-style

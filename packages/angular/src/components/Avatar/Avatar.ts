@@ -1,16 +1,30 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  InjectionToken,
   ViewEncapsulation,
   computed,
+  inject,
   input,
   linkedSignal,
+  type Signal,
 } from "@angular/core";
 
 export type AvatarSize = "sm" | "md" | "lg";
 export type AvatarShape = "circle" | "rounded";
 export type AvatarStatus = "online" | "offline";
 export type AvatarColor = "mint" | "dante" | "indigo";
+
+/**
+ * What an `OkklyAvatarGroup` imposes on one member — the counterpart of React's
+ * `cloneElement(child, { size, color })`. Provided per member by the group.
+ */
+export interface AvatarGroupMember {
+  size: Signal<AvatarSize>;
+  color: Signal<AvatarColor>;
+}
+
+export const AVATAR_GROUP_MEMBER = new InjectionToken<AvatarGroupMember>("AVATAR_GROUP_MEMBER");
 
 /**
  * Inputs mirror `@okkly/react`'s `<Avatar>` name-for-name — `src`, `alt`,
@@ -80,6 +94,12 @@ export class OkklyAvatar {
    */
   readonly color = input<AvatarColor>("mint");
 
+  /** Set when this avatar is a member of an `OkklyAvatarGroup`, which then decides its size and tone. */
+  private readonly member = inject(AVATAR_GROUP_MEMBER, { optional: true });
+
+  private readonly effectiveSize = computed(() => this.member?.size() ?? this.size());
+  private readonly effectiveColor = computed(() => this.member?.color() ?? this.color());
+
   protected readonly imageFailed = linkedSignal({ source: this.src, computation: () => false });
   protected readonly showImage = computed(() => !!this.src() && !this.imageFailed());
   protected readonly shortInitials = computed(() => (this.initials() ?? "").slice(0, 2));
@@ -87,8 +107,10 @@ export class OkklyAvatar {
   protected readonly modifiers = computed(() =>
     [
       this.shape() === "rounded" && "okkly-avatar--rounded",
-      this.size() !== "md" && `okkly-avatar--${this.size()}`,
-      !this.showImage() && this.color() !== "mint" && `okkly-avatar--color-${this.color()}`,
+      this.effectiveSize() !== "md" && `okkly-avatar--${this.effectiveSize()}`,
+      !this.showImage() &&
+        this.effectiveColor() !== "mint" &&
+        `okkly-avatar--color-${this.effectiveColor()}`,
     ]
       .filter(Boolean)
       .join(" "),

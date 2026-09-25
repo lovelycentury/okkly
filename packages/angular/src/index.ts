@@ -119,6 +119,9 @@ export type {
   BadgeVariant,
 } from "./components/Badge/Badge";
 
+export { OkklyAvatarGroup, OkklyAvatarGroupItem } from "./components/AvatarGroup/AvatarGroup";
+export type { AvatarGroupSize, AvatarGroupSpacing } from "./components/AvatarGroup/AvatarGroup";
+
 export { OkklyProgress } from "./components/Progress/Progress";
 export type {
   ProgressVariant,

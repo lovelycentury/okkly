@@ -8,6 +8,7 @@ import "@okkly/design-system/styles/index.scss";
 // paths here so Vite resolves them; the build reads them off disk instead.
 import "@okkly/design-system/components/Alert/Alert.scss";
 import "@okkly/design-system/components/Avatar/Avatar.scss";
+import "@okkly/design-system/components/AvatarGroup/AvatarGroup.scss";
 import "@okkly/design-system/components/Badge/Badge.scss";
 import "@okkly/design-system/components/Box/Box.scss";
 import "@okkly/design-system/components/Button/Button.scss";
