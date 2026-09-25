@@ -156,6 +156,8 @@ export type {
 
 export { OkklyFade } from "./directives/Fade/Fade";
 export type { FadeTimeout } from "./directives/Fade/Fade";
+export { OkklyGrow } from "./directives/Grow/Grow";
+export type { GrowTimeout } from "./directives/Grow/Grow";
 export type { TransitionStatus } from "./helpers/transition";
 
 export type {

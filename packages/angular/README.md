@@ -926,9 +926,10 @@ shorthand cannot bind outputs, so listen on the long form:
 </ng-template>
 ```
 
-| Directive   | Animates | Default `timeout`           |
-| ----------- | -------- | --------------------------- |
-| `okklyFade` | Opacity  | `{ enter: 225, exit: 195 }` |
+| Directive   | Animates                                                     | Default `timeout`                    |
+| ----------- | ------------------------------------------------------------ | ------------------------------------ |
+| `okklyFade` | Opacity                                                      | `{ enter: 225, exit: 195 }`          |
+| `okklyGrow` | Opacity and scale, from the element's own `transform-origin` | `"auto"` — from the element's height |
 
 ## Workbench
 
