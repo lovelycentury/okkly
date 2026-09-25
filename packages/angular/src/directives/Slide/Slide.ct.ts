@@ -113,13 +113,21 @@ test("should slide in to its own place and back out", async ({ mountTemplate, up
   await expect(content).toHaveCSS("transform", "none");
   await expect(content).toHaveCSS("visibility", "visible");
   await expect(content).toHaveCSS("transition-property", "transform");
+  // The exit measures from where the element is, so let the enter finish first.
+  await expect.poll(() => content.evaluate((element) => element.getAnimations().length)).toBe(0);
 
   // ACT
   await update({ open: false });
 
-  // ASSERT
-  await expect(content).toHaveCSS("transform", "matrix(1, 0, 0, 1, 200, 0)");
+  // ASSERT — parked back past the container's right edge. The offset is measured
+  // from wherever the element is when the exit starts, as MUI's is, so allow the
+  // sub-pixel the end of the enter can leave behind.
   await expect(content).toHaveCSS("visibility", "hidden");
+  const translateX = await content.evaluate(
+    (element) => new DOMMatrix(getComputedStyle(element).transform).m41,
+  );
+  expect(translateX).toBeGreaterThan(198);
+  expect(translateX).toBeLessThanOrEqual(200);
 });
 
 test("should fire the enter callbacks when opening", async ({
