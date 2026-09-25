@@ -228,6 +228,30 @@ in an `OkklyRadioGroup`. Inputs mirror `@okkly/react`'s `<Radio>` name-for-name.
 | `disabled`                          | Non-interactive                                                                               |
 | `name`, `value`, `id`, `aria-label` | Forwarded to the native input                                                                 |
 
+## RadioGroup
+
+`OkklyRadioGroup` (`okkly-radio-group`) is a labelled single choice. Nest
+`okkly-radio` elements with a `value` each; the group gives them a shared
+`name`, owns which one is selected, and passes its `disabled`, `size` and
+`color` down unless a radio sets its own. Inputs mirror `@okkly/react`'s
+`<RadioGroup>` name-for-name.
+
+```html
+<okkly-radio-group label="Notification preference" [(value)]="preference">
+  <okkly-radio value="email" label="Email me updates" />
+  <okkly-radio value="none" label="No notifications" />
+</okkly-radio-group>
+```
+
+| Input      | Values                                                                          |
+| ---------- | ------------------------------------------------------------------------------- |
+| `value`    | The selected value; `[(value)]` (React's `defaultValue` is a one-way `[value]`) |
+| `name`     | Shared input name; generated when omitted                                       |
+| `label`    | Shown above the options and used as the group's accessible name                 |
+| `disabled` | Disables every radio                                                            |
+| `size`     | `small`, `medium` (default), `large`                                            |
+| `color`    | Any radio colour (default `primary`)                                            |
+
 ## Chip
 
 `OkklyChip` (`okkly-chip`) is a compact filter, tag or choice token. Inputs

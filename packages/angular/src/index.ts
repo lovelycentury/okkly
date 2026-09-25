@@ -33,6 +33,8 @@ export { OkklyCheckboxGroup } from "./components/CheckboxGroup/CheckboxGroup";
 export { OkklyRadio } from "./components/Radio/Radio";
 export type { RadioSize, RadioColor } from "./components/Radio/Radio";
 
+export { OkklyRadioGroup } from "./components/RadioGroup/RadioGroup";
+
 export { OkklyChip, OkklyChipIcon } from "./components/Chip/Chip";
 export type { ChipVariant, ChipSize } from "./components/Chip/Chip";
 
