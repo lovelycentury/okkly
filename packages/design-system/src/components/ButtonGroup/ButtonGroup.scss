@@ -12,7 +12,8 @@
     align-items: stretch;
     border: none;
     border-radius: 9999px;
-    overflow: hidden;
+    // No `overflow: hidden` here: it would clip the absolutely positioned menu
+    // along with the segments. The end segments round themselves instead (4).
     background: var(--okkly-button-group-tone);
     color: var(--okkly-accent-contrast);
     font-family: var(--okkly-font-family-sans);
@@ -75,6 +76,19 @@
 
       &:not(:first-child) {
         border-inline-start: var(--okkly-1px-in-rem) solid rgba(4, 20, 15, 0.3);
+      }
+
+      // The pill's outer corners, so a hover fill or focus ring stays inside
+      // the rounded shape. The menu is a `<div>`, so the last `<button>` is the
+      // last segment whether or not the menu is open.
+      &:first-child {
+        border-start-start-radius: inherit;
+        border-end-start-radius: inherit;
+      }
+
+      &:last-of-type {
+        border-start-end-radius: inherit;
+        border-end-end-radius: inherit;
       }
 
       // lighten the segment's own tone on hover instead of swapping to a neutral surface

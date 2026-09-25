@@ -158,6 +158,31 @@ test("should open the dropdown when the chevron is clicked", async ({ mountTempl
   );
 });
 
+test("should paint the dropdown outside the pill instead of clipping it", async ({
+  mountTemplate,
+}) => {
+  // ARRANGE
+  const component = await mountTemplate(
+    `<okkly-button-group>
+      <button okklyButtonGroupAction>Save</button>
+      <button okklyButtonGroupMenuItem>Save as…</button>
+    </okkly-button-group>`,
+  );
+
+  // ACT
+  await component.getByRole("button", { name: "Open menu" }).click();
+
+  // ASSERT — `toBeVisible` passes for a clipped element, so ask the browser what
+  // is actually painted at the item's centre.
+  const item = component.getByRole("menuitem", { name: "Save as…" });
+  const hit = await item.evaluate((element) => {
+    const box = element.getBoundingClientRect();
+    const top = document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2);
+    return element.contains(top);
+  });
+  expect(hit).toBe(true);
+});
+
 test("should fire click and close the dropdown when a menu item is picked", async ({
   mountTemplate,
   recordedEvents,
