@@ -35,6 +35,7 @@ import "@okkly/design-system/components/Photo/Photo.scss";
 import "@okkly/design-system/components/Popover/Popover.scss";
 import "@okkly/design-system/components/Popper/Popper.scss";
 import "@okkly/design-system/components/Progress/Progress.scss";
+import "@okkly/design-system/components/ProjectCard/ProjectCard.scss";
 import "@okkly/design-system/components/Radio/Radio.scss";
 import "@okkly/design-system/components/RadioGroup/RadioGroup.scss";
 import "@okkly/design-system/components/Ripple/Ripple.scss";

@@ -1,0 +1,45 @@
+@if (image()) {
+  <img class="okkly-project-card__background" [src]="image()" alt="" />
+}
+<div class="okkly-project-card__scrim" aria-hidden="true"></div>
+@if (device()) {
+  <div class="okkly-project-card__device" aria-hidden="true">
+    <div class="okkly-project-card__device-screen"></div>
+    <div class="okkly-project-card__device-notch"></div>
+    <div class="okkly-project-card__device-line okkly-project-card__device-line--1"></div>
+    <div class="okkly-project-card__device-line okkly-project-card__device-line--2"></div>
+    <div class="okkly-project-card__device-line okkly-project-card__device-line--3"></div>
+    <div class="okkly-project-card__device-line okkly-project-card__device-line--4"></div>
+  </div>
+}
+<div class="okkly-project-card__header">
+  @if (hasLogo()) {
+    <div class="okkly-project-card__logo"><ng-content select="[okklyProjectCardLogo]" /></div>
+  }
+  <div class="okkly-project-card__action" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M7 7h10v10" />
+      <path d="M7 17 17 7" />
+    </svg>
+  </div>
+</div>
+<div class="okkly-project-card__body">
+  @if (tags().length > 0) {
+    <div class="okkly-project-card__tags">
+      @for (tag of tags(); track tag) {
+        <span class="okkly-project-card__tag">{{ tag }}</span>
+      }
+    </div>
+  }
+  <h3 class="okkly-project-card__title">{{ title() }}</h3>
+  @if (description()) {
+    <p class="okkly-project-card__description">{{ description() }}</p>
+  }
+</div>

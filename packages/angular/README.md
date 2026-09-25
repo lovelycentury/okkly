@@ -1060,6 +1060,22 @@ mirror `@okkly/react`'s `<Logo>` name-for-name: `layout`, `variant`, `tone`,
 
 `size` sets the emblem — a number is pixels, a string any CSS length.
 
+## ProjectCard
+
+`OkklyProjectCard` (`a[okklyProjectCard]`, `div[okklyProjectCard]`) is the
+portfolio case-study tile: artwork behind, copy on a scrim, at a fixed 476:290
+ratio. Inputs mirror `@okkly/react`'s `<ProjectCard>` name-for-name: `image`,
+`title`, `description`, `tags`, `device`.
+
+```html
+<a okklyProjectCard href="/work/orbit" [image]="cover" title="Orbit" [tags]="['Product', 'Vue']">
+  <okkly-logo okklyProjectCardLogo [showLabel]="false" [size]="32" />
+</a>
+```
+
+On an anchor the whole tile is one link; on a div it is inert. The brand mark
+is projected content tagged `okklyProjectCardLogo`.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

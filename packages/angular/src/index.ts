@@ -200,3 +200,5 @@ export type { LinkCardColor, LinkCardSize } from "./components/LinkCard/LinkCard
 
 export { OkklyLogo } from "./components/Logo/Logo";
 export type { LogoLayout, LogoTone, LogoVariant } from "./components/Logo/Logo";
+
+export { OkklyProjectCard, OkklyProjectCardLogo } from "./components/ProjectCard/ProjectCard";
