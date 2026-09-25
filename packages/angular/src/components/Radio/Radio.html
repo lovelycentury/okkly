@@ -1,0 +1,17 @@
+<span class="okkly-radio__control">
+  <input
+    type="radio"
+    class="okkly-radio__input"
+    [id]="inputId()"
+    [attr.name]="effectiveName() ?? null"
+    [attr.value]="value() ?? null"
+    [attr.aria-label]="ariaLabel() ?? null"
+    [checked]="effectiveChecked()"
+    [disabled]="effectiveDisabled()"
+    (change)="onChange($event)"
+  />
+  <span class="okkly-radio__circle" aria-hidden="true"></span>
+</span>
+@if (label()) {
+  <label class="okkly-radio__label" [for]="inputId()">{{ label() }}</label>
+}

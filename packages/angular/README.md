@@ -210,6 +210,24 @@ mirror `@okkly/react`'s `<CheckboxGroup>` name-for-name.
 | `size`     | `small`, `medium` (default), `large`                                        |
 | `color`    | Any checkbox colour (default `primary`)                                     |
 
+## Radio
+
+`OkklyRadio` (`okkly-radio`) is one option of a single choice — usually nested
+in an `OkklyRadioGroup`. Inputs mirror `@okkly/react`'s `<Radio>` name-for-name.
+
+```html
+<okkly-radio name="plan" value="pro" label="Pro" [(checked)]="isPro" />
+```
+
+| Input                               | Values                                                                                        |
+| ----------------------------------- | --------------------------------------------------------------------------------------------- |
+| `checked`                           | Selected; `[(checked)]` with `checkedChange`                                                  |
+| `label`                             | Text beside the circle, a `<label for>` tied to the native input                              |
+| `size`                              | `small`, `medium`, `large`; unset follows a group, else `medium`                              |
+| `color`                             | `primary`, `dante`, `indigo`, `violet`, `ember`, `ice`; unset follows a group, else `primary` |
+| `disabled`                          | Non-interactive                                                                               |
+| `name`, `value`, `id`, `aria-label` | Forwarded to the native input                                                                 |
+
 ## Chip
 
 `OkklyChip` (`okkly-chip`) is a compact filter, tag or choice token. Inputs
