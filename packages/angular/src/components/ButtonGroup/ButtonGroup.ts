@@ -4,14 +4,18 @@ import {
   Directive,
   ElementRef,
   ViewEncapsulation,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   contentChildren,
   inject,
   input,
   signal,
+  untracked,
   viewChild,
 } from "@angular/core";
+import type { OverlayCloseEvent } from "../../types";
+import { OkklyPopover } from "../Popover/Popover";
 
 export type ButtonGroupColor = "primary" | "dante" | "indigo" | "violet" | "ember" | "ice";
 export type ButtonGroupVariant = "primary" | "secondary";
@@ -62,6 +66,9 @@ export class OkklyButtonGroupIcon {}
   },
 })
 export class OkklyButtonGroupMenuItem {
+  /** The item's `<button>`, for the menu's keyboard navigation. */
+  readonly element = inject<ElementRef<HTMLButtonElement>>(ElementRef).nativeElement;
+
   protected readonly group = inject(OkklyButtonGroup);
 }
 
@@ -76,6 +83,13 @@ export class OkklyButtonGroupMenuItem {
  * Material's `mat-menu` instead: a `<button okklyButtonGroupAction>` and any
  * number of `<button okklyButtonGroupMenuItem>`, each with its own `(click)`.
  * The chevron appears once at least one menu item is projected.
+ *
+ * The menu opens in an `OkklyPopover` — portalled, flipped when there is no
+ * room below, and grown in with its Grow transition — where React renders it
+ * in place. Because it then sits at the end of the page, it behaves like
+ * `mat-menu` from the keyboard: opening focuses the first item, the arrow keys
+ * move between items, and Escape or Tab closes it and returns focus to the
+ * chevron.
  */
 @Component({
   selector: "okkly-button-group",
@@ -84,12 +98,30 @@ export class OkklyButtonGroupMenuItem {
   // class inside the `okkly` cascade layer; scoping attributes would only add
   // noise to the DOM.
   encapsulation: ViewEncapsulation.None,
+  imports: [OkklyPopover],
   host: {
     class: "okkly-component okkly-button-group",
     "[class]": "modifiers()",
-    "(document:mousedown)": "onDocumentPointerDown($event)",
   },
   templateUrl: "./ButtonGroup.html",
+  // The design system draws the menu as an absolutely positioned child of the
+  // group. Here it lives in a Popover instead, so the paper takes on the
+  // look of `.okkly-button-group__menu` and a plain list holds the items.
+  styles: `
+    .okkly-button-group__menu-paper {
+      --okkly-popover-padding: 0.5rem;
+      --okkly-popover-border-radius: 1.25rem;
+      --okkly-popover-shadow: none;
+      width: 13.125rem;
+      filter: drop-shadow(0 1.75rem 2rem rgba(0, 0, 0, 0.45));
+    }
+
+    .okkly-button-group__menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+    }
+  `,
 })
 export class OkklyButtonGroup {
   /**
@@ -116,8 +148,15 @@ export class OkklyButtonGroup {
    * @default "Open menu"
    */
   readonly menuAriaLabel = input("Open menu");
+  /**
+   * Renders the menu in place instead of in `document.body`, as
+   * `OkklyPopover`'s own `disablePortal` does.
+   *
+   * @default false
+   */
+  readonly disablePortal = input(false, { transform: booleanAttribute });
 
-  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly menuItems = contentChildren(OkklyButtonGroupMenuItem);
   private readonly chevron = viewChild<ElementRef<HTMLButtonElement>>("chevron");
 
@@ -134,6 +173,14 @@ export class OkklyButtonGroup {
       .join(" "),
   );
 
+  constructor() {
+    // The menu is portalled to the end of the page, so Tab from the chevron
+    // would never reach it; like `mat-menu`, opening moves focus into it.
+    afterRenderEffect(() => {
+      if (this.open()) untracked(() => this.enabledItems()[0]?.focus());
+    });
+  }
+
   /** Closes the menu and puts focus back on the chevron that opened it. */
   closeAndFocusChevron(): void {
     this.open.set(false);
@@ -146,13 +193,51 @@ export class OkklyButtonGroup {
 
   // Host listeners hand back a bare `Event`; nothing below needs more than that.
   protected onChevronKeydown(event: Event): void {
-    if ((event as KeyboardEvent).key !== "Escape" || !this.open()) return;
-    event.preventDefault();
-    this.open.set(false);
+    const { key } = event as KeyboardEvent;
+    // Escape is also handled here, not only by the Popover: its document
+    // listener is attached in an effect, a tick after the menu opens.
+    if (key === "Escape" && this.open()) {
+      event.preventDefault();
+      this.closeAndFocusChevron();
+    } else if (key === "ArrowDown" && !this.open()) {
+      event.preventDefault();
+      this.open.set(true);
+    }
   }
 
-  protected onDocumentPointerDown(event: Event): void {
-    if (!this.open()) return;
-    if (!this.host.nativeElement.contains(event.target as Node)) this.open.set(false);
+  protected onPopoverClose({ reason }: OverlayCloseEvent): void {
+    if (reason === "escapeKeyDown") this.closeAndFocusChevron();
+    else this.open.set(false);
+  }
+
+  protected onMenuKeydown(event: Event): void {
+    const { key } = event as KeyboardEvent;
+    if (key === "Tab" || key === "Escape") {
+      event.preventDefault();
+      this.closeAndFocusChevron();
+      return;
+    }
+    const items = this.enabledItems();
+    if (!items.length) return;
+    const current = items.indexOf(event.target as HTMLButtonElement);
+    const next =
+      key === "ArrowDown"
+        ? (current + 1) % items.length
+        : key === "ArrowUp"
+          ? (current - 1 + items.length) % items.length
+          : key === "Home"
+            ? 0
+            : key === "End"
+              ? items.length - 1
+              : null;
+    if (next === null) return;
+    event.preventDefault();
+    items[next].focus();
+  }
+
+  private enabledItems(): HTMLButtonElement[] {
+    return this.menuItems()
+      .map((item) => item.element)
+      .filter((element) => !element.disabled && element.isConnected);
   }
 }

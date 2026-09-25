@@ -27,7 +27,8 @@ const column = "display: flex; flex-direction: column; gap: 12px; align-items: f
  *
  * The main action is a `<button okklyButtonGroupAction>` and each menu entry a
  * `<button okklyButtonGroupMenuItem>`, each with its own `(click)`; the chevron
- * appears once there is at least one menu item.
+ * appears once there is at least one menu item. The menu opens in a Popover that
+ * grows in, and the arrow keys move between its items.
  */
 const meta: Meta<ButtonGroupArgs> = {
   title: "Control/ButtonGroup",

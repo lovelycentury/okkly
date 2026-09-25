@@ -94,11 +94,15 @@ callbacks. Its inputs mirror React's otherwise.
 | `color`         | `primary` (default), `dante`, `indigo`, `violet`, `ember`, `ice` |
 | `disabled`      | Disables the whole split button                                  |
 | `menuAriaLabel` | Accessible name of the chevron (default `Open menu`)             |
+| `disablePortal` | Renders the menu in place instead of in `document.body`          |
 
 The chevron appears once at least one `okklyButtonGroupMenuItem` is projected.
-Picking an item closes the menu and returns focus to the chevron; Escape and an
-outside click close it too. `disabled` on the action button disables just that
-action.
+The menu opens in an `OkklyPopover` — portalled, flipped or shifted to stay on
+screen, and grown in — and works like `mat-menu` from the keyboard: opening
+(by click or ArrowDown on the chevron) focuses the first item, the arrow keys,
+Home and End move between items, and picking one, Escape, Tab or an outside
+click closes it and returns focus to the chevron. `disabled` on the action
+button disables just that action.
 
 ## Icon
 

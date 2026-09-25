@@ -36,12 +36,15 @@ test.describe("Screenshot tests", () => {
       beforeEach: async (component, _page, column) => {
         if (column !== "open") return;
         await component.getByRole("button", { name: "Open menu" }).click();
-        // The dropdown is absolutely positioned, so grow the box to keep it in frame.
+        // The menu is absolutely positioned, so grow the box to keep it in frame.
         await adjustSizeToAbsolutePosition(component);
       },
     },
     component: (column, row) =>
-      `<okkly-button-group variant="${row}"${column === "disabled" ? " disabled" : ""}>
+      // The open cell keeps the menu in place so it lands inside the captured frame.
+      `<okkly-button-group variant="${row}"${column === "disabled" ? " disabled" : ""}${
+        column === "open" ? " disablePortal" : ""
+      }>
         <button okklyButtonGroupAction>Commit</button>
         ${
           column === "no-menu"
@@ -52,7 +55,7 @@ test.describe("Screenshot tests", () => {
   });
 });
 
-test("should render the main action and a chevron toggle", async ({ mountTemplate }) => {
+test("should render the main action and a chevron toggle", async ({ mountTemplate, page }) => {
   // ARRANGE
   const component = await mountTemplate(
     `<okkly-button-group>
@@ -69,7 +72,7 @@ test("should render the main action and a chevron toggle", async ({ mountTemplat
   const chevron = component.getByRole("button", { name: "Open menu" });
   await expect(chevron).toHaveAttribute("aria-haspopup", "menu");
   await expect(chevron).toHaveAttribute("aria-expanded", "false");
-  await expect(component.getByRole("menu")).toHaveCount(0);
+  await expect(page.getByRole("menu")).toHaveCount(0);
 });
 
 test("should apply the color modifier only for non-default colors", async ({
@@ -136,7 +139,7 @@ test("should disable only the action when the action itself is disabled", async 
   await expect(component.getByRole("button", { name: "Open menu" })).toBeEnabled();
 });
 
-test("should open the dropdown when the chevron is clicked", async ({ mountTemplate }) => {
+test("should open the dropdown when the chevron is clicked", async ({ mountTemplate, page }) => {
   // ARRANGE
   const component = await mountTemplate(
     `<okkly-button-group>
@@ -150,8 +153,8 @@ test("should open the dropdown when the chevron is clicked", async ({ mountTempl
   await component.getByRole("button", { name: "Open menu" }).click();
 
   // ASSERT
-  await expect(component.getByRole("menu")).toBeVisible();
-  await expect(component.getByRole("menuitem")).toHaveText(["Save as…", "Save & publish"]);
+  await expect(page.getByRole("menu")).toBeVisible();
+  await expect(page.getByRole("menuitem")).toHaveText(["Save as…", "Save & publish"]);
   await expect(component.getByRole("button", { name: "Open menu" })).toHaveAttribute(
     "aria-expanded",
     "true",
@@ -160,6 +163,7 @@ test("should open the dropdown when the chevron is clicked", async ({ mountTempl
 
 test("should paint the dropdown outside the pill instead of clipping it", async ({
   mountTemplate,
+  page,
 }) => {
   // ARRANGE
   const component = await mountTemplate(
@@ -174,7 +178,7 @@ test("should paint the dropdown outside the pill instead of clipping it", async 
 
   // ASSERT — `toBeVisible` passes for a clipped element, so ask the browser what
   // is actually painted at the item's centre.
-  const item = component.getByRole("menuitem", { name: "Save as…" });
+  const item = page.getByRole("menuitem", { name: "Save as…" });
   const hit = await item.evaluate((element) => {
     const box = element.getBoundingClientRect();
     const top = document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2);
@@ -185,6 +189,7 @@ test("should paint the dropdown outside the pill instead of clipping it", async 
 
 test("should fire click and close the dropdown when a menu item is picked", async ({
   mountTemplate,
+  page,
   recordedEvents,
 }) => {
   // ARRANGE
@@ -198,11 +203,11 @@ test("should fire click and close the dropdown when a menu item is picked", asyn
 
   // ACT
   await chevron.click();
-  await component.getByRole("menuitem", { name: "Save as…" }).click();
+  await page.getByRole("menuitem", { name: "Save as…" }).click();
 
   // ASSERT
   expect(await recordedEvents("saveAs")).toHaveLength(1);
-  await expect(component.getByRole("menu")).toHaveCount(0);
+  await expect(page.getByRole("menu")).toHaveCount(0);
   await expect(chevron).toBeFocused();
 });
 
@@ -219,13 +224,13 @@ test("should close the dropdown on an outside click", async ({ mountTemplate, pa
   await component.getByRole("button", { name: "Open menu" }).click();
 
   // ASSERT
-  await expect(component.getByRole("menu")).toBeVisible();
+  await expect(page.getByRole("menu")).toBeVisible();
 
   // ACT
   await page.mouse.click(0, 0);
 
   // ASSERT
-  await expect(component.getByRole("menu")).toHaveCount(0);
+  await expect(page.getByRole("menu")).toHaveCount(0);
 });
 
 test("should close the dropdown on Escape", async ({ mountTemplate, page }) => {
@@ -242,7 +247,7 @@ test("should close the dropdown on Escape", async ({ mountTemplate, page }) => {
   await page.keyboard.press("Escape");
 
   // ASSERT
-  await expect(component.getByRole("menu")).toHaveCount(0);
+  await expect(page.getByRole("menu")).toHaveCount(0);
 });
 
 test("should apply the secondary variant modifier", async ({ mountTemplate }) => {
@@ -278,4 +283,134 @@ test("should hide the action's icon from assistive tech", async ({ mountTemplate
   const glyph = component.locator(".okkly-button-group__icon");
   await expect(glyph).toHaveAttribute("aria-hidden", "true");
   await expect(component.getByRole("button", { name: "Commit" })).toBeVisible();
+});
+
+test.describe("popover", () => {
+  const template = `<okkly-button-group>
+    <button okklyButtonGroupAction>Save</button>
+    <button okklyButtonGroupMenuItem>Save as…</button>
+    <button okklyButtonGroupMenuItem disabled>Save a copy</button>
+    <button okklyButtonGroupMenuItem>Save &amp; publish</button>
+  </okkly-button-group>`;
+
+  test("should open the menu in a portalled popover that grows in", async ({
+    mountTemplate,
+    page,
+  }) => {
+    // ARRANGE
+    const component = await mountTemplate(template);
+
+    // ACT
+    await component.getByRole("button", { name: "Open menu" }).click();
+
+    // ASSERT
+    const menu = page.getByRole("menu");
+    await expect(menu).toBeVisible();
+    const placement = await menu.evaluate((element) => ({
+      inGroup: !!element.closest("okkly-button-group"),
+      paper: !!element.closest(".okkly-popover__paper.okkly-button-group__menu-paper"),
+    }));
+    expect(placement.inGroup).toBe(false);
+    expect(placement.paper).toBe(true);
+  });
+
+  test("should keep the menu in place with disablePortal", async ({ mountTemplate, page }) => {
+    // ARRANGE
+    const component = await mountTemplate(
+      `<okkly-button-group disablePortal>
+        <button okklyButtonGroupAction>Save</button>
+        <button okklyButtonGroupMenuItem>Save as…</button>
+      </okkly-button-group>`,
+    );
+
+    // ACT
+    await component.getByRole("button", { name: "Open menu" }).click();
+
+    // ASSERT
+    await expect(component.getByRole("menu")).toBeVisible();
+    await expect(page.getByRole("menu")).toHaveCount(1);
+  });
+
+  test("should focus the first enabled item on open and move with the arrow keys", async ({
+    mountTemplate,
+    page,
+  }) => {
+    // ARRANGE
+    const component = await mountTemplate(template);
+    const items = page.getByRole("menuitem");
+
+    // ACT
+    await component.getByRole("button", { name: "Open menu" }).click();
+
+    // ASSERT
+    await expect(items.nth(0)).toBeFocused();
+
+    // ACT — the disabled item in between is skipped.
+    await page.keyboard.press("ArrowDown");
+
+    // ASSERT
+    await expect(items.nth(2)).toBeFocused();
+
+    // ACT — and the list wraps around.
+    await page.keyboard.press("ArrowDown");
+
+    // ASSERT
+    await expect(items.nth(0)).toBeFocused();
+
+    // ACT
+    await page.keyboard.press("End");
+
+    // ASSERT
+    await expect(items.nth(2)).toBeFocused();
+  });
+
+  test("should open from the chevron with ArrowDown", async ({ mountTemplate, page }) => {
+    // ARRANGE
+    const component = await mountTemplate(template);
+
+    // ACT
+    await component.getByRole("button", { name: "Open menu" }).focus();
+    await page.keyboard.press("ArrowDown");
+
+    // ASSERT
+    await expect(page.getByRole("menuitem").first()).toBeFocused();
+  });
+
+  test("should close on Escape and Tab and hand focus back to the chevron", async ({
+    mountTemplate,
+    page,
+  }) => {
+    // ARRANGE
+    const component = await mountTemplate(template);
+    const chevron = component.getByRole("button", { name: "Open menu" });
+
+    for (const key of ["Escape", "Tab"]) {
+      // ACT
+      await chevron.click();
+      await expect(page.getByRole("menuitem").first()).toBeFocused();
+      await page.keyboard.press(key);
+
+      // ASSERT
+      await expect(page.getByRole("menu")).toHaveCount(0);
+      await expect(chevron).toBeFocused();
+    }
+  });
+
+  test("should toggle closed from the chevron rather than reopening", async ({
+    mountTemplate,
+    page,
+  }) => {
+    // ARRANGE
+    const component = await mountTemplate(template);
+    const chevron = component.getByRole("button", { name: "Open menu" });
+
+    // ACT
+    await chevron.click();
+    await expect(page.getByRole("menu")).toBeVisible();
+    await chevron.click();
+
+    // ASSERT
+    await expect(page.getByRole("menu")).toHaveCount(0);
+    await expect(chevron).toHaveAttribute("aria-expanded", "false");
+  });
 });

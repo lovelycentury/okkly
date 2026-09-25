@@ -24,9 +24,16 @@
       </svg>
     </span>
   </button>
-}
-@if (open()) {
-  <div class="okkly-button-group__menu" role="menu">
-    <ng-content select="[okklyButtonGroupMenuItem]" />
-  </div>
+  <okkly-popover
+    [open]="open()"
+    [anchorEl]="host"
+    placement="bottom-end"
+    [disablePortal]="disablePortal()"
+    paperClass="okkly-button-group__menu-paper"
+    (close)="onPopoverClose($event)"
+  >
+    <div class="okkly-button-group__menu-list" role="menu" (keydown)="onMenuKeydown($event)">
+      <ng-content select="[okklyButtonGroupMenuItem]" />
+    </div>
+  </okkly-popover>
 }
