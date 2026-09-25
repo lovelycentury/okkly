@@ -49,7 +49,7 @@ export class OkklyCardAction {}
     class: "okkly-component okkly-card",
     "[class]": "modifiers()",
   },
-  template: "<ng-content />",
+  templateUrl: "./Card.html",
 })
 export class OkklyCard {
   /**
@@ -149,7 +149,7 @@ export class OkklyCardHeader {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: { class: "okkly-card__content" },
-  template: "<ng-content />",
+  templateUrl: "./CardContent.html",
 })
 export class OkklyCardContent {}
 
@@ -159,7 +159,7 @@ export class OkklyCardContent {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: { class: "okkly-card__actions" },
-  template: "<ng-content />",
+  templateUrl: "./CardActions.html",
 })
 export class OkklyCardActions {}
 

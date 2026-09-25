@@ -71,7 +71,7 @@ export const ICON_NAMES = Object.keys(ICONS).toSorted() as IconName[];
     "[attr.aria-hidden]": "titleAccess() ? null : 'true'",
     "[innerHTML]": "markup()",
   },
-  template: "",
+  templateUrl: "./Icon.html",
 })
 export class OkklyIcon {
   /**

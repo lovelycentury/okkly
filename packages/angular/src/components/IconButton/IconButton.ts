@@ -44,7 +44,7 @@ export type IconButtonSize = "small" | "medium" | "large";
     "[attr.aria-disabled]": "!isNativeButton && disabled() ? 'true' : null",
     "[attr.tabindex]": "!isNativeButton && disabled() ? '-1' : null",
   },
-  template: `<span class="okkly-icon-button__icon" aria-hidden="true"><ng-content /></span>`,
+  templateUrl: "./IconButton.html",
 })
 export class OkklyIconButton {
   /**

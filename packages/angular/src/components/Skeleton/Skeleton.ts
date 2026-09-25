@@ -45,7 +45,7 @@ function toCssLength(value: number | string | undefined): string | null {
     "[style.--okkly-skeleton-width]": "cssWidth()",
     "[style.--okkly-skeleton-height]": "cssHeight()",
   },
-  template: "",
+  templateUrl: "./Skeleton.html",
 })
 export class OkklySkeleton {
   /**

@@ -55,7 +55,7 @@ Below, `<dir>` is `components` or `directives`, per the split above.
 | `packages/angular/README.md`                          | A `## <Name>` section, like `## Button`                                   |
 | `.changeset/angular-<kebab-name>.md`                  | `minor` bump for `@okkly/angular`                                         |
 
-A template of a few lines may stay inline (`template:`), but anything with control flow goes in `<Name>.html`. Tests and stories never ship — `tsconfig.build.json` excludes them, from the build and from Compodoc alike.
+Every component's markup lives in a template file (`templateUrl`), never inline `template:` — even a one-line `<ng-content />`. An intentionally empty template (a host that is the whole component, or whose content is set another way) still gets its file, holding a one-line HTML comment that says why it is empty. A file with several components gives each its own, named after the class (`CardHeader.html`). Tests and stories never ship — `tsconfig.build.json` excludes them, from the build and from Compodoc alike.
 
 ### Registering the stylesheet (both places, always)
 

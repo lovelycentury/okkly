@@ -65,7 +65,7 @@ export class OkklyChipGroupOption implements ChipGroupOptionState {
     "[class]": "modifiers()",
     "[attr.role]": "hasOptions() ? 'group' : null",
   },
-  template: "<ng-content />",
+  templateUrl: "./ChipGroup.html",
 })
 export class OkklyChipGroup {
   /**
