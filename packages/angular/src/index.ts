@@ -194,3 +194,6 @@ export type {
   InlineActionFill,
   InlineActionState,
 } from "./components/InlineAction/InlineAction";
+
+export { OkklyLinkCard } from "./components/LinkCard/LinkCard";
+export type { LinkCardColor, LinkCardSize } from "./components/LinkCard/LinkCard";

@@ -28,6 +28,7 @@ import "@okkly/design-system/components/Grow/Grow.scss";
 import "@okkly/design-system/components/Icon/Icon.scss";
 import "@okkly/design-system/components/IconButton/IconButton.scss";
 import "@okkly/design-system/components/InlineAction/InlineAction.scss";
+import "@okkly/design-system/components/LinkCard/LinkCard.scss";
 import "@okkly/design-system/components/Modal/Modal.scss";
 import "@okkly/design-system/components/Photo/Photo.scss";
 import "@okkly/design-system/components/Popover/Popover.scss";

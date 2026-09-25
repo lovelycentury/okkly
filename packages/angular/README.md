@@ -1029,6 +1029,23 @@ glyph projected with `okklyInlineActionIcon` replaces the button's arrow. The
 control has no label of its own, so give it an `aria-label` (set on the native
 input, as are `id`, `name` and `type`).
 
+## LinkCard
+
+`OkklyLinkCard` (`a[okklyLinkCard]`, `div[okklyLinkCard]`) is the "links page"
+row: a title, a supporting line, a trailing tag and an arrow. Inputs mirror
+`@okkly/react`'s `<LinkCard>` name-for-name: `title`, `subtitle`, `meta`,
+`featured`, `color`, `size`.
+
+```html
+<a okklyLinkCard href="/writing" title="Writing" subtitle="Essays" meta="24 posts" featured></a>
+<div okklyLinkCard interactive title="Copy my email" (click)="copy()"></div>
+<div okklyLinkCard title="Newsletter" meta="soon"></div>
+```
+
+It decorates the element you write. React makes a `<div>` a button when it has
+an `onClick`; here `interactive` does that — `role="button"`, `tabindex="0"`,
+and Enter or Space firing `click`.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
