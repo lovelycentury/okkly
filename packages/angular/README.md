@@ -252,6 +252,25 @@ in an `OkklyRadioGroup`. Inputs mirror `@okkly/react`'s `<Radio>` name-for-name.
 | `size`     | `small`, `medium` (default), `large`                                            |
 | `color`    | Any radio colour (default `primary`)                                            |
 
+## Switch
+
+`OkklySwitch` (`okkly-switch`) is an immediate on/off toggle — a native
+checkbox carrying `role="switch"`. Prefer `OkklyCheckbox` for statements a form
+submits later. Inputs mirror `@okkly/react`'s `<Switch>` name-for-name.
+
+```html
+<okkly-switch label="Dark mode" [(checked)]="darkMode" />
+```
+
+| Input                               | Values                                                           |
+| ----------------------------------- | ---------------------------------------------------------------- |
+| `checked`                           | On/off; `[(checked)]` with `checkedChange`                       |
+| `label`                             | Text beside the track, a `<label for>` tied to the native input  |
+| `size`                              | `small`, `medium` (default), `large`                             |
+| `color`                             | `primary` (default), `dante`, `indigo`, `violet`, `ember`, `ice` |
+| `disabled`                          | Non-interactive                                                  |
+| `name`, `value`, `id`, `aria-label` | Forwarded to the native input                                    |
+
 ## Chip
 
 `OkklyChip` (`okkly-chip`) is a compact filter, tag or choice token. Inputs
