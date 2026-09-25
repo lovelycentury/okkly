@@ -1,0 +1,41 @@
+<span class="okkly-checkbox__control">
+  <input
+    type="checkbox"
+    class="okkly-checkbox__input"
+    [id]="inputId()"
+    [attr.name]="name() ?? null"
+    [attr.value]="value() ?? null"
+    [attr.aria-label]="ariaLabel() ?? null"
+    [checked]="isChecked()"
+    [indeterminate]="isIndeterminate()"
+    [disabled]="disabled()"
+    (change)="onChange($event)"
+  />
+  <span class="okkly-checkbox__box" aria-hidden="true">
+    <svg
+      class="okkly-checkbox__check"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+    <svg
+      class="okkly-checkbox__minus"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M5 12h14" />
+    </svg>
+  </span>
+</span>
+@if (label()) {
+  <label class="okkly-checkbox__label" [for]="inputId()">{{ label() }}</label>
+}

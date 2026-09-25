@@ -158,6 +158,34 @@ Material's icon button where they overlap and mirror `@okkly/react`'s
 
 There is no visible label, so always give it an `aria-label` (or a tooltip).
 
+## Checkbox
+
+`OkklyCheckbox` (`okkly-checkbox`) is a binary or indeterminate choice. Inputs
+mirror `@okkly/react`'s `<Checkbox>` name-for-name; the selector follows
+Angular Material's `mat-checkbox`.
+
+```html
+<okkly-checkbox label="Subscribe to updates" [(checked)]="subscribed" />
+<okkly-checkbox
+  label="Select all"
+  [checked]="all"
+  [indeterminate]="some"
+  (checkedChange)="toggleAll($event)"
+/>
+```
+
+| Input                               | Values                                                                                           |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `checked`                           | On/off; `[(checked)]` with `checkedChange`                                                       |
+| `indeterminate`                     | Mixed state, cleared when the user toggles; `[(indeterminate)]`                                  |
+| `label`                             | Text beside the box, a `<label for>` tied to the native input                                    |
+| `size`                              | `small`, `medium` (default), `large`                                                             |
+| `color`                             | `primary` (default), `dante`, `indigo`, `violet`, `ember`, `ice`, `success`, `warning`, `danger` |
+| `disabled`                          | Non-interactive                                                                                  |
+| `name`, `value`, `id`, `aria-label` | Forwarded to the native input                                                                    |
+
+No `ngModel` or reactive-forms binding yet, as with `OkklyTextField`.
+
 ## Chip
 
 `OkklyChip` (`okkly-chip`) is a compact filter, tag or choice token. Inputs
