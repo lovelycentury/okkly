@@ -38,6 +38,7 @@ import "@okkly/design-system/components/Switch/Switch.scss";
 import "@okkly/design-system/components/TextField/TextField.scss";
 import "@okkly/design-system/components/Tooltip/Tooltip.scss";
 import "@okkly/design-system/components/Typography/Typography.scss";
+import "@okkly/design-system/components/Zoom/Zoom.scss";
 import "./preview.css";
 import { okklyTheme } from "./theme";
 // Angular has no react-docgen equivalent: Compodoc reads the inputs' types,

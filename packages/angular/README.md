@@ -930,6 +930,7 @@ shorthand cannot bind outputs, so listen on the long form:
 | ----------- | ------------------------------------------------------------ | ------------------------------------ |
 | `okklyFade` | Opacity                                                      | `{ enter: 225, exit: 195 }`          |
 | `okklyGrow` | Opacity and scale, from the element's own `transform-origin` | `"auto"` — from the element's height |
+| `okklyZoom` | Scale from a point, without opacity                          | `{ enter: 225, exit: 195 }`          |
 
 ## Workbench
 
