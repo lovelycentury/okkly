@@ -1046,6 +1046,20 @@ It decorates the element you write. React makes a `<div>` a button when it has
 an `onClick`; here `interactive` does that — `role="button"`, `tabindex="0"`,
 and Enter or Space firing `click`.
 
+## Logo
+
+`OkklyLogo` (`okkly-logo`) is the brand lockup — the disc mark as a filled
+disc, an outlined ring or the bare glyph, with an optional wordmark. Inputs
+mirror `@okkly/react`'s `<Logo>` name-for-name: `layout`, `variant`, `tone`,
+`label`, `showLabel`, `size`.
+
+```html
+<okkly-logo layout="compact" />
+<okkly-logo variant="outlined" tone="dante" [showLabel]="false" [size]="32" />
+```
+
+`size` sets the emblem — a number is pixels, a string any CSS length.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

@@ -1,0 +1,56 @@
+<svg
+  class="okkly-logo__emblem"
+  [attr.viewBox]="viewBox()"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+>
+  @if (isMulti()) {
+    <defs>
+      <linearGradient
+        [attr.id]="gradientId"
+        x1="0"
+        y1="0"
+        [attr.x2]="vb"
+        [attr.y2]="vb"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop stop-color="var(--okkly-logo-gradient-start)" />
+        <stop offset="1" stop-color="var(--okkly-logo-gradient-end)" />
+      </linearGradient>
+    </defs>
+  }
+  @switch (variant()) {
+    @case ("filled") {
+      <circle [attr.cx]="vb / 2" [attr.cy]="vb / 2" [attr.r]="vb / 2" [attr.fill]="ink()" />
+    }
+    @case ("outlined") {
+      <circle
+        [attr.cx]="vb / 2"
+        [attr.cy]="vb / 2"
+        [attr.r]="ringRadius"
+        [attr.stroke]="ink()"
+        [attr.stroke-width]="stroke"
+      />
+    }
+  }
+  <!-- The wand-and-spark glyph, exactly as exported from Figma. -->
+  <g
+    [attr.stroke]="glyphStroke()"
+    [attr.stroke-width]="glyphStrokeWidth()"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path
+      d="M32.5235 39.4764L25.8747 46.1252L22.6685 42.9189C22.3547 42.6055 22.1058 42.2333 21.936 41.8236C21.7661 41.4139 21.6787 40.9747 21.6787 40.531C21.6787 40.0875 21.7661 39.6483 21.936 39.2386C22.1058 38.8289 22.3547 38.4567 22.6685 38.1433L35.9997 24.812C36.3131 24.4982 36.6855 24.2493 37.0952 24.0794C37.505 23.9096 37.9442 23.8223 38.3876 23.8223C38.8311 23.8223 39.2703 23.9096 39.68 24.0794C40.0898 24.2493 40.4619 24.4982 40.7753 24.812L46.1247 25.8752"
+    />
+    <path d="M36 20.8125V27.5625" />
+    <path d="M20.8125 36H27.5625" />
+    <path
+      d="M46.125 41.0625L47.8125 46.125L52.875 47.8125L47.8125 49.5L46.125 54.5625L44.4375 49.5L39.375 47.8125L44.4375 46.125L46.125 41.0625Z"
+    />
+  </g>
+</svg>
+@if (showLabel()) {
+  <span class="okkly-logo__label">{{ label() }}</span>
+}
