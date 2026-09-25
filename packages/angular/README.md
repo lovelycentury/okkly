@@ -926,11 +926,12 @@ shorthand cannot bind outputs, so listen on the long form:
 </ng-template>
 ```
 
-| Directive   | Animates                                                     | Default `timeout`                    |
-| ----------- | ------------------------------------------------------------ | ------------------------------------ |
-| `okklyFade` | Opacity                                                      | `{ enter: 225, exit: 195 }`          |
-| `okklyGrow` | Opacity and scale, from the element's own `transform-origin` | `"auto"` — from the element's height |
-| `okklyZoom` | Scale from a point, without opacity                          | `{ enter: 225, exit: 195 }`          |
+| Directive    | Animates                                                              | Default `timeout`                    |
+| ------------ | --------------------------------------------------------------------- | ------------------------------------ |
+| `okklyFade`  | Opacity                                                               | `{ enter: 225, exit: 195 }`          |
+| `okklyGrow`  | Opacity and scale, from the element's own `transform-origin`          | `"auto"` — from the element's height |
+| `okklyZoom`  | Scale from a point, without opacity                                   | `{ enter: 225, exit: 195 }`          |
+| `okklySlide` | Position, in from the `direction` edge of the window or a `container` | `{ enter: 225, exit: 195 }`          |
 
 ## Workbench
 

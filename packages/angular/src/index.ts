@@ -160,6 +160,8 @@ export { OkklyGrow } from "./directives/Grow/Grow";
 export type { GrowTimeout } from "./directives/Grow/Grow";
 export { OkklyZoom } from "./directives/Zoom/Zoom";
 export type { ZoomTimeout } from "./directives/Zoom/Zoom";
+export { OkklySlide } from "./directives/Slide/Slide";
+export type { SlideContainer, SlideDirection, SlideTimeout } from "./directives/Slide/Slide";
 export type { TransitionStatus } from "./helpers/transition";
 
 export type {
