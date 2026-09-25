@@ -1,17 +1,35 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  InjectionToken,
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
   linkedSignal,
   output,
+  type Signal,
 } from "@angular/core";
 
 export type CheckboxSize = "small" | "medium" | "large";
 export type CheckboxColor =
   "primary" | "dante" | "indigo" | "violet" | "ember" | "ice" | "success" | "warning" | "danger";
+
+/**
+ * What an `OkklyCheckboxGroup` shares with the checkboxes nested in it — the
+ * counterpart of React's `CheckboxGroupContext`.
+ */
+export interface CheckboxGroupState {
+  name: Signal<string>;
+  disabled: Signal<boolean>;
+  size: Signal<CheckboxSize>;
+  color: Signal<CheckboxColor>;
+  isChecked(value: string): boolean;
+  toggle(value: string, checked: boolean): void;
+}
+
+export const CHECKBOX_GROUP = new InjectionToken<CheckboxGroupState>("CHECKBOX_GROUP");
 
 let nextId = 0;
 
@@ -29,6 +47,9 @@ let nextId = 0;
  * `aria-label` is an input forwarded to that input, for a checkbox with no
  * visible label. No `ngModel`/reactive-forms binding yet, as with
  * `OkklyTextField`.
+ *
+ * Nested in an `OkklyCheckboxGroup`, it takes its name, checked state,
+ * disabled state, size and colour from the group, and `value` picks the option.
  */
 @Component({
   selector: "okkly-checkbox",
@@ -73,17 +94,17 @@ export class OkklyCheckbox {
    */
   readonly indeterminate = input(false, { transform: booleanAttribute });
   /**
-   * Box size.
+   * Box size. Unset, it follows a surrounding group, else `medium`.
    *
-   * @default "medium"
+   * @default undefined
    */
-  readonly size = input<CheckboxSize>("medium");
+  readonly size = input<CheckboxSize>();
   /**
-   * Fill colour.
+   * Fill colour. Unset, it follows a surrounding group, else `primary`.
    *
-   * @default "primary"
+   * @default undefined
    */
-  readonly color = input<CheckboxColor>("primary");
+  readonly color = input<CheckboxColor>();
   /**
    * Non-interactive.
    *
@@ -119,13 +140,29 @@ export class OkklyCheckbox {
   protected readonly isChecked = linkedSignal(() => this.checked());
   protected readonly isIndeterminate = linkedSignal(() => this.indeterminate());
 
+  /** Set when the checkbox is nested in an `OkklyCheckboxGroup`. */
+  private readonly group = inject(CHECKBOX_GROUP, { optional: true });
+
   private readonly generatedId = `okkly-checkbox-${nextId++}`;
   protected readonly inputId = computed(() => this.id() ?? this.generatedId);
 
+  protected readonly effectiveChecked = computed(() => {
+    const value = this.value();
+    return this.group && value !== undefined ? this.group.isChecked(value) : this.isChecked();
+  });
+  protected readonly effectiveName = computed(() => this.name() ?? this.group?.name());
+  protected readonly effectiveDisabled = computed(
+    () => this.disabled() || !!this.group?.disabled(),
+  );
+  private readonly effectiveSize = computed(() => this.size() ?? this.group?.size() ?? "medium");
+  private readonly effectiveColor = computed(
+    () => this.color() ?? this.group?.color() ?? "primary",
+  );
+
   protected readonly modifiers = computed(() =>
     [
-      this.color() !== "primary" && `okkly-checkbox--color-${this.color()}`,
-      this.size() !== "medium" && `okkly-checkbox--${this.size()}`,
+      this.effectiveColor() !== "primary" && `okkly-checkbox--color-${this.effectiveColor()}`,
+      this.effectiveSize() !== "medium" && `okkly-checkbox--${this.effectiveSize()}`,
     ]
       .filter(Boolean)
       .join(" "),
@@ -137,7 +174,9 @@ export class OkklyCheckbox {
       this.isIndeterminate.set(false);
       this.indeterminateChange.emit(false);
     }
-    this.isChecked.set(checked);
+    const value = this.value();
+    if (this.group && value !== undefined) this.group.toggle(value, checked);
+    else this.isChecked.set(checked);
     this.checkedChange.emit(checked);
   }
 }

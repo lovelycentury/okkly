@@ -28,6 +28,8 @@ export type {
 export { OkklyCheckbox } from "./components/Checkbox/Checkbox";
 export type { CheckboxSize, CheckboxColor } from "./components/Checkbox/Checkbox";
 
+export { OkklyCheckboxGroup } from "./components/CheckboxGroup/CheckboxGroup";
+
 export { OkklyChip, OkklyChipIcon } from "./components/Chip/Chip";
 export type { ChipVariant, ChipSize } from "./components/Chip/Chip";
 

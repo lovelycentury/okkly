@@ -174,17 +174,41 @@ Angular Material's `mat-checkbox`.
 />
 ```
 
-| Input                               | Values                                                                                           |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `checked`                           | On/off; `[(checked)]` with `checkedChange`                                                       |
-| `indeterminate`                     | Mixed state, cleared when the user toggles; `[(indeterminate)]`                                  |
-| `label`                             | Text beside the box, a `<label for>` tied to the native input                                    |
-| `size`                              | `small`, `medium` (default), `large`                                                             |
-| `color`                             | `primary` (default), `dante`, `indigo`, `violet`, `ember`, `ice`, `success`, `warning`, `danger` |
-| `disabled`                          | Non-interactive                                                                                  |
-| `name`, `value`, `id`, `aria-label` | Forwarded to the native input                                                                    |
+| Input                               | Values                                                                                                                        |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `checked`                           | On/off; `[(checked)]` with `checkedChange`                                                                                    |
+| `indeterminate`                     | Mixed state, cleared when the user toggles; `[(indeterminate)]`                                                               |
+| `label`                             | Text beside the box, a `<label for>` tied to the native input                                                                 |
+| `size`                              | `small`, `medium`, `large`; unset follows a group, else `medium`                                                              |
+| `color`                             | `primary`, `dante`, `indigo`, `violet`, `ember`, `ice`, `success`, `warning`, `danger`; unset follows a group, else `primary` |
+| `disabled`                          | Non-interactive                                                                                                               |
+| `name`, `value`, `id`, `aria-label` | Forwarded to the native input                                                                                                 |
 
 No `ngModel` or reactive-forms binding yet, as with `OkklyTextField`.
+
+## CheckboxGroup
+
+`OkklyCheckboxGroup` (`okkly-checkbox-group`) is a labelled set of checkboxes
+that share one question. Nest `okkly-checkbox` elements with a `value` each; the
+group gives them a shared `name`, owns which are checked, and passes its
+`disabled`, `size` and `color` down unless a checkbox sets its own. Inputs
+mirror `@okkly/react`'s `<CheckboxGroup>` name-for-name.
+
+```html
+<okkly-checkbox-group label="Notification channels" [(value)]="channels">
+  <okkly-checkbox value="email" label="Email me updates" />
+  <okkly-checkbox value="push" label="Push notifications" />
+</okkly-checkbox-group>
+```
+
+| Input      | Values                                                                      |
+| ---------- | --------------------------------------------------------------------------- |
+| `value`    | Checked values; `[(value)]` (React's `defaultValue` is a one-way `[value]`) |
+| `name`     | Shared input name; generated when omitted                                   |
+| `label`    | Shown above the options and used as the group's accessible name             |
+| `disabled` | Disables every checkbox                                                     |
+| `size`     | `small`, `medium` (default), `large`                                        |
+| `color`    | Any checkbox colour (default `primary`)                                     |
 
 ## Chip
 
