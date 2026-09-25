@@ -1093,6 +1093,28 @@ The trend badge speaks its direction ("Up 12.5%"). A glyph tagged
 `okklyStatCardIcon` goes in the header chip; any other projected content follows
 `value` inside the headline, for a unit or a currency.
 
+## List
+
+`OkklyList` (`ul[okklyList]`) and `OkklyListItem` (`li[okklyListItem]`) are a
+vertical run of rows on one surface. Inputs follow MUI's List and ListItem, as
+`@okkly/react` does: `dense`, `disablePadding`, `subheader` on the list;
+`selected`, `disabled`, `button`, `dense` on a row. `okkly-list-item-text`
+(`primary`, `secondary`) and `okkly-list-item-icon` fill the common row shape.
+
+```html
+<ul okklyList subheader="Settings">
+  <li okklyListItem button [selected]="active === 'profile'" (itemClick)="active = 'profile'">
+    <okkly-list-item-icon okklyListItemStart><okkly-icon name="iconUser" /></okkly-list-item-icon>
+    <okkly-list-item-text primary="Profile" secondary="Name, photo, and handle" />
+    <okkly-badge okklyListItemEnd [badgeContent]="3" />
+  </li>
+</ul>
+```
+
+A `button` row renders its content as a real `<button>` and reports it through
+`itemClick`; the `okklyListItemEnd` control stays outside that button so it
+remains reachable.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

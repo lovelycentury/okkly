@@ -1,0 +1,27 @@
+<!--
+  The row's content is stamped from one template — inside the button on a
+  `button` row, straight into the <li> otherwise — as each <ng-content> slot
+  can only be declared once.
+-->
+<ng-template #body>
+  @if (hasStart()) {
+    <span class="okkly-list-item__leading"><ng-content select="[okklyListItemStart]" /></span>
+  }
+  <span class="okkly-list-item__content"><ng-content /></span>
+</ng-template>
+@if (button()) {
+  <!-- A real button already fires `click` on Enter and Space. -->
+  <button
+    type="button"
+    [class]="buttonClasses()"
+    [disabled]="disabled()"
+    (click)="itemClick.emit()"
+  >
+    <ng-container [ngTemplateOutlet]="body" />
+  </button>
+} @else {
+  <ng-container [ngTemplateOutlet]="body" />
+}
+@if (hasEnd()) {
+  <span class="okkly-list-item__trailing"><ng-content select="[okklyListItemEnd]" /></span>
+}

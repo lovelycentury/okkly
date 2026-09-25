@@ -29,6 +29,7 @@ import "@okkly/design-system/components/Icon/Icon.scss";
 import "@okkly/design-system/components/IconButton/IconButton.scss";
 import "@okkly/design-system/components/InlineAction/InlineAction.scss";
 import "@okkly/design-system/components/LinkCard/LinkCard.scss";
+import "@okkly/design-system/components/List/List.scss";
 import "@okkly/design-system/components/Logo/Logo.scss";
 import "@okkly/design-system/components/Modal/Modal.scss";
 import "@okkly/design-system/components/Photo/Photo.scss";

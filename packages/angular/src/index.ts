@@ -205,3 +205,12 @@ export { OkklyProjectCard, OkklyProjectCardLogo } from "./components/ProjectCard
 
 export { OkklyStatCard, OkklyStatCardIcon } from "./components/StatCard/StatCard";
 export type { StatCardColor, StatCardSize, StatCardTrend } from "./components/StatCard/StatCard";
+
+export {
+  OkklyList,
+  OkklyListItem,
+  OkklyListItemStart,
+  OkklyListItemEnd,
+  OkklyListItemText,
+  OkklyListItemIcon,
+} from "./components/List/List";
