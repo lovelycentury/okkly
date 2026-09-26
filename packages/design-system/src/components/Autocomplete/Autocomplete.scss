@@ -15,7 +15,7 @@
     }
 
     &--disabled &__control {
-      cursor: not-allowed;
+      cursor: default;
     }
 
     // Tags sit inside the control, before the input, and wrap onto new lines as

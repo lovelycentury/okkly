@@ -57,7 +57,7 @@
     &:disabled,
     &[aria-disabled="true"] {
       opacity: 0.4;
-      cursor: not-allowed;
+      cursor: default;
       box-shadow:
         0 0 0.5rem transparent,
         0 0 0 0.1875rem transparent;

@@ -103,7 +103,7 @@
 
       &:disabled {
         opacity: 0.4;
-        cursor: not-allowed;
+        cursor: default;
       }
     }
 
@@ -186,7 +186,7 @@
 
       &:disabled {
         opacity: 0.4;
-        cursor: not-allowed;
+        cursor: default;
       }
     }
   }

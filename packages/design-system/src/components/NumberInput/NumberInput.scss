@@ -95,7 +95,7 @@
       }
 
       &:disabled {
-        cursor: not-allowed;
+        cursor: default;
       }
     }
 
@@ -141,7 +141,7 @@
 
       &:disabled {
         color: var(--okkly-text-muted);
-        cursor: not-allowed;
+        cursor: default;
       }
 
       svg,

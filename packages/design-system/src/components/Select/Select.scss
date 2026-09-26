@@ -20,7 +20,7 @@
     }
 
     &--disabled &__control {
-      cursor: not-allowed;
+      cursor: default;
     }
 
     &__trigger {
@@ -37,10 +37,10 @@
     // Tab), which without this let a click land the focus ring and glow on a
     // disabled trigger even though the JS handlers already no-op the toggle.
     // `pointer-events: none` here stops the click before it can focus
-    // anything; it still shows the `not-allowed` cursor because the event
-    // falls through to `&__control`, which keeps its own pointer-events.
+    // anything; it still shows the `default` cursor because the event falls
+    // through to `&__control`, which keeps its own pointer-events.
     &--disabled &__trigger {
-      cursor: not-allowed;
+      cursor: default;
       pointer-events: none;
     }
 
