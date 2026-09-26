@@ -1370,6 +1370,102 @@ markup. A `freeSolo` commit stores the typed text as the `value` string
 itself, so the `name` hidden inputs submit each option's `value` (matching
 `Select`), not its `label`.
 
+## TimePicker
+
+`OkklyTimePicker` (`okkly-time-picker`) is an always-visible inline time
+picker — up to three plain scrollable columns (hours, minutes, and, only for
+`format="12h"`, a third AM/PM column), each a simple list with the selected
+row picked out by a filled pill. No MUI equivalent: MUI X's `TimePicker` is a
+masked text input with a popover, deliberately out of scope here — this
+mirrors MUI's `MultiSectionDigitalClock` instead. Built on native scrolling
+with CSS `scroll-snap` rather than a drag library, so the browser's own
+touch/trackpad momentum gives the "coast to a stop on a value" feel for free.
+
+| Input               | Type                                                   | Default          |
+| ------------------- | ------------------------------------------------------ | ---------------- |
+| `value`             | `{ h: number; m: number }` (`model`, two-way)          | `{ h: 0, m: 0 }` |
+| `step`              | `number`                                               | `1`              |
+| `format`            | `24h \| 12h`                                           | `24h`            |
+| `color`             | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`        |
+| `hoursAriaLabel`    | `string`                                               | `"Hours"`        |
+| `minutesAriaLabel`  | `string`                                               | `"Minutes"`      |
+| `meridiemAriaLabel` | `string`                                               | `"AM/PM"`        |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyTimePicker, type TimePickerValue } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyTimePicker],
+  template: `<okkly-time-picker [(value)]="time" format="12h" />`,
+})
+export class AppComponent {
+  time: TimePickerValue = { h: 9, m: 30 };
+}
+```
+
+`value.h` is always canonical 24-hour (0–23); the AM/PM column is purely a
+12-hour selection helper layered on top of it. `step` sets the minute
+column's granularity (clamped 1–59, e.g. `step="5"` for `:00, :05, :10, …`).
+Click a row, or focus a column (`role="spinbutton"`) and use ArrowUp/
+ArrowDown/Home/End to change it.
+
+Deliberate gaps: no `className`/`class` forwarding onto the host, matching
+`Select`/`Autocomplete`. `WheelColumn`, the internal scrollable-column
+primitive `@okkly/react`'s `<TimePicker>` also keeps private, is not
+exported.
+
+## Calendar
+
+`OkklyCalendar` (`okkly-calendar`) is a month card for picking a date or a
+date range — day, month and year grids, drilling up the hierarchy on a
+header click. Closest MUI counterpart is MUI X's `DateCalendar`, as
+`@okkly/react`'s `<Calendar>` follows.
+
+| Input                | Type                                                   | Default            |
+| -------------------- | ------------------------------------------------------ | ------------------ |
+| `mode`               | `single \| range`                                      | `single`           |
+| `value`              | `Date \| [Date, Date] \| null` (`model`, two-way)      | `null`             |
+| `month`              | `Date \| undefined` (`model`, two-way)                 | today              |
+| `min`                | `Date`                                                 | —                  |
+| `max`                | `Date`                                                 | —                  |
+| `weekStart`          | `mon \| sun`                                           | `mon`              |
+| `locale`             | `string`                                               | `"en-US"`          |
+| `previousMonthLabel` | `string`                                               | `"Previous month"` |
+| `nextMonthLabel`     | `string`                                               | `"Next month"`     |
+| `color`              | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`          |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyCalendar } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyCalendar],
+  template: `<okkly-calendar [(value)]="selected" />`,
+})
+export class AppComponent {
+  selected: Date | null = null;
+}
+```
+
+`mode="range"` takes two clicks to commit a pair — the first click arms a
+start, the second orders and commits `[start, end]`; a third click after a
+pair is committed starts a new range. `min`/`max` also disable unreachable
+months and years in those views, not just individual days. `color` sets
+`--okkly-calendar-tone`; override it directly with a
+`style="--okkly-calendar-tone: …"` attribute for a one-off tone `color`
+doesn't name.
+
+Deliberate gaps: no discriminated `mode`/`value`/`onSelect` union — react's
+`CalendarSingleProps`/`CalendarRangeProps` split exists so a TSX caller gets
+`onSelect` narrowed per mode, which an Angular template gets no benefit from,
+so `value` is one `model<CalendarValue | null>()` for both modes. No
+separate `(select)` output either — every `value` change here means exactly
+one thing, so `[(value)]` alone carries what react's `onSelect` did. No
+`className`/`style` forwarding, matching `Select`/`Autocomplete`.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

@@ -1,0 +1,17 @@
+<div class="okkly-time-picker__column-viewport" #viewport>
+  <div class="okkly-time-picker__column-container">
+    @for (v of values(); track v; let i = $index) {
+      <div
+        [attr.data-value]="v"
+        [class]="
+          isSelected(v)
+            ? 'okkly-time-picker__slide okkly-time-picker__slide--selected'
+            : 'okkly-time-picker__slide'
+        "
+        (click)="commitIndex(i)"
+      >
+        {{ formatValue()(v) }}
+      </div>
+    }
+  </div>
+</div>
