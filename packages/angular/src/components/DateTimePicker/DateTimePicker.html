@@ -1,0 +1,54 @@
+<div class="okkly-date-time-picker__panels">
+  <div #calendarHost style="display: contents">
+    <okkly-calendar
+      [color]="color()"
+      [value]="day()"
+      (valueChange)="handleSelectDay($event)"
+      [month]="month()"
+      (monthChange)="month.set($event)"
+      [min]="min()"
+      [max]="max()"
+      [weekStart]="weekStart()"
+      [locale]="locale()"
+      [previousMonthLabel]="previousMonthLabel() ?? 'Previous month'"
+      [nextMonthLabel]="nextMonthLabel() ?? 'Next month'"
+    />
+  </div>
+  <okkly-time-picker
+    [style.--okkly-time-picker-viewport-height]="timePickerViewportHeight()"
+    [value]="time()"
+    (valueChange)="handleTimeChange($event)"
+    [step]="timeStep()"
+    [format]="format()"
+    [color]="color()"
+  />
+</div>
+<div class="okkly-date-time-picker__footer">
+  <div class="okkly-date-time-picker__summary">
+    <p class="okkly-date-time-picker__summary-label">{{ summaryLabel() }}</p>
+    <div class="okkly-date-time-picker__summary-value">
+      <span
+        class="okkly-date-time-picker__summary-text"
+        [class.okkly-date-time-picker__summary-text--empty]="!value()"
+      >
+        {{ summaryText() }}
+      </span>
+      @if (timezoneLabel(); as timezone) {
+        <okkly-chip size="small" [label]="timezone">
+          <okkly-icon okklyChipIcon [icon]="iconGlobe" />
+        </okkly-chip>
+      }
+    </div>
+  </div>
+  <button
+    okklyButton
+    variant="gradient"
+    shape="rounded"
+    [color]="color()"
+    [disabled]="!value()"
+    (click)="onConfirmClick()"
+  >
+    {{ confirmLabel() }}
+    <okkly-icon okklyButtonEndIcon [icon]="iconArrowRight" />
+  </button>
+</div>

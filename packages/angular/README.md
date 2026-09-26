@@ -1466,6 +1466,215 @@ separate `(select)` output either — every `value` change here means exactly
 one thing, so `[(value)]` alone carries what react's `onSelect` did. No
 `className`/`style` forwarding, matching `Select`/`Autocomplete`.
 
+## DateField
+
+`OkklyDateField` (`okkly-date-field`) is a masked `dd.mm.yyyy` text input with
+a calendar popover, closest to MUI X's `DateField`/`DatePicker`.
+
+| Input         | Type                              | Default        |
+| ------------- | --------------------------------- | -------------- |
+| `label`       | `string`                          | —              |
+| `hideLabel`   | `boolean`                         | `false`        |
+| `size`        | `small \| medium \| large`        | `medium`       |
+| `color`       | `primary \| dante`                | `primary`      |
+| `error`       | `boolean`                         | `false`        |
+| `helperText`  | `string`                          | —              |
+| `fullWidth`   | `boolean`                         | `false`        |
+| `disabled`    | `boolean`                         | `false`        |
+| `value`       | `Date \| null` (`model`, two-way) | `null`         |
+| `min`         | `Date`                            | —              |
+| `max`         | `Date`                            | —              |
+| `open`        | `boolean` (`model`, two-way)      | `false`        |
+| `placeholder` | `string`                          | `"dd.mm.yyyy"` |
+| `required`    | `boolean`                         | `false`        |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyDateField } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyDateField],
+  template: `<okkly-date-field label="Birthday" [(value)]="birthday" />`,
+})
+export class AppComponent {
+  birthday: Date | null = null;
+}
+```
+
+Typing a complete date commits it as soon as the mask (built with
+`@maskito/angular`/`@maskito/kit`) parses it; an empty input commits `null`.
+`min`/`max` both constrain what can be typed and disable out-of-range
+days/months/years in the popover. Picking a day in the calendar commits,
+updates the displayed text, and closes the popover.
+
+Deliberate gaps, the same calls `Select`/`Calendar` already made: no
+`defaultValue` — `value`'s own `model()` default covers the uncontrolled case.
+No `className` forwarding. `color` is narrower than `Field`'s own full accent
+palette — `primary | dante` only, matching react's actual `DateField`/
+`TimeField`/`Select` restriction (react's wider palette, `FieldAccentColor`,
+belongs only to `TextField` upstream). This also sidesteps a real naming
+clash: `Calendar`'s `CalendarTone` spells the indigo tone `"indigo"`, while
+`Field`'s `FieldColor` spells the same accent `"secondary"` — the two types
+aren't mutually assignable outside the tones they agree on.
+
+## TimeField
+
+`OkklyTimeField` (`okkly-time-field`) is a masked `HH:mm` text input with a
+`TimePicker` popover, closest to MUI X's `TimeField`/`TimePicker`.
+
+| Input         | Type                              | Default   |
+| ------------- | --------------------------------- | --------- |
+| `label`       | `string`                          | —         |
+| `hideLabel`   | `boolean`                         | `false`   |
+| `size`        | `small \| medium \| large`        | `medium`  |
+| `color`       | `primary \| dante`                | `primary` |
+| `error`       | `boolean`                         | `false`   |
+| `helperText`  | `string`                          | —         |
+| `fullWidth`   | `boolean`                         | `false`   |
+| `disabled`    | `boolean`                         | `false`   |
+| `value`       | `Date \| null` (`model`, two-way) | `null`    |
+| `min`         | `Date`                            | —         |
+| `max`         | `Date`                            | —         |
+| `open`        | `boolean` (`model`, two-way)      | `false`   |
+| `placeholder` | `string`                          | `"HH:mm"` |
+| `required`    | `boolean`                         | `false`   |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyTimeField } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyTimeField],
+  template: `<okkly-time-field label="Meeting time" [(value)]="time" />`,
+})
+export class AppComponent {
+  time: Date | null = null;
+}
+```
+
+Typing a complete `HH:MM` commits it as soon as the mask (built with
+`@maskito/angular`/`@maskito/kit`) parses it; an empty input commits `null`.
+Picking a value in the popover's wheel columns commits and updates the
+displayed text.
+
+Deliberate gaps: `color` is narrower than `Field`'s own full accent palette —
+`primary | dante` only, matching react's actual `TimeField`/`DateField`/
+`Select` restriction (react's wider palette, `FieldAccentColor`, belongs only
+to `TextField` upstream) and sidestepping the same `"indigo"`/`"secondary"`
+naming clash `DateField` documents. `min`/`max` are accepted for prop parity
+but are currently inert — neither the react source nor this port wires them
+into the mask or the picker. No `defaultValue` — `value`'s own `model()`
+default covers the uncontrolled case, matching `DateField`/`Calendar`. No
+`className` forwarding, no `name` (react's `TimeField` has none either).
+
+## DateTimeField
+
+`OkklyDateTimeField` (`okkly-date-time-field`) is a masked
+`dd.mm.yyyy, HH:mm` text input with a date+time picker popover, closest to
+MUI X's `DateTimeField`/`DateTimePicker`.
+
+| Input         | Type                              | Default               |
+| ------------- | --------------------------------- | --------------------- |
+| `label`       | `string`                          | —                     |
+| `hideLabel`   | `boolean`                         | `false`               |
+| `size`        | `small \| medium \| large`        | `medium`              |
+| `color`       | `primary \| dante`                | `primary`             |
+| `error`       | `boolean`                         | `false`               |
+| `helperText`  | `string`                          | —                     |
+| `fullWidth`   | `boolean`                         | `false`               |
+| `disabled`    | `boolean`                         | `false`               |
+| `value`       | `Date \| null` (`model`, two-way) | `null`                |
+| `min`         | `Date`                            | —                     |
+| `max`         | `Date`                            | —                     |
+| `open`        | `boolean` (`model`, two-way)      | `false`               |
+| `placeholder` | `string`                          | `"dd.mm.yyyy, HH:mm"` |
+| `required`    | `boolean`                         | `false`               |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyDateTimeField } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyDateTimeField],
+  template: `<okkly-date-time-field label="Meeting" [(value)]="meeting" />`,
+})
+export class AppComponent {
+  meeting: Date | null = null;
+}
+```
+
+Typing a complete date and time commits it as soon as the mask (built with
+`@maskito/angular`/`@maskito/kit`) parses it; an empty input commits `null`.
+The popover embeds `OkklyDateTimePicker`: picking a day or nudging a time
+wheel commits and updates the displayed text immediately, but — unlike
+`DateField`'s calendar — does **not** close the popover; only clicking the
+picker's own Confirm button does, matching react's `handlePickerChange`
+(no close) vs `handleConfirm` (commits and closes) split.
+
+Deliberate gaps, the same calls `TimeField`/`DateField` already made: `color`
+is narrower than `Field`'s own full accent palette — `primary | dante`
+only — because the value feeds straight into `DateTimePicker`'s six-tone
+`DateTimePickerColor`, which has no `secondary`/`contrast` to map onto. No
+`defaultValue` — `value`'s own `model()` default covers the uncontrolled
+case. No `className` forwarding.
+
+## DateTimePicker
+
+`OkklyDateTimePicker` (`okkly-date-time-picker`) is a fixed inline card
+combining a `Calendar` and a `TimePicker`, with a selected-time summary and a
+Confirm button. `OkklyDateTimeField` embeds it in a popover; use this
+component directly for an always-visible picker instead.
+
+| Input                | Type                                                   | Default              |
+| -------------------- | ------------------------------------------------------ | -------------------- |
+| `value`              | `Date \| null` (`model`, two-way)                      | `null`               |
+| `min`                | `Date`                                                 | —                    |
+| `max`                | `Date`                                                 | —                    |
+| `timeStep`           | `number`                                               | `1`                  |
+| `format`             | `"24h" \| "12h"`                                       | `"24h"`              |
+| `weekStart`          | `"mon" \| "sun"`                                       | `"mon"`              |
+| `color`              | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`            |
+| `locale`             | `string`                                               | `"en-US"`            |
+| `timezoneLabel`      | `string`                                               | —                    |
+| `summaryLabel`       | `string`                                               | `"Selected time"`    |
+| `emptyLabel`         | `string`                                               | `"No date selected"` |
+| `confirmLabel`       | `string`                                               | `"Confirm"`          |
+| `previousMonthLabel` | `string`                                               | —                    |
+| `nextMonthLabel`     | `string`                                               | —                    |
+
+Output: `(confirm)` — fires only when the Confirm button is clicked, carrying
+the current value. `(valueChange)` (via `[(value)]`) fires on every day pick
+or time-wheel nudge instead, so a caller can tell "still adjusting" apart from
+"done".
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyDateTimePicker } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyDateTimePicker],
+  template: `<okkly-date-time-picker [(value)]="meeting" (confirm)="onConfirm($event)" />`,
+})
+export class AppComponent {
+  meeting: Date | null = null;
+  onConfirm(value: Date) {
+    /* … */
+  }
+}
+```
+
+The time wheels stay interactive before a day is picked — the dialed-in
+hour/minute carries over once a day finally lands, instead of resetting to
+midnight or committing a bogus "today" value. Deliberate gaps: no generic
+option type, no render-prop escape hatches, matching every other component in
+this package. `color` reuses `CalendarTone` (six tones), not `Field`'s
+seven-value palette — this component wraps `Calendar`/`TimePicker`/`Button`
+directly, not `Field`.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
