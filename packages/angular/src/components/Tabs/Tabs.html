@@ -1,0 +1,43 @@
+<ng-template #tabList>
+  <ul class="okkly-tabs__list" role="tablist" [attr.aria-orientation]="orientation()">
+    @for (item of items(); track item.value) {
+      <li role="presentation">
+        <button
+          #tabButton
+          type="button"
+          role="tab"
+          [attr.id]="'okkly-tab-' + item.value"
+          [attr.aria-selected]="currentValue() === item.value"
+          [attr.aria-controls]="
+            currentValue() === item.value ? 'okkly-tabpanel-' + item.value : null
+          "
+          [attr.tabindex]="currentValue() === item.value ? 0 : -1"
+          [disabled]="!!item.disabled"
+          class="okkly-tabs__tab"
+          [class.okkly-tabs__tab--active]="currentValue() === item.value"
+          (click)="select(item.value)"
+          (keydown)="onKeydown($event)"
+        >
+          @if (item.icon) {
+            <span class="okkly-tabs__icon" aria-hidden="true">
+              @if (isTemplate(item.icon)) {
+                <ng-container [ngTemplateOutlet]="item.icon" />
+              } @else {
+                <okkly-icon [icon]="item.icon" fontSize="inherit" />
+              }
+            </span>
+          }
+          {{ item.label }}
+        </button>
+      </li>
+    }
+  </ul>
+</ng-template>
+
+@if (variant() === "scrollable") {
+  <div class="okkly-tabs__scroller">
+    <ng-container [ngTemplateOutlet]="tabList" />
+  </div>
+} @else {
+  <ng-container [ngTemplateOutlet]="tabList" />
+}

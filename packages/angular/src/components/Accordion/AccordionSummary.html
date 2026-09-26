@@ -1,0 +1,19 @@
+<span class="okkly-accordion__title"><ng-content /></span>
+<span
+  class="okkly-accordion__chevron"
+  [class.okkly-accordion__chevron--expanded]="expanded()"
+  aria-hidden="true"
+>
+  <ng-content select="[okklyAccordionExpandIcon]">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  </ng-content>
+</span>

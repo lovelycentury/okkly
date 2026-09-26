@@ -15,7 +15,7 @@
 
     &:has(.okkly-radio__input:disabled) {
       opacity: 0.4;
-      cursor: not-allowed;
+      cursor: default;
     }
 
     // 2. elements
@@ -35,7 +35,7 @@
       cursor: pointer;
 
       &:disabled {
-        cursor: not-allowed;
+        cursor: default;
       }
     }
 

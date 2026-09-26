@@ -1,0 +1,77 @@
+<ng-template #dot let-i>
+  <span
+    class="okkly-stepper__dot"
+    [class.okkly-stepper__dot--done]="stepState(i) === 'done'"
+    [class.okkly-stepper__dot--active]="stepState(i) === 'active'"
+    [class.okkly-stepper__dot--pending]="stepState(i) === 'pending'"
+    aria-hidden="true"
+  >
+    @if (stepState(i) === "done") {
+      <span class="okkly-stepper__check-icon">
+        <okkly-icon [icon]="iconCheck" />
+      </span>
+    } @else {
+      {{ i + 1 }}
+    }
+  </span>
+</ng-template>
+
+<ng-template #label let-step>
+  <div class="okkly-stepper__label">
+    {{ step.label }}
+    @if (step.optional) {
+      <span class="okkly-stepper__optional">(optional)</span>
+    }
+  </div>
+  @if (step.description) {
+    <div class="okkly-stepper__description">{{ step.description }}</div>
+  }
+</ng-template>
+
+@for (step of steps(); track $index; let i = $index) {
+  <div
+    class="okkly-stepper__step"
+    [class.okkly-stepper__step--done]="stepState(i) === 'done'"
+    [class.okkly-stepper__step--active]="stepState(i) === 'active'"
+    role="listitem"
+    [attr.aria-current]="stepState(i) === 'active' ? 'step' : null"
+  >
+    <div class="okkly-stepper__step-inner">
+      @if (stacked()) {
+        <div class="okkly-stepper__track">
+          <ng-container [ngTemplateOutlet]="dot" [ngTemplateOutletContext]="{ $implicit: i }" />
+          @if (!isLast(i)) {
+            <span
+              class="okkly-stepper__connector"
+              [class.okkly-stepper__connector--active]="connectorActive(i)"
+              aria-hidden="true"
+            ></span>
+          }
+        </div>
+        <div class="okkly-stepper__content">
+          <ng-container
+            [ngTemplateOutlet]="label"
+            [ngTemplateOutletContext]="{ $implicit: step }"
+          />
+        </div>
+      } @else {
+        <div class="okkly-stepper__inline-row">
+          <ng-container [ngTemplateOutlet]="dot" [ngTemplateOutletContext]="{ $implicit: i }" />
+          <div class="okkly-stepper__content okkly-stepper__content--inline">
+            <ng-container
+              [ngTemplateOutlet]="label"
+              [ngTemplateOutletContext]="{ $implicit: step }"
+            />
+          </div>
+          @if (!isLast(i)) {
+            <span
+              class="okkly-stepper__connector"
+              [class.okkly-stepper__connector--active]="connectorActive(i)"
+              aria-hidden="true"
+            ></span>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}

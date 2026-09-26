@@ -1,0 +1,26 @@
+<div
+  okklyTimePickerColumn
+  [values]="hourValues()"
+  [value]="hourValue()"
+  [formatValue]="pad2"
+  [ariaLabel]="hoursAriaLabel()"
+  (valueChange)="onHourChange($event)"
+></div>
+<div
+  okklyTimePickerColumn
+  [values]="minuteValuesList()"
+  [value]="currentValue().m"
+  [formatValue]="pad2"
+  [ariaLabel]="minutesAriaLabel()"
+  (valueChange)="onMinuteChange($event)"
+></div>
+@if (isTwelveHour()) {
+  <div
+    okklyTimePickerColumn
+    [values]="meridiemValues"
+    [value]="meridiemValue()"
+    [formatValue]="formatMeridiem"
+    [ariaLabel]="meridiemAriaLabel()"
+    (valueChange)="onMeridiemChange($event)"
+  ></div>
+}

@@ -20,7 +20,7 @@
     }
 
     &--disabled &__control {
-      cursor: not-allowed;
+      cursor: default;
     }
 
     &__trigger {
@@ -33,8 +33,25 @@
       cursor: pointer;
     }
 
+    // A `tabindex="-1"` div is still focusable by a mouse click (just not by
+    // Tab), which without this let a click land the focus ring and glow on a
+    // disabled trigger even though the JS handlers already no-op the toggle.
+    // `pointer-events: none` here stops the click before it can focus
+    // anything; it still shows the `default` cursor because the event falls
+    // through to `&__control`, which keeps its own pointer-events.
     &--disabled &__trigger {
-      cursor: not-allowed;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    // The Angular port needs one extra DOM node here to group the clear
+    // button and chevron for content projection — React/Vue hand the same
+    // pair over as a Fragment, with no wrapper element. `display: contents`
+    // makes that wrapper invisible to layout, so its children still sit
+    // directly in the `&__adornment` flex row instead of stacking as the two
+    // block-level boxes `&__clear`/`&__chevron`'s own `display: flex` makes them.
+    &__end-adornment {
+      display: contents;
     }
 
     &__value {

@@ -1,0 +1,98 @@
+<div class="okkly-calendar__panel">
+  <div class="okkly-calendar__header">
+    <button
+      type="button"
+      class="okkly-calendar__nav-button"
+      [attr.aria-label]="prevLabel()"
+      (click)="handlePrev()"
+    >
+      <okkly-icon [icon]="iconChevronLeft" />
+    </button>
+    @if (view() === "year") {
+      <p class="okkly-calendar__title">{{ headerLabel() }}</p>
+    } @else {
+      <button
+        type="button"
+        class="okkly-calendar__title okkly-calendar__title--button"
+        [attr.aria-label]="headerAriaLabel()"
+        (click)="openYearView()"
+      >
+        {{ headerLabel() }}
+        <span
+          [class]="
+            view() === 'month'
+              ? 'okkly-calendar__title-chevron okkly-calendar__title-chevron--open'
+              : 'okkly-calendar__title-chevron'
+          "
+        >
+          <okkly-icon [icon]="iconChevronDown" />
+        </span>
+      </button>
+    }
+    <button
+      type="button"
+      class="okkly-calendar__nav-button"
+      [attr.aria-label]="nextLabel()"
+      (click)="handleNext()"
+    >
+      <okkly-icon [icon]="iconChevronRight" />
+    </button>
+  </div>
+
+  @if (view() === "day") {
+    <div class="okkly-calendar__grid">
+      <div class="okkly-calendar__week">
+        @for (label of weekdayLabels(); track label + $index) {
+          <span class="okkly-calendar__weekday">{{ label }}</span>
+        }
+      </div>
+      @for (week of weeks(); track $index) {
+        <div class="okkly-calendar__week">
+          @for (day of week; track day.date.toISOString()) {
+            <button
+              type="button"
+              [class]="dayState(day).classes"
+              [disabled]="dayState(day).disabled"
+              [attr.aria-pressed]="dayState(day).selected"
+              [attr.aria-current]="isToday(day.date) ? 'date' : null"
+              (click)="onDayClick(day.date)"
+            >
+              {{ day.date.getDate() }}
+              @if (isToday(day.date)) {
+                <span class="okkly-calendar__day-dot" aria-hidden="true"></span>
+              }
+            </button>
+          }
+        </div>
+      }
+    </div>
+  } @else if (view() === "month") {
+    <div class="okkly-calendar__period-grid">
+      @for (label of monthLabels(); track label; let index = $index) {
+        <button
+          type="button"
+          [class]="monthCellState(index).classes"
+          [disabled]="monthCellState(index).disabled"
+          [attr.aria-pressed]="monthCellState(index).selected"
+          (click)="selectMonth(index)"
+        >
+          {{ label }}
+        </button>
+      }
+    </div>
+  } @else {
+    <div class="okkly-calendar__period-grid">
+      @for (year of yearRange(); track year) {
+        <button
+          type="button"
+          [class]="yearCellState(year).classes"
+          [disabled]="yearCellState(year).disabled"
+          [attr.aria-pressed]="yearCellState(year).selected"
+          (click)="selectYear(year)"
+        >
+          {{ year }}
+        </button>
+      }
+    </div>
+  }
+</div>

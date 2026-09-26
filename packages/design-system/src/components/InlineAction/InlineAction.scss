@@ -137,7 +137,7 @@
         filter var(--okkly-duration-sm) ease-out;
 
       &:disabled {
-        cursor: not-allowed;
+        cursor: default;
       }
     }
 

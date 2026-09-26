@@ -1,0 +1,60 @@
+<div
+  okklyField
+  #field
+  block="okkly-date-field"
+  [id]="fieldId()"
+  [label]="label()"
+  [hideLabel]="hideLabel()"
+  [required]="required()"
+  [size]="size()"
+  [color]="color()"
+  [error]="error()"
+  [helperText]="helperText()"
+  [disabled]="disabled()"
+  [fullWidth]="fullWidth()"
+  [hasEndAdornment]="true"
+>
+  <input
+    [id]="fieldId()"
+    type="text"
+    inputMode="numeric"
+    class="okkly-date-field__input"
+    [value]="text()"
+    [maskito]="maskOptions()"
+    [disabled]="disabled()"
+    [required]="required()"
+    [placeholder]="placeholder()"
+    [attr.aria-invalid]="error() || null"
+    [attr.aria-describedby]="helperId() ?? null"
+    (input)="onInput($event)"
+  />
+
+  <button
+    okklyFieldEndAdornment
+    type="button"
+    class="okkly-date-field__trigger"
+    [disabled]="disabled()"
+    aria-label="Open calendar"
+    [attr.aria-expanded]="open()"
+    (mousedown)="$event.stopPropagation()"
+    (click)="setOpen(!open())"
+  >
+    <okkly-icon [icon]="iconCalendar" />
+  </button>
+</div>
+
+<okkly-popover
+  [open]="open()"
+  [anchorEl]="controlElement()"
+  placement="bottom-start"
+  popoverClass="okkly-date-field-popover"
+  (close)="setOpen(false)"
+>
+  <okkly-calendar
+    [value]="value()"
+    (valueChange)="onSelect($event)"
+    [min]="min()"
+    [max]="max()"
+    [color]="color()"
+  />
+</okkly-popover>

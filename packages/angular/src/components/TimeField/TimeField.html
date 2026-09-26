@@ -1,0 +1,58 @@
+<div
+  okklyField
+  #field
+  block="okkly-time-field"
+  [id]="fieldId()"
+  [label]="label()"
+  [hideLabel]="hideLabel()"
+  [required]="required()"
+  [size]="size()"
+  [color]="color()"
+  [error]="error()"
+  [helperText]="helperText()"
+  [disabled]="disabled()"
+  [fullWidth]="fullWidth()"
+  [hasEndAdornment]="true"
+>
+  <input
+    [id]="fieldId()"
+    type="text"
+    inputMode="numeric"
+    class="okkly-time-field__input"
+    [maskito]="maskOptions"
+    [value]="text()"
+    [disabled]="disabled()"
+    [required]="required()"
+    [attr.placeholder]="placeholder()"
+    [attr.aria-invalid]="error() || null"
+    [attr.aria-describedby]="helperId() ?? null"
+    (input)="onInput($event)"
+  />
+
+  <button
+    okklyFieldEndAdornment
+    type="button"
+    class="okkly-time-field__trigger"
+    [disabled]="disabled()"
+    aria-label="Open time picker"
+    [attr.aria-expanded]="open()"
+    (mousedown)="$event.stopPropagation()"
+    (click)="onTriggerClick()"
+  >
+    <okkly-icon [icon]="iconClock" />
+  </button>
+</div>
+
+<okkly-popover
+  [open]="open()"
+  [anchorEl]="controlElement()"
+  placement="bottom-end"
+  popoverClass="okkly-time-field-popover"
+  (close)="open.set(false)"
+>
+  <okkly-time-picker
+    [value]="pickerValue()"
+    (valueChange)="onPickerChange($event)"
+    [color]="color()"
+  />
+</okkly-popover>

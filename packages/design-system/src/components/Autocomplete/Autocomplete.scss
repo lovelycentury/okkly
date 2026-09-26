@@ -15,7 +15,18 @@
     }
 
     &--disabled &__control {
-      cursor: not-allowed;
+      cursor: default;
+    }
+
+    // The Angular port needs one extra DOM node here to group the clear
+    // button and the open/close toggle for content projection — React/Vue
+    // hand the same pair over as a Fragment, with no wrapper element.
+    // `display: contents` makes that wrapper invisible to layout, so its
+    // children still sit directly in the `&__adornment` flex row instead of
+    // stacking as the two block-level boxes `&__clear`/`&__toggle`'s own
+    // `display: flex` makes them.
+    &__end-adornment {
+      display: contents;
     }
 
     // Tags sit inside the control, before the input, and wrap onto new lines as

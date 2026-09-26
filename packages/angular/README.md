@@ -1212,6 +1212,628 @@ ToggleButtonGroup, as `@okkly/react`'s `<SegmentedToggle>` does: `items`,
 segment is a button with `aria-pressed`. An item's `icon` is raw SVG markup or a
 `TemplateRef`; give an icon-only item an `ariaLabel`.
 
+## Select
+
+`OkklySelect` (`okkly-select`) is a closed list of options in a field. Prefer
+it over a native `<select>` when you need multi-select, grouping or a loading
+state; reach for [`Autocomplete`](#autocomplete) once the list gets long
+enough to search. Inputs follow MUI's Select API, as `@okkly/react`'s
+`<Select>` does.
+
+| Input                  | Type                                                                  | Default        |
+| ---------------------- | --------------------------------------------------------------------- | -------------- |
+| `options`              | `{ value: string; label: string; disabled?: boolean }[]`              | `[]`           |
+| `value`                | `string \| string[] \| null` (`model`, two-way)                       | `null`         |
+| `multiple`             | `boolean`                                                             | `false`        |
+| `open`                 | `boolean` (`model`, two-way)                                          | `false`        |
+| `label`                | `string`                                                              | —              |
+| `hideLabel`            | `boolean`                                                             | `false`        |
+| `placeholder`          | `string`                                                              | `"Select…"`    |
+| `size`                 | `small \| medium \| large`                                            | `medium`       |
+| `color`                | `primary \| secondary \| dante \| violet \| ember \| ice \| contrast` | `primary`      |
+| `error`                | `boolean`                                                             | `false`        |
+| `helperText`           | `string`                                                              | —              |
+| `fullWidth`            | `boolean`                                                             | `false`        |
+| `disabled`             | `boolean`                                                             | `false`        |
+| `required`             | `boolean`                                                             | `false`        |
+| `loading`              | `boolean`                                                             | `false`        |
+| `name`                 | `string`                                                              | —              |
+| `groupBy`              | `(option: SelectOption) => string`                                    | —              |
+| `limitTags`            | `number`                                                              | `2`            |
+| `disableCloseOnSelect` | `boolean`                                                             | `multiple`     |
+| `disableClearable`     | `boolean`                                                             | `false`        |
+| `noOptionsText`        | `string`                                                              | `"No options"` |
+| `loadingText`          | `string`                                                              | `"Loading…"`   |
+| `clearText`            | `string`                                                              | `"Clear"`      |
+| `popupWidth`           | `number \| string`                                                    | —              |
+| `id`                   | `string`                                                              | generated      |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklySelect, type SelectOption } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklySelect],
+  template: `<okkly-select label="Team" [options]="teams" [(value)]="team" />`,
+})
+export class AppComponent {
+  team: string | null = null;
+  teams: SelectOption[] = [
+    { value: "design", label: "Product design" },
+    { value: "engineering", label: "Engineering" },
+  ];
+}
+```
+
+`multiple` renders the current value as removable chips, collapsing past
+`limitTags` into a `+N`. `name` emits hidden `<input type="hidden">`s so the
+value reaches a plain `<form>` submit with no JavaScript. `(change)` reports
+the reason behind a `value` change (`selectOption` / `removeOption` /
+`clear`) alongside the two-way `[(value)]`.
+
+Deliberate gaps: no generic option type — `SelectOption` is fixed to
+`{ value: string; label: string; disabled?: boolean }`, so there is no
+`isOptionEqualToValue` either, since `===` is always correct for a string.
+No `renderValue`/`renderOption`/`renderInput`/`renderGroup`/`renderNoOptions`/
+`renderLoading` — a row is always the built-in label (plus a checkbox in
+`multiple` mode, plus a tick when selected), built from the same
+`OkklyOptionRow`/`OkklyOptionLabel`/`OkklyOptionCheck` primitives a future
+custom row would use.
+
+## Autocomplete
+
+`OkklyAutocomplete` (`okkly-autocomplete`) is a filter-as-you-type field, with
+free-text and multi-select tag support. Reach for it over
+[`Select`](#select) once the option list is long enough that typing to
+narrow it beats scanning it. Inputs follow MUI's Autocomplete API, as
+`@okkly/react`'s `<Autocomplete>` does.
+
+| Input                   | Type                                                                           | Default           |
+| ----------------------- | ------------------------------------------------------------------------------ | ----------------- |
+| `options`               | `{ value: string; label: string; disabled?: boolean; description?: string }[]` | `[]`              |
+| `value`                 | `string \| string[] \| null` (`model`, two-way)                                | `null`            |
+| `inputValue`            | `string` (`model`, two-way)                                                    | `""`              |
+| `multiple`              | `boolean`                                                                      | `false`           |
+| `freeSolo`              | `boolean`                                                                      | `false`           |
+| `open`                  | `boolean` (`model`, two-way)                                                   | `false`           |
+| `label`                 | `string`                                                                       | —                 |
+| `hideLabel`             | `boolean`                                                                      | `false`           |
+| `placeholder`           | `string`                                                                       | `"Search…"`       |
+| `size`                  | `small \| medium \| large`                                                     | `medium`          |
+| `color`                 | `primary \| secondary \| dante \| violet \| ember \| ice \| contrast`          | `primary`         |
+| `error`                 | `boolean`                                                                      | `false`           |
+| `helperText`            | `string`                                                                       | —                 |
+| `fullWidth`             | `boolean`                                                                      | `false`           |
+| `disabled`              | `boolean`                                                                      | `false`           |
+| `required`              | `boolean`                                                                      | `false`           |
+| `loading`               | `boolean`                                                                      | `false`           |
+| `name`                  | `string`                                                                       | —                 |
+| `openOnFocus`           | `boolean`                                                                      | `false`           |
+| `autoHighlight`         | `boolean`                                                                      | `false`           |
+| `autoSelect`            | `boolean`                                                                      | `false`           |
+| `blurOnSelect`          | `boolean`                                                                      | `false`           |
+| `clearOnEscape`         | `boolean`                                                                      | `false`           |
+| `clearOnBlur`           | `boolean`                                                                      | `!freeSolo`       |
+| `filterSelectedOptions` | `boolean`                                                                      | `false`           |
+| `groupBy`               | `(option: AutocompleteOption) => string`                                       | —                 |
+| `filterOptions`         | `(options: AutocompleteOption[], inputValue: string) => AutocompleteOption[]`  | substring match   |
+| `limitTags`             | `number`                                                                       | `-1`              |
+| `disableCloseOnSelect`  | `boolean`                                                                      | `multiple`        |
+| `disableClearable`      | `boolean`                                                                      | `false`           |
+| `noOptionsText`         | `string`                                                                       | `"No results"`    |
+| `loadingText`           | `string`                                                                       | `"Loading…"`      |
+| `clearText`             | `string`                                                                       | `"Clear"`         |
+| `openText`              | `string`                                                                       | `"Open options"`  |
+| `closeText`             | `string`                                                                       | `"Close options"` |
+| `popupWidth`            | `number \| string`                                                             | —                 |
+| `id`                    | `string`                                                                       | generated         |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyAutocomplete, type AutocompleteOption } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyAutocomplete],
+  template: `<okkly-autocomplete label="Team" [options]="teams" [(value)]="team" />`,
+})
+export class AppComponent {
+  team: string | null = null;
+  teams: AutocompleteOption[] = [
+    { value: "design", label: "Product design" },
+    { value: "engineering", label: "Engineering" },
+  ];
+}
+```
+
+`multiple` renders the current value as removable tags, collapsing past
+`limitTags` into a `+N`. `freeSolo` commits whatever is typed on Enter
+(reason `"createOption"`) or on blur (reason `"blur"`) even when it matches
+no option. `name` emits hidden `<input type="hidden">`s so the value reaches
+a plain `<form>` submit with no JavaScript. `(change)` reports the reason
+behind a `value` change (`selectOption` / `removeOption` / `clear` /
+`createOption` / `blur`) alongside the two-way `[(value)]`.
+
+Deliberate gaps, the same call `Select` already made: no generic option
+type — `AutocompleteOption` is fixed to
+`{ value: string; label: string; disabled?: boolean; description?: string }`
+(the same shape `SelectOption` uses), so there is no `getOptionLabel`/
+`getOptionDescription`/`isOptionEqualToValue` either — a row always reads
+`option.label`/`option.description`, and values compare with `===`. No
+`renderOption`/`renderInput`/`renderGroup`/`renderNoOptions`/`renderLoading`/
+`renderTags` — a row is always the built-in label, description and tick,
+built from the same `OkklyOptionRow`/`OkklyOptionLabel`/
+`OkklyOptionDescription`/`OkklyOptionCheck` primitives `Select` uses.
+`filterOptions`/`groupBy` stay as function inputs since they return data, not
+markup. A `freeSolo` commit stores the typed text as the `value` string
+itself, so the `name` hidden inputs submit each option's `value` (matching
+`Select`), not its `label`.
+
+## TimePicker
+
+`OkklyTimePicker` (`okkly-time-picker`) is an always-visible inline time
+picker — up to three plain scrollable columns (hours, minutes, and, only for
+`format="12h"`, a third AM/PM column), each a simple list with the selected
+row picked out by a filled pill. No MUI equivalent: MUI X's `TimePicker` is a
+masked text input with a popover, deliberately out of scope here — this
+mirrors MUI's `MultiSectionDigitalClock` instead. Built on native scrolling
+with CSS `scroll-snap` rather than a drag library, so the browser's own
+touch/trackpad momentum gives the "coast to a stop on a value" feel for free.
+
+| Input               | Type                                                   | Default          |
+| ------------------- | ------------------------------------------------------ | ---------------- |
+| `value`             | `{ h: number; m: number }` (`model`, two-way)          | `{ h: 0, m: 0 }` |
+| `step`              | `number`                                               | `1`              |
+| `format`            | `24h \| 12h`                                           | `24h`            |
+| `color`             | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`        |
+| `hoursAriaLabel`    | `string`                                               | `"Hours"`        |
+| `minutesAriaLabel`  | `string`                                               | `"Minutes"`      |
+| `meridiemAriaLabel` | `string`                                               | `"AM/PM"`        |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyTimePicker, type TimePickerValue } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyTimePicker],
+  template: `<okkly-time-picker [(value)]="time" format="12h" />`,
+})
+export class AppComponent {
+  time: TimePickerValue = { h: 9, m: 30 };
+}
+```
+
+`value.h` is always canonical 24-hour (0–23); the AM/PM column is purely a
+12-hour selection helper layered on top of it. `step` sets the minute
+column's granularity (clamped 1–59, e.g. `step="5"` for `:00, :05, :10, …`).
+Click a row, or focus a column (`role="spinbutton"`) and use ArrowUp/
+ArrowDown/Home/End to change it.
+
+Deliberate gaps: no `className`/`class` forwarding onto the host, matching
+`Select`/`Autocomplete`. `WheelColumn`, the internal scrollable-column
+primitive `@okkly/react`'s `<TimePicker>` also keeps private, is not
+exported.
+
+## Calendar
+
+`OkklyCalendar` (`okkly-calendar`) is a month card for picking a date or a
+date range — day, month and year grids, drilling up the hierarchy on a
+header click. Closest MUI counterpart is MUI X's `DateCalendar`, as
+`@okkly/react`'s `<Calendar>` follows.
+
+| Input                | Type                                                   | Default            |
+| -------------------- | ------------------------------------------------------ | ------------------ |
+| `mode`               | `single \| range`                                      | `single`           |
+| `value`              | `Date \| [Date, Date] \| null` (`model`, two-way)      | `null`             |
+| `month`              | `Date \| undefined` (`model`, two-way)                 | today              |
+| `min`                | `Date`                                                 | —                  |
+| `max`                | `Date`                                                 | —                  |
+| `weekStart`          | `mon \| sun`                                           | `mon`              |
+| `locale`             | `string`                                               | `"en-US"`          |
+| `previousMonthLabel` | `string`                                               | `"Previous month"` |
+| `nextMonthLabel`     | `string`                                               | `"Next month"`     |
+| `color`              | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`          |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyCalendar } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyCalendar],
+  template: `<okkly-calendar [(value)]="selected" />`,
+})
+export class AppComponent {
+  selected: Date | null = null;
+}
+```
+
+`mode="range"` takes two clicks to commit a pair — the first click arms a
+start, the second orders and commits `[start, end]`; a third click after a
+pair is committed starts a new range. `min`/`max` also disable unreachable
+months and years in those views, not just individual days. `color` sets
+`--okkly-calendar-tone`; override it directly with a
+`style="--okkly-calendar-tone: …"` attribute for a one-off tone `color`
+doesn't name.
+
+Deliberate gaps: no discriminated `mode`/`value`/`onSelect` union — react's
+`CalendarSingleProps`/`CalendarRangeProps` split exists so a TSX caller gets
+`onSelect` narrowed per mode, which an Angular template gets no benefit from,
+so `value` is one `model<CalendarValue | null>()` for both modes. No
+separate `(select)` output either — every `value` change here means exactly
+one thing, so `[(value)]` alone carries what react's `onSelect` did. No
+`className`/`style` forwarding, matching `Select`/`Autocomplete`.
+
+## DateField
+
+`OkklyDateField` (`okkly-date-field`) is a masked `dd.mm.yyyy` text input with
+a calendar popover, closest to MUI X's `DateField`/`DatePicker`.
+
+| Input         | Type                              | Default        |
+| ------------- | --------------------------------- | -------------- |
+| `label`       | `string`                          | —              |
+| `hideLabel`   | `boolean`                         | `false`        |
+| `size`        | `small \| medium \| large`        | `medium`       |
+| `color`       | `primary \| dante`                | `primary`      |
+| `error`       | `boolean`                         | `false`        |
+| `helperText`  | `string`                          | —              |
+| `fullWidth`   | `boolean`                         | `false`        |
+| `disabled`    | `boolean`                         | `false`        |
+| `value`       | `Date \| null` (`model`, two-way) | `null`         |
+| `min`         | `Date`                            | —              |
+| `max`         | `Date`                            | —              |
+| `open`        | `boolean` (`model`, two-way)      | `false`        |
+| `placeholder` | `string`                          | `"dd.mm.yyyy"` |
+| `required`    | `boolean`                         | `false`        |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyDateField } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyDateField],
+  template: `<okkly-date-field label="Birthday" [(value)]="birthday" />`,
+})
+export class AppComponent {
+  birthday: Date | null = null;
+}
+```
+
+Typing a complete date commits it as soon as the mask (built with
+`@maskito/angular`/`@maskito/kit`) parses it; an empty input commits `null`.
+`min`/`max` both constrain what can be typed and disable out-of-range
+days/months/years in the popover. Picking a day in the calendar commits,
+updates the displayed text, and closes the popover.
+
+Deliberate gaps, the same calls `Select`/`Calendar` already made: no
+`defaultValue` — `value`'s own `model()` default covers the uncontrolled case.
+No `className` forwarding. `color` is narrower than `Field`'s own full accent
+palette — `primary | dante` only, matching react's actual `DateField`/
+`TimeField`/`Select` restriction (react's wider palette, `FieldAccentColor`,
+belongs only to `TextField` upstream). This also sidesteps a real naming
+clash: `Calendar`'s `CalendarTone` spells the indigo tone `"indigo"`, while
+`Field`'s `FieldColor` spells the same accent `"secondary"` — the two types
+aren't mutually assignable outside the tones they agree on.
+
+## TimeField
+
+`OkklyTimeField` (`okkly-time-field`) is a masked `HH:mm` text input with a
+`TimePicker` popover, closest to MUI X's `TimeField`/`TimePicker`.
+
+| Input         | Type                              | Default   |
+| ------------- | --------------------------------- | --------- |
+| `label`       | `string`                          | —         |
+| `hideLabel`   | `boolean`                         | `false`   |
+| `size`        | `small \| medium \| large`        | `medium`  |
+| `color`       | `primary \| dante`                | `primary` |
+| `error`       | `boolean`                         | `false`   |
+| `helperText`  | `string`                          | —         |
+| `fullWidth`   | `boolean`                         | `false`   |
+| `disabled`    | `boolean`                         | `false`   |
+| `value`       | `Date \| null` (`model`, two-way) | `null`    |
+| `min`         | `Date`                            | —         |
+| `max`         | `Date`                            | —         |
+| `open`        | `boolean` (`model`, two-way)      | `false`   |
+| `placeholder` | `string`                          | `"HH:mm"` |
+| `required`    | `boolean`                         | `false`   |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyTimeField } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyTimeField],
+  template: `<okkly-time-field label="Meeting time" [(value)]="time" />`,
+})
+export class AppComponent {
+  time: Date | null = null;
+}
+```
+
+Typing a complete `HH:MM` commits it as soon as the mask (built with
+`@maskito/angular`/`@maskito/kit`) parses it; an empty input commits `null`.
+Picking a value in the popover's wheel columns commits and updates the
+displayed text.
+
+Deliberate gaps: `color` is narrower than `Field`'s own full accent palette —
+`primary | dante` only, matching react's actual `TimeField`/`DateField`/
+`Select` restriction (react's wider palette, `FieldAccentColor`, belongs only
+to `TextField` upstream) and sidestepping the same `"indigo"`/`"secondary"`
+naming clash `DateField` documents. `min`/`max` are accepted for prop parity
+but are currently inert — neither the react source nor this port wires them
+into the mask or the picker. No `defaultValue` — `value`'s own `model()`
+default covers the uncontrolled case, matching `DateField`/`Calendar`. No
+`className` forwarding, no `name` (react's `TimeField` has none either).
+
+## DateTimeField
+
+`OkklyDateTimeField` (`okkly-date-time-field`) is a masked
+`dd.mm.yyyy, HH:mm` text input with a date+time picker popover, closest to
+MUI X's `DateTimeField`/`DateTimePicker`.
+
+| Input         | Type                              | Default               |
+| ------------- | --------------------------------- | --------------------- |
+| `label`       | `string`                          | —                     |
+| `hideLabel`   | `boolean`                         | `false`               |
+| `size`        | `small \| medium \| large`        | `medium`              |
+| `color`       | `primary \| dante`                | `primary`             |
+| `error`       | `boolean`                         | `false`               |
+| `helperText`  | `string`                          | —                     |
+| `fullWidth`   | `boolean`                         | `false`               |
+| `disabled`    | `boolean`                         | `false`               |
+| `value`       | `Date \| null` (`model`, two-way) | `null`                |
+| `min`         | `Date`                            | —                     |
+| `max`         | `Date`                            | —                     |
+| `open`        | `boolean` (`model`, two-way)      | `false`               |
+| `placeholder` | `string`                          | `"dd.mm.yyyy, HH:mm"` |
+| `required`    | `boolean`                         | `false`               |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyDateTimeField } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyDateTimeField],
+  template: `<okkly-date-time-field label="Meeting" [(value)]="meeting" />`,
+})
+export class AppComponent {
+  meeting: Date | null = null;
+}
+```
+
+Typing a complete date and time commits it as soon as the mask (built with
+`@maskito/angular`/`@maskito/kit`) parses it; an empty input commits `null`.
+The popover embeds `OkklyDateTimePicker`: picking a day or nudging a time
+wheel commits and updates the displayed text immediately, but — unlike
+`DateField`'s calendar — does **not** close the popover; only clicking the
+picker's own Confirm button does, matching react's `handlePickerChange`
+(no close) vs `handleConfirm` (commits and closes) split.
+
+Deliberate gaps, the same calls `TimeField`/`DateField` already made: `color`
+is narrower than `Field`'s own full accent palette — `primary | dante`
+only — because the value feeds straight into `DateTimePicker`'s six-tone
+`DateTimePickerColor`, which has no `secondary`/`contrast` to map onto. No
+`defaultValue` — `value`'s own `model()` default covers the uncontrolled
+case. No `className` forwarding.
+
+## DateTimePicker
+
+`OkklyDateTimePicker` (`okkly-date-time-picker`) is a fixed inline card
+combining a `Calendar` and a `TimePicker`, with a selected-time summary and a
+Confirm button. `OkklyDateTimeField` embeds it in a popover; use this
+component directly for an always-visible picker instead.
+
+| Input                | Type                                                   | Default              |
+| -------------------- | ------------------------------------------------------ | -------------------- |
+| `value`              | `Date \| null` (`model`, two-way)                      | `null`               |
+| `min`                | `Date`                                                 | —                    |
+| `max`                | `Date`                                                 | —                    |
+| `timeStep`           | `number`                                               | `1`                  |
+| `format`             | `"24h" \| "12h"`                                       | `"24h"`              |
+| `weekStart`          | `"mon" \| "sun"`                                       | `"mon"`              |
+| `color`              | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`            |
+| `locale`             | `string`                                               | `"en-US"`            |
+| `timezoneLabel`      | `string`                                               | —                    |
+| `summaryLabel`       | `string`                                               | `"Selected time"`    |
+| `emptyLabel`         | `string`                                               | `"No date selected"` |
+| `confirmLabel`       | `string`                                               | `"Confirm"`          |
+| `previousMonthLabel` | `string`                                               | —                    |
+| `nextMonthLabel`     | `string`                                               | —                    |
+
+Output: `(confirm)` — fires only when the Confirm button is clicked, carrying
+the current value. `(valueChange)` (via `[(value)]`) fires on every day pick
+or time-wheel nudge instead, so a caller can tell "still adjusting" apart from
+"done".
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyDateTimePicker } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyDateTimePicker],
+  template: `<okkly-date-time-picker [(value)]="meeting" (confirm)="onConfirm($event)" />`,
+})
+export class AppComponent {
+  meeting: Date | null = null;
+  onConfirm(value: Date) {
+    /* … */
+  }
+}
+```
+
+The time wheels stay interactive before a day is picked — the dialed-in
+hour/minute carries over once a day finally lands, instead of resetting to
+midnight or committing a bogus "today" value. Deliberate gaps: no generic
+option type, no render-prop escape hatches, matching every other component in
+this package. `color` reuses `CalendarTone` (six tones), not `Field`'s
+seven-value palette — this component wraps `Calendar`/`TimePicker`/`Button`
+directly, not `Field`.
+
+## Pagination
+
+`OkklyPagination` (`okkly-pagination`) is page controls with boundary pages, a
+sibling window around the current page, and ellipses in between, closest to
+MUI's `Pagination`.
+
+| Input             | Type                                                   | Default   |
+| ----------------- | ------------------------------------------------------ | --------- |
+| `count`           | `number` (required)                                    | —         |
+| `page`            | `number` (`model`, two-way)                            | `1`       |
+| `siblingCount`    | `number`                                               | `1`       |
+| `boundaryCount`   | `number`                                               | `1`       |
+| `showFirstButton` | `boolean`                                              | `false`   |
+| `showLastButton`  | `boolean`                                              | `false`   |
+| `size`            | `small \| medium \| large`                             | `medium`  |
+| `color`           | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary` |
+| `disabled`        | `boolean`                                              | `false`   |
+| `shape`           | `circular \| rounded`                                  | `rounded` |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyPagination } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyPagination],
+  template: `<okkly-pagination [count]="pageCount" [(page)]="page" />`,
+})
+export class AppComponent {
+  pageCount = 12;
+  page = 1;
+}
+```
+
+Deliberate gaps: no `renderItem` override and no compact mobile variant,
+matching react's own v1 scope. React's `onChange(event, page)` becomes
+`page`'s own `model()` — a click just moves the model; there is no Angular
+equivalent worth threading a `MouseEvent` through for. `@okkly/icons` has no
+first/last-page glyphs, so those two buttons render the same inline
+double-chevron SVGs react hand-rolls, kept byte-for-byte for visual parity;
+prev/next reuse the shared `iconChevronLeft`/`iconChevronRight`.
+
+## Tabs
+
+`OkklyTabs` (`okkly-tabs`) is a tab strip switching between peer views inside
+one panel, following MUI's `Tabs` API closely. Tabs come from an `items` array
+rather than child composition; tab panels are left to the consumer.
+
+| Input         | Type                                                   | Default      |
+| ------------- | ------------------------------------------------------ | ------------ |
+| `items`       | `TabItem[]`                                            | `[]`         |
+| `value`       | `string` (`model`, two-way)                            | first item   |
+| `color`       | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`    |
+| `variant`     | `standard \| scrollable`                               | `standard`   |
+| `orientation` | `horizontal \| vertical`                               | `horizontal` |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyTabs, type TabItem } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyTabs],
+  template: `
+    <okkly-tabs [items]="items" [(value)]="tab" />
+    <div role="tabpanel" [id]="'okkly-tabpanel-' + tab">{{ tab }} panel</div>
+  `,
+})
+export class AppComponent {
+  items: TabItem[] = [
+    { label: "Overview", value: "overview" },
+    { label: "Activity", value: "activity" },
+    { label: "Members", value: "members", disabled: true },
+  ];
+  tab = "overview";
+}
+```
+
+Deliberate gaps: react's separate `value`/`defaultValue` split becomes
+`value`'s own `model()` default (the first item) — bind `[(value)]` for the
+controlled case, leave it unbound for the uncontrolled one. An item's `label`
+is plain text and its `icon` is raw SVG markup or a `TemplateRef`, since
+Angular has no `ReactNode` equivalent. Keyboard follows the WAI-ARIA tabs
+pattern with automatic activation, matching react: only the active tab is
+tabbable (roving tabindex), and the arrow keys (plus Home/End) move focus and
+select in one step, skipping disabled tabs.
+
+## Stepper
+
+`OkklyStepper` (`okkly-stepper`) is a presentational progress indicator for an
+ordered flow, following MUI's `Stepper` API loosely. Steps come from a `steps`
+array rather than `Step` children; advancing `activeStep` is the caller's job.
+
+| Input              | Type                                                   | Default      |
+| ------------------ | ------------------------------------------------------ | ------------ |
+| `steps`            | `StepperStep[]` (required)                             | —            |
+| `activeStep`       | `number` (required)                                    | —            |
+| `orientation`      | `horizontal \| vertical`                               | `horizontal` |
+| `alternativeLabel` | `boolean`                                              | `true`       |
+| `color`            | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`    |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyStepper, type StepperStep } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyStepper],
+  template: `<okkly-stepper [steps]="steps" [activeStep]="1" />`,
+})
+export class AppComponent {
+  steps: StepperStep[] = [{ label: "Cart" }, { label: "Delivery" }, { label: "Payment" }];
+}
+```
+
+Deliberate gaps: react's `steps[].label`/`description` accept any `ReactNode`
+— here they're plain strings, the same call `OkklyBreadcrumbs`'s `items`
+already made. There's no `StepButton`/clickable jump in v1, matching react.
+
+## Accordion
+
+`OkklyAccordion` (`okkly-accordion`) is an expandable section, following MUI's
+`Accordion` API. `expanded` is a `model()` — bind `[(expanded)]` for a
+controlled section, or leave it unbound and the accordion manages its own
+state, replacing react's separate `expanded`/`defaultExpanded`/`onChange`.
+Composition is three parts: `okkly-accordion` owns the state,
+`button[okklyAccordionSummary]` toggles it, `okkly-accordion-details` is the
+collapsible body (built on `OkklyCollapse`). The summary and details read the
+accordion's state through Angular DI — the same way Angular Material's
+`MatExpansionPanel` reads its `MatAccordion` — rather than React context, so
+both must be projected inside an `okkly-accordion`.
+
+| Input      | Type      | Default |
+| ---------- | --------- | ------- |
+| `expanded` | `boolean` | `false` |
+| `disabled` | `boolean` | `false` |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyAccordion, OkklyAccordionDetails, OkklyAccordionSummary } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyAccordion, OkklyAccordionSummary, OkklyAccordionDetails],
+  template: `
+    <okkly-accordion>
+      <button type="button" okklyAccordionSummary>What is included?</button>
+      <okkly-accordion-details>Tokens, components, and documentation.</okkly-accordion-details>
+    </okkly-accordion>
+  `,
+})
+export class AppComponent {}
+```
+
+A custom expand icon replaces the default chevron as projected content tagged
+`okklyAccordionExpandIcon`, inside the summary button, the same call
+`OkklyButton`'s `okklyButtonStartIcon`/`okklyButtonEndIcon` already made.
+Deliberate gaps: no `AccordionActions` slot in v1.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

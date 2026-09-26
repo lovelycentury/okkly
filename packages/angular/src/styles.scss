@@ -1,7 +1,9 @@
 // Global stylesheet for @okkly/angular, published as `@okkly/angular/style.css`.
 // Mirrors the CSS Vite emits for @okkly/react: one file per component whose
 // markup this package renders, plus the shared overlays those components use.
+@use "@okkly/design-system/src/components/Accordion/Accordion.scss";
 @use "@okkly/design-system/src/components/Alert/Alert.scss";
+@use "@okkly/design-system/src/components/Autocomplete/Autocomplete.scss";
 @use "@okkly/design-system/src/components/Avatar/Avatar.scss";
 @use "@okkly/design-system/src/components/AvatarGroup/AvatarGroup.scss";
 @use "@okkly/design-system/src/components/Badge/Badge.scss";
@@ -9,12 +11,16 @@
 @use "@okkly/design-system/src/components/Breadcrumbs/Breadcrumbs.scss";
 @use "@okkly/design-system/src/components/Button/Button.scss";
 @use "@okkly/design-system/src/components/ButtonGroup/ButtonGroup.scss";
+@use "@okkly/design-system/src/components/Calendar/Calendar.scss";
 @use "@okkly/design-system/src/components/Card/Card.scss";
 @use "@okkly/design-system/src/components/Checkbox/Checkbox.scss";
 @use "@okkly/design-system/src/components/CheckboxGroup/CheckboxGroup.scss";
 @use "@okkly/design-system/src/components/Chip/Chip.scss";
 @use "@okkly/design-system/src/components/ChipGroup/ChipGroup.scss";
 @use "@okkly/design-system/src/components/Collapse/Collapse.scss";
+@use "@okkly/design-system/src/components/DateField/DateField.scss";
+@use "@okkly/design-system/src/components/DateTimeField/DateTimeField.scss";
+@use "@okkly/design-system/src/components/DateTimePicker/DateTimePicker.scss";
 @use "@okkly/design-system/src/components/Divider/Divider.scss";
 @use "@okkly/design-system/src/components/EmptyState/EmptyState.scss";
 @use "@okkly/design-system/src/components/FAB/FAB.scss";
@@ -28,6 +34,7 @@
 @use "@okkly/design-system/src/components/Logo/Logo.scss";
 @use "@okkly/design-system/src/components/Modal/Modal.scss";
 @use "@okkly/design-system/src/components/NumberInput/NumberInput.scss";
+@use "@okkly/design-system/src/components/Pagination/Pagination.scss";
 @use "@okkly/design-system/src/components/Photo/Photo.scss";
 @use "@okkly/design-system/src/components/Popover/Popover.scss";
 @use "@okkly/design-system/src/components/Popper/Popper.scss";
@@ -38,15 +45,20 @@
 @use "@okkly/design-system/src/components/Rating/Rating.scss";
 @use "@okkly/design-system/src/components/Ripple/Ripple.scss";
 @use "@okkly/design-system/src/components/SegmentedToggle/SegmentedToggle.scss";
+@use "@okkly/design-system/src/components/Select/Select.scss";
 @use "@okkly/design-system/src/components/SeverityIcon/SeverityIcon.scss";
 @use "@okkly/design-system/src/components/Slide/Slide.scss";
 @use "@okkly/design-system/src/components/Skeleton/Skeleton.scss";
 @use "@okkly/design-system/src/components/Slider/Slider.scss";
 @use "@okkly/design-system/src/components/Spinner/Spinner.scss";
 @use "@okkly/design-system/src/components/StatCard/StatCard.scss";
+@use "@okkly/design-system/src/components/Stepper/Stepper.scss";
 @use "@okkly/design-system/src/components/Switch/Switch.scss";
+@use "@okkly/design-system/src/components/Tabs/Tabs.scss";
 @use "@okkly/design-system/src/components/TextArea/TextArea.scss";
 @use "@okkly/design-system/src/components/TextField/TextField.scss";
+@use "@okkly/design-system/src/components/TimeField/TimeField.scss";
+@use "@okkly/design-system/src/components/TimePicker/TimePicker.scss";
 @use "@okkly/design-system/src/components/Tooltip/Tooltip.scss";
 @use "@okkly/design-system/src/components/Typography/Typography.scss";
 @use "@okkly/design-system/src/components/Zoom/Zoom.scss";

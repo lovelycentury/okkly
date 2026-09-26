@@ -1,0 +1,62 @@
+<div
+  okklyField
+  #field
+  block="okkly-date-time-field"
+  [id]="fieldId()"
+  [label]="label()"
+  [hideLabel]="hideLabel()"
+  [required]="required()"
+  [size]="size()"
+  [color]="color()"
+  [error]="error()"
+  [helperText]="helperText()"
+  [disabled]="disabled()"
+  [fullWidth]="fullWidth()"
+  [hasEndAdornment]="true"
+>
+  <input
+    [id]="fieldId()"
+    type="text"
+    inputMode="numeric"
+    class="okkly-date-time-field__input"
+    [value]="text()"
+    [maskito]="maskOptions()"
+    [disabled]="disabled()"
+    [required]="required()"
+    [placeholder]="placeholder()"
+    [attr.aria-invalid]="error() || null"
+    [attr.aria-describedby]="helperId() ?? null"
+    (input)="onInput($event)"
+  />
+
+  <button
+    okklyFieldEndAdornment
+    type="button"
+    class="okkly-date-time-field__trigger"
+    [disabled]="disabled()"
+    aria-label="Open date time picker"
+    [attr.aria-expanded]="open()"
+    (mousedown)="$event.stopPropagation()"
+    (click)="setOpen(!open())"
+  >
+    <span aria-hidden="true"><okkly-icon [icon]="iconCalendar" /></span>
+    <span aria-hidden="true"><okkly-icon [icon]="iconClock" /></span>
+  </button>
+</div>
+
+<okkly-popover
+  [open]="open()"
+  [anchorEl]="controlElement()"
+  placement="bottom-start"
+  popoverClass="okkly-date-time-field-popover"
+  (close)="setOpen(false)"
+>
+  <okkly-date-time-picker
+    [value]="value()"
+    (valueChange)="onPickerChange($event)"
+    (confirm)="onConfirm($event)"
+    [min]="min()"
+    [max]="max()"
+    [color]="color()"
+  />
+</okkly-popover>

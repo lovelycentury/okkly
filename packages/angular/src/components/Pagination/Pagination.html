@@ -1,0 +1,97 @@
+<ul class="okkly-pagination__list">
+  @if (showFirstButton()) {
+    <li class="okkly-pagination__item">
+      <button
+        type="button"
+        class="okkly-pagination__button"
+        aria-label="Go to first page"
+        [disabled]="prevDisabled()"
+        (click)="goToPage(1)"
+      >
+        <span class="okkly-pagination__icon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m11 6-6 6 6 6" />
+            <path d="M18 6v12" />
+          </svg>
+        </span>
+      </button>
+    </li>
+  }
+  <li class="okkly-pagination__item">
+    <button
+      type="button"
+      class="okkly-pagination__button"
+      aria-label="Go to previous page"
+      [disabled]="prevDisabled()"
+      (click)="goToPage(safePage() - 1)"
+    >
+      <span class="okkly-pagination__icon" aria-hidden="true">
+        <okkly-icon [icon]="iconChevronLeft" />
+      </span>
+    </button>
+  </li>
+  @for (item of items(); track item + "-" + $index) {
+    <li class="okkly-pagination__item">
+      @if (item === "ellipsis") {
+        <span class="okkly-pagination__ellipsis" aria-hidden="true">…</span>
+      } @else {
+        <button
+          type="button"
+          class="okkly-pagination__button"
+          [class.okkly-pagination__button--active]="item === safePage()"
+          [attr.aria-label]="'Go to page ' + item"
+          [attr.aria-current]="item === safePage() ? 'page' : null"
+          [disabled]="disabled()"
+          (click)="goToPage(item)"
+        >
+          {{ item }}
+        </button>
+      }
+    </li>
+  }
+  <li class="okkly-pagination__item">
+    <button
+      type="button"
+      class="okkly-pagination__button"
+      aria-label="Go to next page"
+      [disabled]="nextDisabled()"
+      (click)="goToPage(safePage() + 1)"
+    >
+      <span class="okkly-pagination__icon" aria-hidden="true">
+        <okkly-icon [icon]="iconChevronRight" />
+      </span>
+    </button>
+  </li>
+  @if (showLastButton()) {
+    <li class="okkly-pagination__item">
+      <button
+        type="button"
+        class="okkly-pagination__button"
+        aria-label="Go to last page"
+        [disabled]="nextDisabled()"
+        (click)="goToPage(safeCount())"
+      >
+        <span class="okkly-pagination__icon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m6 6 6 6-6 6" />
+            <path d="M18 6v12" />
+          </svg>
+        </span>
+      </button>
+    </li>
+  }
+</ul>
