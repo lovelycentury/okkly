@@ -1,5 +1,12 @@
 # @okkly/svelte
 
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [[`44f650b`](https://github.com/lovelycentury/okkly/commit/44f650b551077474f0ccecf94885ca0556aff31a)]:
+  - @okkly/design-system@0.4.1
+
 ## 0.3.0
 
 ### Minor Changes
