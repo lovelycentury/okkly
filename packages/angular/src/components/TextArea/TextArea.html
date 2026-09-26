@@ -1,0 +1,41 @@
+@if (label()) {
+  <label
+    [attr.for]="inputId()"
+    class="okkly-text-area__label"
+    [class.okkly-text-area__label--hidden]="hideLabel()"
+  >
+    {{ label() }}
+    @if (required()) {
+      <span class="okkly-text-area__required" aria-hidden="true">*</span>
+    }
+  </label>
+}
+<div class="okkly-text-area__control">
+  <textarea
+    #textarea
+    [id]="inputId()"
+    class="okkly-text-area__textarea"
+    [rows]="rows()"
+    [disabled]="disabled()"
+    [required]="required()"
+    [attr.name]="name() ?? null"
+    [attr.placeholder]="placeholder() ?? null"
+    [attr.maxlength]="maxLength() ?? null"
+    [attr.aria-invalid]="error() ? true : null"
+    [attr.aria-describedby]="describedBy()"
+    [value]="value()"
+    (input)="onInput($event)"
+  ></textarea>
+</div>
+@if (showFooter()) {
+  <div class="okkly-text-area__footer">
+    @if (helperText()) {
+      <span [id]="helperId()" class="okkly-text-area__helper">{{ helperText() }}</span>
+    }
+    @if (maxLength() != null) {
+      <span [id]="counterId()" class="okkly-text-area__counter"
+        >{{ value().length }} / {{ maxLength() }}</span
+      >
+    }
+  </div>
+}

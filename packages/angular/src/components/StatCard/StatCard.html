@@ -1,0 +1,55 @@
+@if (hasIcon()) {
+  <div class="okkly-stat-card__header">
+    <span class="okkly-stat-card__icon"><ng-content select="[okklyStatCardIcon]" /></span>
+  </div>
+}
+<div class="okkly-stat-card__value-row">
+  <p class="okkly-stat-card__value">{{ value() }}<ng-content /></p>
+  @if (trend(); as trend) {
+    <!--
+      The direction lives in an arrow and a colour, and neither survives being
+      read aloud — so the badge carries the word itself. `role="img"` is what
+      makes the label replace the contents rather than sit beside them.
+    -->
+    <span
+      role="img"
+      [attr.aria-label]="(trend.up ? 'Up ' : 'Down ') + trend.value"
+      class="okkly-stat-card__trend"
+      [class.okkly-stat-card__trend--up]="trend.up"
+      [class.okkly-stat-card__trend--down]="!trend.up"
+    >
+      @if (trend.up) {
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 19V5" />
+          <path d="m5 12 7-7 7 7" />
+        </svg>
+      } @else {
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 5v14" />
+          <path d="m19 12-7 7-7-7" />
+        </svg>
+      }
+      {{ trend.value }}
+    </span>
+  }
+</div>
+<p class="okkly-stat-card__label">{{ label() }}</p>
+@if (description()) {
+  <p class="okkly-stat-card__description">{{ description() }}</p>
+}

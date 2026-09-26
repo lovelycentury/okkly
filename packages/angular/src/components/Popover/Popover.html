@@ -1,0 +1,26 @@
+@if (!hideBackdrop() && open()) {
+  <div
+    #backdrop
+    class="okkly-popover__backdrop"
+    role="presentation"
+    (click)="onBackdropClick($event)"
+  ></div>
+}
+<okkly-popper
+  [open]="open()"
+  [anchorEl]="resolvedAnchor()"
+  [placement]="placement()"
+  transition
+  [disablePortal]="disablePortal()"
+  [matchAnchorWidth]="matchAnchorWidth()"
+  [minWidth]="minWidth()"
+  [modifiers]="offsetModifiers"
+  [popperClass]="popperClasses()"
+  role="presentation"
+>
+  @if (paperMounted()) {
+    <div #paper class="okkly-popover__paper" [class]="paperClass()">
+      <ng-content />
+    </div>
+  }
+</okkly-popper>

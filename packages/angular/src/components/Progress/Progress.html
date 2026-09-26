@@ -1,0 +1,34 @@
+@if (type() === "circular") {
+  <div class="okkly-progress__circular">
+    <svg class="okkly-progress__svg" [attr.viewBox]="ring().viewBox">
+      <circle
+        class="okkly-progress__circle-track"
+        [attr.cx]="ring().center"
+        [attr.cy]="ring().center"
+        [attr.r]="ring().radius"
+        fill="none"
+        [attr.stroke-width]="ring().stroke"
+      />
+      <circle
+        class="okkly-progress__circle-bar"
+        [attr.cx]="ring().center"
+        [attr.cy]="ring().center"
+        [attr.r]="ring().radius"
+        fill="none"
+        [attr.stroke-width]="ring().stroke"
+        [attr.stroke-dasharray]="ring().circumference"
+        [attr.stroke-dashoffset]="ring().offset"
+      />
+    </svg>
+    @if (showLabel() && !isIndeterminate()) {
+      <span class="okkly-progress__label">{{ percentLabel() }}%</span>
+    }
+  </div>
+} @else {
+  <div class="okkly-progress__track">
+    <div
+      class="okkly-progress__bar"
+      [style.width]="isIndeterminate() ? null : clamped() + '%'"
+    ></div>
+  </div>
+}

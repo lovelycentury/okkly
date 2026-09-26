@@ -1,0 +1,10 @@
+@for (member of members(); track member.item) {
+  <span class="okkly-avatar-group__item">
+    <ng-container *ngTemplateOutlet="member.item.template; injector: member.injector" />
+  </span>
+}
+@if (overflowCount() > 0) {
+  <span class="okkly-avatar-group__item">
+    <span class="okkly-avatar-group__overflow">+{{ overflowCount() }}</span>
+  </span>
+}

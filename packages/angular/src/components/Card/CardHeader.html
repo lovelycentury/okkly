@@ -1,0 +1,15 @@
+@if (hasAvatar()) {
+  <div class="okkly-card__avatar"><ng-content select="[okklyCardAvatar]" /></div>
+}
+<div class="okkly-card__heading">
+  @if (title() !== undefined) {
+    <h3 class="okkly-card__title">{{ title() }}</h3>
+  }
+  @if (subheader() !== undefined) {
+    <p class="okkly-card__subheader">{{ subheader() }}</p>
+  }
+  <ng-content />
+</div>
+@if (hasAction()) {
+  <div class="okkly-card__action"><ng-content select="[okklyCardAction]" /></div>
+}

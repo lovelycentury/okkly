@@ -30,8 +30,9 @@ import { createApplication } from "@angular/platform-browser";
 import * as okkly from "../src/index";
 import type { HarnessEvent, HarnessState, OkklyHarness } from "../src/playwright/harness";
 
-// Every runtime export of the package is a standalone component or directive.
-const IMPORTS = Object.values(okkly);
+// Every class the package exports is a standalone component or directive; the
+// rest (data such as `ICON_NAMES`) cannot go into `imports`.
+const IMPORTS = Object.values(okkly).filter((value) => typeof value === "function");
 
 const root = document.getElementById("root") as HTMLElement;
 const application: Promise<ApplicationRef> = createApplication({

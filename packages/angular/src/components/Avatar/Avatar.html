@@ -1,0 +1,12 @@
+@if (showImage()) {
+  <img class="okkly-avatar__image" [src]="src()" alt="" (error)="imageFailed.set(true)" />
+} @else {
+  <span class="okkly-avatar__initials" aria-hidden="true">{{ shortInitials() }}</span>
+}
+@if (status(); as status) {
+  <span
+    class="okkly-avatar__status"
+    [class.okkly-avatar__status--offline]="status === 'offline'"
+    aria-hidden="true"
+  ></span>
+}

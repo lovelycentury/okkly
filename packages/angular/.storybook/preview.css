@@ -20,3 +20,50 @@
   min-height: 0;
   padding: 2rem;
 }
+
+/*
+ * Fields read at a realistic width, as in @okkly/react's workbench. Set on the
+ * blocks rather than on the canvas: `field.shell` declares
+ * `--okkly-<block>-min-width` on the block itself, and a declaration on the
+ * element always beats one inherited from an ancestor.
+ */
+.okkly-storybook-canvas .okkly-text-field {
+  --okkly-text-field-min-width: 17.5rem;
+}
+
+.okkly-storybook-canvas .okkly-select {
+  --okkly-select-min-width: 17.5rem;
+}
+
+.okkly-storybook-canvas .okkly-autocomplete {
+  --okkly-autocomplete-min-width: 17.5rem;
+}
+
+/*
+ * The controls that predate the shared `field.shell` mixin have no min-width
+ * variable to set, so they get the floor directly. `:not(--full-width)` leaves
+ * a field that was asked to fill its container alone.
+ */
+.okkly-storybook-canvas
+  :is(
+    .okkly-text-area,
+    .okkly-number-input,
+    .okkly-date-field,
+    .okkly-date-time-field,
+    .okkly-time-field
+  ):not([class*="--full-width"]) {
+  min-width: 17.5rem;
+}
+
+/*
+ * Story-only backdrop demos, applied through `OkklyModal`'s `backdropClass` in
+ * the Modal stories. Unlayered, so they outrank the design system's own
+ * `.okkly-modal__backdrop` rule without a specificity contest.
+ */
+.okkly-story-backdrop--lightbox {
+  background: rgba(0, 0, 0, 0.88);
+}
+
+.okkly-story-backdrop--tinted {
+  background: color-mix(in srgb, var(--okkly-accent-secondary) 30%, rgba(0, 0, 0, 0.7));
+}

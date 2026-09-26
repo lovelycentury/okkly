@@ -65,15 +65,21 @@ export const useMatrixScreenshotTest = <TContext extends HookContext = HookConte
         );
         await options.hooks?.beforeEach?.(component, page, column, row, options.context);
 
-        const screenshot = await component.screenshot({
-          animations: "disabled",
+        // An overlay portals out of the mount root, so those cells photograph
+        // the whole viewport instead of the component's own (empty) box.
+        const capturePage = options.screenshotTarget === "page";
+        const screenshotOptions = {
+          animations: "disabled" as const,
           ...globalOptions.defaults?.screenshotOptions,
           ...options.screenshotOptions,
-        });
+        };
+        const screenshot = capturePage
+          ? await page.screenshot(screenshotOptions)
+          : await component.screenshot(screenshotOptions);
 
         // Browsers differ in device pixel ratio, so the raw image can come back
         // at 2x. Read the CSS box and size the <img> with it below.
-        const box = await component.boundingBox();
+        const box = capturePage ? page.viewportSize() : await component.boundingBox();
 
         await globalOptions.defaults?.hooks?.afterEach?.(
           component,
@@ -173,6 +179,19 @@ export const useMatrixScreenshotTest = <TContext extends HookContext = HookConte
   };
 
   return { executeMatrixScreenshotTest };
+};
+
+/**
+ * Grows a cell's box to its scroll size, so an absolutely positioned part
+ * (a dropdown, say) stays inside the captured frame. Same as `@okkly/react`'s.
+ */
+export const adjustSizeToAbsolutePosition = async (component: Locator) => {
+  await expect(component).toBeVisible();
+
+  await component.evaluate((element) => {
+    (element as HTMLElement).style.height = `${element.scrollHeight}px`;
+    (element as HTMLElement).style.width = `${element.scrollWidth}px`;
+  });
 };
 
 export type UseFocusStateHooksOptions = {

@@ -1,0 +1,37 @@
+<div class="okkly-photo__frame">
+  @if (showSkeleton()) {
+    <okkly-skeleton class="okkly-photo__skeleton" variant="rectangular" animation="pulse" />
+  }
+  @if (showImage()) {
+    <img
+      class="okkly-photo__image"
+      [src]="image()"
+      [alt]="alt()"
+      [style.opacity]="showSkeleton() ? 0 : null"
+      [style.position]="showSkeleton() ? 'absolute' : null"
+      (load)="loaded.set(true)"
+      (error)="failed.set(true)"
+    />
+  } @else {
+    <div class="okkly-photo__placeholder" role="img" [attr.aria-label]="alt()">
+      <ng-content select="[okklyPhotoFallback]" />
+      @if (!hasFallback()) {
+        <svg viewBox="0 0 210 280" class="okkly-photo__silhouette" aria-hidden="true">
+          <circle cx="105" cy="80.5" r="35.7" fill="currentColor" />
+          <rect x="34.7" y="122.2" width="138.6" height="140" rx="69.3" fill="currentColor" />
+        </svg>
+      }
+    </div>
+  }
+  @if (showScrim()) {
+    <div class="okkly-photo__scrim-layer"></div>
+  }
+  @if (showNoir()) {
+    <div class="okkly-photo__noir-top"></div>
+    <div class="okkly-photo__noir-left"></div>
+    <div class="okkly-photo__noir-right"></div>
+  }
+  @if (caption() && showScrim()) {
+    <p class="okkly-photo__caption">{{ caption() }}</p>
+  }
+</div>

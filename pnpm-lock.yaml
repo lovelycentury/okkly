@@ -114,9 +114,15 @@ importers:
       '@okkly/design-system':
         specifier: workspace:*
         version: link:../design-system
+      '@okkly/icons':
+        specifier: workspace:*
+        version: link:../icons
       '@okkly/shared':
         specifier: workspace:*
         version: link:../shared
+      '@popperjs/core':
+        specifier: ^2.11.8
+        version: 2.11.8
       tslib:
         specifier: ^2.8.1
         version: 2.8.1

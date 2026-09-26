@@ -1,0 +1,71 @@
+<span class="okkly-rating__stars">
+  @for (kind of glyphs(); track $index) {
+    @if (interactive()) {
+      <button
+        type="button"
+        class="okkly-rating__item"
+        [attr.name]="name() ?? null"
+        [attr.aria-label]="getLabelText()($index + 1)"
+        (click)="onClick($event, $index)"
+        (mousemove)="onMove($event, $index)"
+        (keydown)="onKeydown($event)"
+      >
+        <ng-container
+          [ngTemplateOutlet]="glyph"
+          [ngTemplateOutletContext]="{ $implicit: $index }"
+        />
+      </button>
+    } @else {
+      <span class="okkly-rating__item" aria-hidden="true">
+        <ng-container
+          [ngTemplateOutlet]="glyph"
+          [ngTemplateOutletContext]="{ $implicit: $index }"
+        />
+      </span>
+    }
+  }
+</span>
+@if (label()) {
+  <span class="okkly-rating__label">{{ label() }}</span>
+}
+
+<!--
+  One glyph: filled, outlined, or an outline with a filled half on top. Its
+  nodes never change with the fill — only their attributes do — because
+  hovering re-renders the glyphs mid-click, and a click whose pressed node was
+  swapped out between mousedown and mouseup never fires.
+-->
+<ng-template #glyph let-index>
+  <span
+    class="okkly-rating__icon"
+    [class.okkly-rating__icon--full]="glyphs()[index] === 'full'"
+    [class.okkly-rating__icon--half]="glyphs()[index] === 'half'"
+    aria-hidden="true"
+  >
+    @if (customIcon(); as custom) {
+      <ng-container [ngTemplateOutlet]="custom.template" />
+    } @else {
+      <svg
+        viewBox="0 0 24 24"
+        [attr.fill]="glyphs()[index] === 'full' ? 'currentColor' : 'none'"
+        [attr.stroke]="glyphs()[index] === 'full' ? 'none' : 'currentColor'"
+        [attr.stroke-width]="glyphs()[index] === 'full' ? null : 1.5"
+        [attr.stroke-linejoin]="glyphs()[index] === 'full' ? null : 'round'"
+      >
+        <path [attr.d]="glyphPath()" />
+      </svg>
+    }
+    <span
+      class="okkly-rating__icon-fill"
+      [style.display]="glyphs()[index] === 'half' ? null : 'none'"
+    >
+      @if (customIcon(); as custom) {
+        <ng-container [ngTemplateOutlet]="custom.template" />
+      } @else {
+        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+          <path [attr.d]="glyphPath()" />
+        </svg>
+      }
+    </span>
+  </span>
+</ng-template>

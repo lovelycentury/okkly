@@ -1,0 +1,39 @@
+<ng-content select="[okklyButtonGroupAction]" />
+@if (hasMenu()) {
+  <button
+    #chevron
+    type="button"
+    class="okkly-button-group__segment okkly-button-group__chevron"
+    [disabled]="disabled()"
+    aria-haspopup="menu"
+    [attr.aria-expanded]="open()"
+    [attr.aria-label]="menuAriaLabel()"
+    (click)="toggle()"
+    (keydown)="onChevronKeydown($event)"
+  >
+    <span class="okkly-button-group__chevron-icon" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m6 9 6 6 6-6" />
+      </svg>
+    </span>
+  </button>
+  <okkly-popover
+    [open]="open()"
+    [anchorEl]="host"
+    placement="bottom-end"
+    [disablePortal]="disablePortal()"
+    paperClass="okkly-button-group__menu-paper"
+    (close)="onPopoverClose($event)"
+  >
+    <div class="okkly-button-group__menu-list" role="menu" (keydown)="onMenuKeydown($event)">
+      <ng-content select="[okklyButtonGroupMenuItem]" />
+    </div>
+  </okkly-popover>
+}

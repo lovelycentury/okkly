@@ -1,0 +1,23 @@
+@if (open() || keepMounted()) {
+  <!--
+    Moved into the portal container by the component; Angular keeps owning the
+    node and removes it from wherever it sits once this block goes away.
+  -->
+  <div
+    #root
+    class="okkly-component okkly-modal"
+    [class]="rootClasses()"
+    role="presentation"
+    [attr.aria-hidden]="open() ? null : 'true'"
+  >
+    @if (!hideBackdrop()) {
+      <div
+        class="okkly-modal__backdrop"
+        [class]="backdropClass()"
+        aria-hidden="true"
+        (click)="onBackdropClick($event)"
+      ></div>
+    }
+    <ng-content />
+  </div>
+}

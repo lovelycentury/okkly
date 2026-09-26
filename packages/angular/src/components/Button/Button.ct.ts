@@ -218,6 +218,41 @@ test.describe("disabled", () => {
     // ASSERT
     expect(await recordedEvents("click")).toHaveLength(0);
   });
+
+  test("should mark a disabled link aria-disabled and swallow clicks", async ({
+    mountTemplate,
+    page,
+    recordedEvents,
+  }) => {
+    // ARRANGE
+    const component = await mountTemplate(
+      `<a okklyButton href="#test-section" disabled (click)="record('click')">Click me</a>`,
+    );
+
+    // ASSERT
+    await expect(component).toHaveAttribute("aria-disabled", "true");
+    await expect(component).toHaveAttribute("tabindex", "-1");
+
+    // ACT — Playwright treats aria-disabled as not clickable, so force it the way a mouse would.
+    await component.click({ force: true });
+
+    // ASSERT
+    expect(new URL(page.url()).hash).toBe("");
+    expect(await recordedEvents("click")).toHaveLength(0);
+  });
+
+  test("should swallow clicks on a loading link too", async ({ mountTemplate, recordedEvents }) => {
+    // ARRANGE
+    const component = await mountTemplate(
+      `<a okklyButton href="#test-section" loading (click)="record('click')">Click me</a>`,
+    );
+
+    // ACT
+    await component.click({ force: true });
+
+    // ASSERT
+    expect(await recordedEvents("click")).toHaveLength(0);
+  });
 });
 
 test.describe("loading", () => {

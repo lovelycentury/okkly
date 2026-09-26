@@ -1,0 +1,38 @@
+@if (icon()) {
+  <span class="okkly-alert__icon">
+    <ng-content select="[okklyAlertIcon]" />
+    @if (!hasCustomIcon()) {
+      <okkly-severity-icon [severity]="iconSeverity()" size="small" shape="rounded" />
+    }
+  </span>
+}
+<div class="okkly-alert__content">
+  @if (title()) {
+    <p class="okkly-alert__title">{{ title() }}</p>
+  }
+  <!--
+    The message renders unconditionally and collapses through `display` when
+    nothing was projected, since it is what the component inspects for content.
+  -->
+  <p #messageSlot class="okkly-alert__message" [style.display]="hasMessage() ? null : 'none'">
+    <ng-content />
+  </p>
+</div>
+@if (hasAction()) {
+  <span class="okkly-alert__action"><ng-content select="[okklyAlertAction]" /></span>
+}
+@if (closable()) {
+  <button type="button" class="okkly-alert__close" aria-label="Close" (click)="close.emit()">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  </button>
+}
