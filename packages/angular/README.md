@@ -1177,6 +1177,24 @@ score. Inputs follow MUI's Rating, as `@okkly/react`'s `<Rating>` does: `value`,
 arrow keys step by `precision`. A read-only rating is an image named "4 of 5".
 A custom glyph goes in an `<ng-template okklyRatingIcon>`.
 
+## Slider
+
+`OkklySlider` (`okkly-slider`) picks a number, or a range, along a track.
+Inputs follow MUI's Slider, as `@okkly/react`'s `<Slider>` does: `min`, `max`,
+`step`, `marks`, `orientation`, `disabled`, `color`, `size`,
+`valueLabelDisplay`, `discrete`, `shiftStep`, `getAriaLabel`,
+`getAriaValueText`, `track`, `valueLabelFormat`.
+
+```html
+<okkly-slider [(value)]="volume" aria-label="Volume" />
+
+<okkly-slider [(value)]="price" valueLabelDisplay="auto" aria-label="Price" />
+```
+
+`value` is a number, or `[from, to]` for a range; `changeCommitted` fires once
+a drag ends or a key sets a value. Each thumb is a native `<input type="range">`,
+so arrow keys, Page Up/Down, Home and End work, with Shift for bigger steps.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

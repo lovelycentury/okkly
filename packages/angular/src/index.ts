@@ -235,3 +235,13 @@ export type {
   RatingIcon,
   RatingPrecision,
 } from "./components/Rating/Rating";
+
+export { OkklySlider } from "./components/Slider/Slider";
+export type {
+  SliderMark,
+  SliderOrientation,
+  SliderSize,
+  SliderColor,
+  SliderValueLabelDisplay,
+  SliderTrack,
+} from "./components/Slider/Slider";

@@ -45,6 +45,7 @@ import "@okkly/design-system/components/Ripple/Ripple.scss";
 import "@okkly/design-system/components/SeverityIcon/SeverityIcon.scss";
 import "@okkly/design-system/components/Slide/Slide.scss";
 import "@okkly/design-system/components/Skeleton/Skeleton.scss";
+import "@okkly/design-system/components/Slider/Slider.scss";
 import "@okkly/design-system/components/Spinner/Spinner.scss";
 import "@okkly/design-system/components/StatCard/StatCard.scss";
 import "@okkly/design-system/components/Switch/Switch.scss";

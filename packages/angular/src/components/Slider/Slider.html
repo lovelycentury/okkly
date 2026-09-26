@@ -1,0 +1,81 @@
+<div class="okkly-slider__rail" role="presentation" aria-hidden="true"></div>
+
+@if (track() === "normal") {
+  <div
+    class="okkly-slider__track"
+    role="presentation"
+    aria-hidden="true"
+    [style]="trackStyle()"
+  ></div>
+}
+
+@for (segment of invertedTracks(); track $index) {
+  <div
+    class="okkly-slider__track-inverted"
+    role="presentation"
+    aria-hidden="true"
+    [style]="segment"
+  ></div>
+}
+
+@if (marksList().length > 0) {
+  <div class="okkly-slider__marks">
+    @for (mark of marksList(); track mark.value) {
+      <div>
+        <div
+          class="okkly-slider__mark"
+          [class.okkly-slider__mark--active]="isMarkActive(mark.value)"
+          [attr.data-value]="mark.value"
+          aria-hidden="true"
+          [style]="positionStyle(mark.value, true)"
+        ></div>
+        @if (mark.label) {
+          <span
+            class="okkly-slider__mark-label"
+            [attr.data-value]="mark.value"
+            aria-hidden="true"
+            [style]="positionStyle(mark.value)"
+            >{{ mark.label }}</span
+          >
+        }
+      </div>
+    }
+  </div>
+}
+
+@for (thumbValue of values(); track $index) {
+  <div
+    class="okkly-slider__thumb"
+    [class.okkly-slider__thumb--active]="
+      activeThumbIndex() === $index || focusedThumbIndex() === $index
+    "
+    [attr.data-index]="$index"
+    [style]="positionStyle(thumbValue)"
+  >
+    @if (showValueLabel($index)) {
+      <span class="okkly-slider__value-label">{{ valueLabelFormat()(thumbValue, $index) }}</span>
+    }
+    <span class="okkly-slider__handle" aria-hidden="true"></span>
+    <input
+      class="okkly-slider__input"
+      type="range"
+      [min]="min()"
+      [max]="max()"
+      [attr.step]="discrete() && marksList().length > 0 ? 'any' : step()"
+      [value]="thumbValue"
+      [attr.aria-label]="thumbAriaLabel($index)"
+      [attr.aria-valuemin]="min()"
+      [attr.aria-valuemax]="max()"
+      [attr.aria-valuenow]="thumbValue"
+      [attr.aria-valuetext]="thumbAriaValueText(thumbValue, $index)"
+      [attr.aria-orientation]="orientation()"
+      [attr.data-index]="$index"
+      [tabIndex]="disabled() ? -1 : 0"
+      [disabled]="disabled()"
+      (input)="onThumbInput($event)"
+      (focus)="onThumbFocus($event)"
+      (blur)="onThumbBlur($event)"
+      (keydown)="onThumbKeydown($event)"
+    />
+  </div>
+}
