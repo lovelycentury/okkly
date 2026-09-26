@@ -2,6 +2,9 @@
   "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
   "dest": "./dist",
   "allowedNonPeerDependencies": [
+    "@maskito/angular",
+    "@maskito/core",
+    "@maskito/kit",
     "@okkly/design-system",
     "@okkly/icons",
     "@okkly/shared",

@@ -1675,6 +1675,165 @@ this package. `color` reuses `CalendarTone` (six tones), not `Field`'s
 seven-value palette — this component wraps `Calendar`/`TimePicker`/`Button`
 directly, not `Field`.
 
+## Pagination
+
+`OkklyPagination` (`okkly-pagination`) is page controls with boundary pages, a
+sibling window around the current page, and ellipses in between, closest to
+MUI's `Pagination`.
+
+| Input             | Type                                                   | Default   |
+| ----------------- | ------------------------------------------------------ | --------- |
+| `count`           | `number` (required)                                    | —         |
+| `page`            | `number` (`model`, two-way)                            | `1`       |
+| `siblingCount`    | `number`                                               | `1`       |
+| `boundaryCount`   | `number`                                               | `1`       |
+| `showFirstButton` | `boolean`                                              | `false`   |
+| `showLastButton`  | `boolean`                                              | `false`   |
+| `size`            | `small \| medium \| large`                             | `medium`  |
+| `color`           | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary` |
+| `disabled`        | `boolean`                                              | `false`   |
+| `shape`           | `circular \| rounded`                                  | `rounded` |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyPagination } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyPagination],
+  template: `<okkly-pagination [count]="pageCount" [(page)]="page" />`,
+})
+export class AppComponent {
+  pageCount = 12;
+  page = 1;
+}
+```
+
+Deliberate gaps: no `renderItem` override and no compact mobile variant,
+matching react's own v1 scope. React's `onChange(event, page)` becomes
+`page`'s own `model()` — a click just moves the model; there is no Angular
+equivalent worth threading a `MouseEvent` through for. `@okkly/icons` has no
+first/last-page glyphs, so those two buttons render the same inline
+double-chevron SVGs react hand-rolls, kept byte-for-byte for visual parity;
+prev/next reuse the shared `iconChevronLeft`/`iconChevronRight`.
+
+## Tabs
+
+`OkklyTabs` (`okkly-tabs`) is a tab strip switching between peer views inside
+one panel, following MUI's `Tabs` API closely. Tabs come from an `items` array
+rather than child composition; tab panels are left to the consumer.
+
+| Input         | Type                                                   | Default      |
+| ------------- | ------------------------------------------------------ | ------------ |
+| `items`       | `TabItem[]`                                            | `[]`         |
+| `value`       | `string` (`model`, two-way)                            | first item   |
+| `color`       | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`    |
+| `variant`     | `standard \| scrollable`                               | `standard`   |
+| `orientation` | `horizontal \| vertical`                               | `horizontal` |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyTabs, type TabItem } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyTabs],
+  template: `
+    <okkly-tabs [items]="items" [(value)]="tab" />
+    <div role="tabpanel" [id]="'okkly-tabpanel-' + tab">{{ tab }} panel</div>
+  `,
+})
+export class AppComponent {
+  items: TabItem[] = [
+    { label: "Overview", value: "overview" },
+    { label: "Activity", value: "activity" },
+    { label: "Members", value: "members", disabled: true },
+  ];
+  tab = "overview";
+}
+```
+
+Deliberate gaps: react's separate `value`/`defaultValue` split becomes
+`value`'s own `model()` default (the first item) — bind `[(value)]` for the
+controlled case, leave it unbound for the uncontrolled one. An item's `label`
+is plain text and its `icon` is raw SVG markup or a `TemplateRef`, since
+Angular has no `ReactNode` equivalent. Keyboard follows the WAI-ARIA tabs
+pattern with automatic activation, matching react: only the active tab is
+tabbable (roving tabindex), and the arrow keys (plus Home/End) move focus and
+select in one step, skipping disabled tabs.
+
+## Stepper
+
+`OkklyStepper` (`okkly-stepper`) is a presentational progress indicator for an
+ordered flow, following MUI's `Stepper` API loosely. Steps come from a `steps`
+array rather than `Step` children; advancing `activeStep` is the caller's job.
+
+| Input              | Type                                                   | Default      |
+| ------------------ | ------------------------------------------------------ | ------------ |
+| `steps`            | `StepperStep[]` (required)                             | —            |
+| `activeStep`       | `number` (required)                                    | —            |
+| `orientation`      | `horizontal \| vertical`                               | `horizontal` |
+| `alternativeLabel` | `boolean`                                              | `true`       |
+| `color`            | `primary \| dante \| indigo \| violet \| ember \| ice` | `primary`    |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyStepper, type StepperStep } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyStepper],
+  template: `<okkly-stepper [steps]="steps" [activeStep]="1" />`,
+})
+export class AppComponent {
+  steps: StepperStep[] = [{ label: "Cart" }, { label: "Delivery" }, { label: "Payment" }];
+}
+```
+
+Deliberate gaps: react's `steps[].label`/`description` accept any `ReactNode`
+— here they're plain strings, the same call `OkklyBreadcrumbs`'s `items`
+already made. There's no `StepButton`/clickable jump in v1, matching react.
+
+## Accordion
+
+`OkklyAccordion` (`okkly-accordion`) is an expandable section, following MUI's
+`Accordion` API. `expanded` is a `model()` — bind `[(expanded)]` for a
+controlled section, or leave it unbound and the accordion manages its own
+state, replacing react's separate `expanded`/`defaultExpanded`/`onChange`.
+Composition is three parts: `okkly-accordion` owns the state,
+`button[okklyAccordionSummary]` toggles it, `okkly-accordion-details` is the
+collapsible body (built on `OkklyCollapse`). The summary and details read the
+accordion's state through Angular DI — the same way Angular Material's
+`MatExpansionPanel` reads its `MatAccordion` — rather than React context, so
+both must be projected inside an `okkly-accordion`.
+
+| Input      | Type      | Default |
+| ---------- | --------- | ------- |
+| `expanded` | `boolean` | `false` |
+| `disabled` | `boolean` | `false` |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyAccordion, OkklyAccordionDetails, OkklyAccordionSummary } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyAccordion, OkklyAccordionSummary, OkklyAccordionDetails],
+  template: `
+    <okkly-accordion>
+      <button type="button" okklyAccordionSummary>What is included?</button>
+      <okkly-accordion-details>Tokens, components, and documentation.</okkly-accordion-details>
+    </okkly-accordion>
+  `,
+})
+export class AppComponent {}
+```
+
+A custom expand icon replaces the default chevron as projected content tagged
+`okklyAccordionExpandIcon`, inside the summary button, the same call
+`OkklyButton`'s `okklyButtonStartIcon`/`okklyButtonEndIcon` already made.
+Deliberate gaps: no `AccordionActions` slot in v1.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

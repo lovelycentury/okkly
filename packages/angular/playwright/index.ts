@@ -25,14 +25,21 @@ import {
   signal,
   type ApplicationRef,
   type ComponentRef,
+  type Type,
 } from "@angular/core";
 import { createApplication } from "@angular/platform-browser";
 import * as okkly from "../src/index";
 import type { HarnessEvent, HarnessState, OkklyHarness } from "../src/playwright/harness";
 
-// Every class the package exports is a standalone component or directive; the
-// rest (data such as `ICON_NAMES`) cannot go into `imports`.
-const IMPORTS = Object.values(okkly).filter((value) => typeof value === "function");
+// Every class the package exports is a standalone component or directive and
+// belongs in `imports`; the rest — data (`ICON_NAMES`), plain helper
+// functions (`getPaginationItems`) — does not. `class` vs `function`
+// declarations stringify with a distinct leading keyword, which tells them
+// apart without relying on Ivy's internal `ɵcmp`/`ɵdir` markers.
+const IMPORTS = Object.values(okkly).filter(
+  (value): boolean =>
+    typeof value === "function" && /^class[\s{]/.test(Function.prototype.toString.call(value)),
+) as Type<unknown>[];
 
 const root = document.getElementById("root") as HTMLElement;
 const application: Promise<ApplicationRef> = createApplication({

@@ -6,6 +6,7 @@ import "@okkly/design-system/styles/index.scss";
 // Component styles, mirroring `src/styles.scss` (which the published
 // `style.css` is built from). Imported through the package's public export
 // paths here so Vite resolves them; the build reads them off disk instead.
+import "@okkly/design-system/components/Accordion/Accordion.scss";
 import "@okkly/design-system/components/Alert/Alert.scss";
 import "@okkly/design-system/components/Autocomplete/Autocomplete.scss";
 import "@okkly/design-system/components/Avatar/Avatar.scss";
@@ -38,6 +39,7 @@ import "@okkly/design-system/components/List/List.scss";
 import "@okkly/design-system/components/Logo/Logo.scss";
 import "@okkly/design-system/components/Modal/Modal.scss";
 import "@okkly/design-system/components/NumberInput/NumberInput.scss";
+import "@okkly/design-system/components/Pagination/Pagination.scss";
 import "@okkly/design-system/components/Photo/Photo.scss";
 import "@okkly/design-system/components/Popover/Popover.scss";
 import "@okkly/design-system/components/Popper/Popper.scss";
@@ -55,7 +57,9 @@ import "@okkly/design-system/components/Skeleton/Skeleton.scss";
 import "@okkly/design-system/components/Slider/Slider.scss";
 import "@okkly/design-system/components/Spinner/Spinner.scss";
 import "@okkly/design-system/components/StatCard/StatCard.scss";
+import "@okkly/design-system/components/Stepper/Stepper.scss";
 import "@okkly/design-system/components/Switch/Switch.scss";
+import "@okkly/design-system/components/Tabs/Tabs.scss";
 import "@okkly/design-system/components/TextArea/TextArea.scss";
 import "@okkly/design-system/components/TextField/TextField.scss";
 import "@okkly/design-system/components/TimeField/TimeField.scss";
