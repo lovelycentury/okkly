@@ -1,5 +1,33 @@
 # @okkly/angular
 
+## 0.5.0
+
+### Minor Changes
+
+- [#274](https://github.com/lovelycentury/okkly/pull/274) [`ff1d948`](https://github.com/lovelycentury/okkly/commit/ff1d9489f7d58d290f171d67f1369a570a8d6ce5) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `OkklyAccordion` (`okkly-accordion`), a disclosure section built from a summary button and a collapsible details panel.
+
+- [#274](https://github.com/lovelycentury/okkly/pull/274) [`ad44ded`](https://github.com/lovelycentury/okkly/commit/ad44ded904812f1e0b6b5225ddab517382ea0e3e) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `OkklyAutocomplete` (`okkly-autocomplete`), a filter-as-you-type field with single and multi-select tags, free text (`freeSolo`), grouping, clearing, loading and a native form fallback via `name`. Built on the same `OkklyOption*` primitives and `SelectOption` shape as `OkklySelect`.
+
+- [#274](https://github.com/lovelycentury/okkly/pull/274) [`e6fdc9a`](https://github.com/lovelycentury/okkly/commit/e6fdc9a4b4d972eae23368861126080313b14bfe) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `OkklyCalendar` (`okkly-calendar`), a month card for picking a date or a date range — day, month and year grids, min/max bounds, week-start and locale, and an accent tone via `color`.
+
+- [#274](https://github.com/lovelycentury/okkly/pull/274) [`6341b16`](https://github.com/lovelycentury/okkly/commit/6341b16ca3c20636ac1ddb78f1a2700e3580201e) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `OkklyDateField` (`okkly-date-field`), a masked `dd.mm.yyyy` date input with a calendar popover, min/max bounds, and an accent tone via `color`.
+
+- [#274](https://github.com/lovelycentury/okkly/pull/274) [`6341b16`](https://github.com/lovelycentury/okkly/commit/6341b16ca3c20636ac1ddb78f1a2700e3580201e) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `OkklyDateTimeField` (`okkly-date-time-field`), a masked `dd.mm.yyyy, HH:mm` date+time input with a `DateTimePicker` popover, min/max bounds, and an accent tone via `color`.
+
+- [#274](https://github.com/lovelycentury/okkly/pull/274) [`6341b16`](https://github.com/lovelycentury/okkly/commit/6341b16ca3c20636ac1ddb78f1a2700e3580201e) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `OkklyDateTimePicker` (`okkly-date-time-picker`), a fixed inline card combining a `Calendar` and a `TimePicker` with a selected-time summary and a Confirm button.
+
+- [#274](https://github.com/lovelycentury/okkly/pull/274) [`ff1d948`](https://github.com/lovelycentury/okkly/commit/ff1d9489f7d58d290f171d67f1369a570a8d6ce5) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `OkklyPagination` (`okkly-pagination`), page controls with boundary pages, a sibling window around the current page, and ellipses in between.
+
+- [#274](https://github.com/lovelycentury/okkly/pull/274) [`8d84b09`](https://github.com/lovelycentury/okkly/commit/8d84b097a549ae8cef5248866286b4a014363456) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `OkklySelect` (`okkly-select`), a closed-list field with single and multi-select, grouping, clearing, loading and a native form fallback via `name`. Also adds the `OkklyOption*` primitives (`OkklyOptionScope`, `OkklyOptionRow`, `OkklyOptionLabel`, `OkklyOptionDescription`, `OkklyOptionBody`, `OkklyOptionCheck`, `OkklyHighlightMatch`) it's built from, shared with a future `OkklyAutocomplete`.
+
+- [#274](https://github.com/lovelycentury/okkly/pull/274) [`ff1d948`](https://github.com/lovelycentury/okkly/commit/ff1d9489f7d58d290f171d67f1369a570a8d6ce5) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `OkklyStepper` (`okkly-stepper`), a presentational progress indicator for an ordered flow with horizontal/vertical orientation, alternative labels, optional steps, and accent colors.
+
+- [#274](https://github.com/lovelycentury/okkly/pull/274) [`ff1d948`](https://github.com/lovelycentury/okkly/commit/ff1d9489f7d58d290f171d67f1369a570a8d6ce5) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `OkklyTabs` (`okkly-tabs`), an accessible tab strip switching between peer views inside one panel.
+
+- [#274](https://github.com/lovelycentury/okkly/pull/274) [`6341b16`](https://github.com/lovelycentury/okkly/commit/6341b16ca3c20636ac1ddb78f1a2700e3580201e) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `OkklyTimeField` (`okkly-time-field`), a masked `HH:mm` text input with a `TimePicker` popover, built with `@maskito/angular`.
+
+- [#274](https://github.com/lovelycentury/okkly/pull/274) [`e6fdc9a`](https://github.com/lovelycentury/okkly/commit/e6fdc9a4b4d972eae23368861126080313b14bfe) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Add `OkklyTimePicker` (`okkly-time-picker`), an always-visible inline time picker with scrollable hour/minute/AM-PM columns, native scroll-snap momentum, `step`, `format`, and accent `color`.
+
 ## 0.4.0
 
 ### Minor Changes
