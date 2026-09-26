@@ -270,3 +270,10 @@ export type {
   SelectionChangeEvent,
   SelectionChangeReason,
 } from "./components/Select/Select";
+
+export { OkklyAutocomplete } from "./components/Autocomplete/Autocomplete";
+export type {
+  AutocompleteSize,
+  AutocompleteColor,
+  AutocompleteOption,
+} from "./components/Autocomplete/Autocomplete";

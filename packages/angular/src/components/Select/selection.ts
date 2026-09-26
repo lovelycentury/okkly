@@ -13,14 +13,19 @@ export interface SelectOption {
   label: string;
   /** Non-selectable, skipped by keyboard navigation and typeahead. */
   disabled?: boolean;
+  /** Muted secondary text under the label. `OkklySelect` doesn't render it — `OkklyAutocomplete` does. */
+  description?: string;
 }
 
 /**
  * Why a selection changed. Mirrors MUI's Autocomplete `reason` values —
  * "user cleared the field" and "user deselected the last option" produce an
- * identical value, and this is what tells them apart.
+ * identical value, and this is what tells them apart. `"blur"` is
+ * `OkklyAutocomplete`-only, for a `freeSolo` value committed by losing focus
+ * rather than by a keypress or a click.
  */
-export type SelectionChangeReason = "selectOption" | "removeOption" | "clear" | "createOption";
+export type SelectionChangeReason =
+  "selectOption" | "removeOption" | "clear" | "createOption" | "blur";
 
 /** Emitted by `change` — the value already landed in `[(value)]`; this carries why. */
 export interface SelectionChangeEvent {

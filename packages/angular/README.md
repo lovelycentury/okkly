@@ -1216,8 +1216,9 @@ segment is a button with `aria-pressed`. An item's `icon` is raw SVG markup or a
 
 `OkklySelect` (`okkly-select`) is a closed list of options in a field. Prefer
 it over a native `<select>` when you need multi-select, grouping or a loading
-state; reach for a future `Autocomplete` once the list gets long enough to
-search. Inputs follow MUI's Select API, as `@okkly/react`'s `<Select>` does.
+state; reach for [`Autocomplete`](#autocomplete) once the list gets long
+enough to search. Inputs follow MUI's Select API, as `@okkly/react`'s
+`<Select>` does.
 
 | Input                  | Type                                                                  | Default        |
 | ---------------------- | --------------------------------------------------------------------- | -------------- |
@@ -1279,6 +1280,95 @@ No `renderValue`/`renderOption`/`renderInput`/`renderGroup`/`renderNoOptions`/
 `multiple` mode, plus a tick when selected), built from the same
 `OkklyOptionRow`/`OkklyOptionLabel`/`OkklyOptionCheck` primitives a future
 custom row would use.
+
+## Autocomplete
+
+`OkklyAutocomplete` (`okkly-autocomplete`) is a filter-as-you-type field, with
+free-text and multi-select tag support. Reach for it over
+[`Select`](#select) once the option list is long enough that typing to
+narrow it beats scanning it. Inputs follow MUI's Autocomplete API, as
+`@okkly/react`'s `<Autocomplete>` does.
+
+| Input                   | Type                                                                           | Default           |
+| ----------------------- | ------------------------------------------------------------------------------ | ----------------- |
+| `options`               | `{ value: string; label: string; disabled?: boolean; description?: string }[]` | `[]`              |
+| `value`                 | `string \| string[] \| null` (`model`, two-way)                                | `null`            |
+| `inputValue`            | `string` (`model`, two-way)                                                    | `""`              |
+| `multiple`              | `boolean`                                                                      | `false`           |
+| `freeSolo`              | `boolean`                                                                      | `false`           |
+| `open`                  | `boolean` (`model`, two-way)                                                   | `false`           |
+| `label`                 | `string`                                                                       | —                 |
+| `hideLabel`             | `boolean`                                                                      | `false`           |
+| `placeholder`           | `string`                                                                       | `"Search…"`       |
+| `size`                  | `small \| medium \| large`                                                     | `medium`          |
+| `color`                 | `primary \| secondary \| dante \| violet \| ember \| ice \| contrast`          | `primary`         |
+| `error`                 | `boolean`                                                                      | `false`           |
+| `helperText`            | `string`                                                                       | —                 |
+| `fullWidth`             | `boolean`                                                                      | `false`           |
+| `disabled`              | `boolean`                                                                      | `false`           |
+| `required`              | `boolean`                                                                      | `false`           |
+| `loading`               | `boolean`                                                                      | `false`           |
+| `name`                  | `string`                                                                       | —                 |
+| `openOnFocus`           | `boolean`                                                                      | `false`           |
+| `autoHighlight`         | `boolean`                                                                      | `false`           |
+| `autoSelect`            | `boolean`                                                                      | `false`           |
+| `blurOnSelect`          | `boolean`                                                                      | `false`           |
+| `clearOnEscape`         | `boolean`                                                                      | `false`           |
+| `clearOnBlur`           | `boolean`                                                                      | `!freeSolo`       |
+| `filterSelectedOptions` | `boolean`                                                                      | `false`           |
+| `groupBy`               | `(option: AutocompleteOption) => string`                                       | —                 |
+| `filterOptions`         | `(options: AutocompleteOption[], inputValue: string) => AutocompleteOption[]`  | substring match   |
+| `limitTags`             | `number`                                                                       | `-1`              |
+| `disableCloseOnSelect`  | `boolean`                                                                      | `multiple`        |
+| `disableClearable`      | `boolean`                                                                      | `false`           |
+| `noOptionsText`         | `string`                                                                       | `"No results"`    |
+| `loadingText`           | `string`                                                                       | `"Loading…"`      |
+| `clearText`             | `string`                                                                       | `"Clear"`         |
+| `openText`              | `string`                                                                       | `"Open options"`  |
+| `closeText`             | `string`                                                                       | `"Close options"` |
+| `popupWidth`            | `number \| string`                                                             | —                 |
+| `id`                    | `string`                                                                       | generated         |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklyAutocomplete, type AutocompleteOption } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklyAutocomplete],
+  template: `<okkly-autocomplete label="Team" [options]="teams" [(value)]="team" />`,
+})
+export class AppComponent {
+  team: string | null = null;
+  teams: AutocompleteOption[] = [
+    { value: "design", label: "Product design" },
+    { value: "engineering", label: "Engineering" },
+  ];
+}
+```
+
+`multiple` renders the current value as removable tags, collapsing past
+`limitTags` into a `+N`. `freeSolo` commits whatever is typed on Enter
+(reason `"createOption"`) or on blur (reason `"blur"`) even when it matches
+no option. `name` emits hidden `<input type="hidden">`s so the value reaches
+a plain `<form>` submit with no JavaScript. `(change)` reports the reason
+behind a `value` change (`selectOption` / `removeOption` / `clear` /
+`createOption` / `blur`) alongside the two-way `[(value)]`.
+
+Deliberate gaps, the same call `Select` already made: no generic option
+type — `AutocompleteOption` is fixed to
+`{ value: string; label: string; disabled?: boolean; description?: string }`
+(the same shape `SelectOption` uses), so there is no `getOptionLabel`/
+`getOptionDescription`/`isOptionEqualToValue` either — a row always reads
+`option.label`/`option.description`, and values compare with `===`. No
+`renderOption`/`renderInput`/`renderGroup`/`renderNoOptions`/`renderLoading`/
+`renderTags` — a row is always the built-in label, description and tick,
+built from the same `OkklyOptionRow`/`OkklyOptionLabel`/
+`OkklyOptionDescription`/`OkklyOptionCheck` primitives `Select` uses.
+`filterOptions`/`groupBy` stay as function inputs since they return data, not
+markup. A `freeSolo` commit stores the typed text as the `value` string
+itself, so the `name` hidden inputs submit each option's `value` (matching
+`Select`), not its `label`.
 
 ## Workbench
 

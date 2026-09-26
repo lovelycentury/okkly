@@ -1,0 +1,167 @@
+<ng-template #optionRow let-option="option" let-index="index">
+  <li
+    okklyOptionRow
+    [id]="listboxId() + '-option-' + index"
+    role="option"
+    [attr.data-index]="index"
+    [attr.aria-selected]="isSelected(option)"
+    [attr.aria-disabled]="option.disabled || null"
+    tabindex="-1"
+    [class]="optionRowClass(index, option)"
+    (mouseenter)="onOptionMouseEnter(index, option)"
+    (click)="onOptionClick(index, option)"
+  >
+    <span okklyOptionLabel>{{ option.label }}</span>
+    @if (option.description) {
+      <span okklyOptionDescription>{{ option.description }}</span>
+    }
+    @if (isSelected(option)) {
+      <span okklyOptionCheck></span>
+    }
+  </li>
+</ng-template>
+
+<div
+  okklyField
+  #field
+  block="okkly-autocomplete"
+  [id]="fieldId()"
+  [label]="label()"
+  [hideLabel]="hideLabel()"
+  [required]="required()"
+  [size]="size()"
+  [color]="color()"
+  [error]="error()"
+  [helperText]="helperText()"
+  [disabled]="disabled()"
+  [fullWidth]="fullWidth()"
+  [hasEndAdornment]="true"
+  (controlClick)="onControlClick($event)"
+>
+  <div class="okkly-autocomplete__body">
+    @if (tags().length > 0) {
+      <span class="okkly-autocomplete__tags">
+        @for (tag of shownTags(); track tag.value) {
+          <okkly-chip
+            [label]="tag.label"
+            size="small"
+            variant="solid"
+            [removable]="!disabled()"
+            (removed)="removeTag($index)"
+          />
+        }
+        @if (tagOverflow() > 0) {
+          <span class="okkly-autocomplete__overflow">+{{ tagOverflow() }}</span>
+        }
+      </span>
+    }
+    <input
+      #input
+      class="okkly-autocomplete__input"
+      [id]="fieldId()"
+      [attr.placeholder]="tags().length > 0 ? 'Add…' : placeholder()"
+      [disabled]="disabled()"
+      [required]="required()"
+      role="combobox"
+      [attr.aria-expanded]="open()"
+      aria-autocomplete="list"
+      [attr.aria-controls]="listboxId()"
+      [attr.aria-disabled]="disabled() || null"
+      [attr.aria-activedescendant]="inputActivedescendant()"
+      [attr.aria-invalid]="error() || null"
+      [attr.aria-describedby]="helperId() ?? null"
+      [value]="inputValue()"
+      (input)="onInputChange($event)"
+      (focus)="onInputFocus()"
+      (blur)="onInputBlur()"
+      (keydown)="onInputKeydown($event)"
+    />
+  </div>
+
+  @if (name()) {
+    @for (option of hiddenInputs(); track option.value) {
+      <input type="hidden" [name]="name()" [value]="option.value" />
+    }
+  }
+
+  <span okklyFieldEndAdornment class="okkly-autocomplete__end-adornment">
+    @if (!disableClearable()) {
+      <button
+        type="button"
+        class="okkly-autocomplete__clear"
+        [attr.aria-label]="clearText()"
+        [disabled]="disabled() || !hasValue()"
+        (mousedown)="$event.preventDefault(); $event.stopPropagation()"
+        (click)="onClearClick($event)"
+      >
+        <okkly-icon [icon]="iconX" />
+      </button>
+    }
+    <button
+      type="button"
+      class="okkly-autocomplete__toggle"
+      tabindex="-1"
+      [attr.aria-label]="open() ? closeText() : openText()"
+      [disabled]="disabled()"
+      (click)="onToggleClick()"
+    >
+      <okkly-icon [icon]="open() ? iconChevronUp : iconChevronDown" />
+    </button>
+  </span>
+
+  <okkly-popper
+    [open]="open()"
+    [anchorEl]="controlElement()"
+    placement="bottom-start"
+    [modifiers]="popperModifiers"
+    matchAnchorWidth="min"
+    role="presentation"
+  >
+    <div #panel [class]="popoverClass()" [style]="popupStyle()">
+      <ul
+        okklyOptionScope="okkly-autocomplete"
+        [id]="listboxId()"
+        role="listbox"
+        class="okkly-autocomplete__listbox"
+        [attr.aria-multiselectable]="multiple() || null"
+        (mousedown)="$event.preventDefault()"
+      >
+        @if (loading()) {
+          <li class="okkly-autocomplete__loading">
+            <okkly-spinner size="small" />
+            {{ loadingText() }}
+          </li>
+        } @else if (filteredOptions().length === 0) {
+          <li class="okkly-autocomplete__empty">{{ noOptionsText() }}</li>
+        } @else if (groupedOptions(); as groups) {
+          @for (group of groups; track group.key) {
+            <li role="presentation">
+              <span class="okkly-autocomplete__group-label" role="presentation">{{
+                group.label
+              }}</span>
+              <ul
+                class="okkly-autocomplete__group-options"
+                role="group"
+                [attr.aria-label]="group.label"
+              >
+                @for (entry of group.options; track entry.index) {
+                  <ng-container
+                    [ngTemplateOutlet]="optionRow"
+                    [ngTemplateOutletContext]="{ option: entry.option, index: entry.index }"
+                  />
+                }
+              </ul>
+            </li>
+          }
+        } @else {
+          @for (option of filteredOptions(); track option.value; let i = $index) {
+            <ng-container
+              [ngTemplateOutlet]="optionRow"
+              [ngTemplateOutletContext]="{ option: option, index: i }"
+            />
+          }
+        }
+      </ul>
+    </div>
+  </okkly-popper>
+</div>

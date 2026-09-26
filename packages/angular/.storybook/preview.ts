@@ -7,6 +7,7 @@ import "@okkly/design-system/styles/index.scss";
 // `style.css` is built from). Imported through the package's public export
 // paths here so Vite resolves them; the build reads them off disk instead.
 import "@okkly/design-system/components/Alert/Alert.scss";
+import "@okkly/design-system/components/Autocomplete/Autocomplete.scss";
 import "@okkly/design-system/components/Avatar/Avatar.scss";
 import "@okkly/design-system/components/AvatarGroup/AvatarGroup.scss";
 import "@okkly/design-system/components/Badge/Badge.scss";
