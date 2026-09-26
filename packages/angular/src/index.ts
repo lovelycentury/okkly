@@ -220,3 +220,10 @@ export type { OnlyBreakpoint, OnlyRange } from "./directives/Only/Only";
 
 export { OkklyTextArea } from "./components/TextArea/TextArea";
 export type { TextAreaSize, TextAreaColor, TextAreaResize } from "./components/TextArea/TextArea";
+
+export { OkklyNumberInput } from "./components/NumberInput/NumberInput";
+export type {
+  NumberInputSize,
+  NumberInputColor,
+  NumberInputControls,
+} from "./components/NumberInput/NumberInput";

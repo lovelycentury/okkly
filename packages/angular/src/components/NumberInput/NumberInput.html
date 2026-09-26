@@ -1,0 +1,58 @@
+@if (label()) {
+  <label
+    [attr.for]="inputId()"
+    class="okkly-number-input__label"
+    [class.okkly-number-input__label--hidden]="hideLabel()"
+  >
+    {{ label() }}
+    @if (required()) {
+      <span class="okkly-number-input__required" aria-hidden="true">*</span>
+    }
+  </label>
+}
+<div class="okkly-number-input__control">
+  <input
+    [id]="inputId()"
+    type="text"
+    inputmode="decimal"
+    class="okkly-number-input__input"
+    [value]="displayValue()"
+    [disabled]="disabled()"
+    [required]="required()"
+    [attr.name]="name() ?? null"
+    [attr.placeholder]="placeholder() ?? null"
+    [attr.aria-invalid]="error() ? true : null"
+    [attr.aria-describedby]="helperId()"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+    (keydown)="onKeydown($event)"
+  />
+  <div
+    class="okkly-number-input__controls"
+    [class.okkly-number-input__controls--chevrons]="controls() !== 'stepper'"
+  >
+    <button
+      type="button"
+      class="okkly-number-input__step okkly-number-input__step--increment"
+      aria-label="Increase value"
+      [disabled]="disabled() || !canIncrement()"
+      tabindex="-1"
+      (click)="stepBy(1)"
+    >
+      <span aria-hidden="true"><okkly-icon [icon]="incrementIcon()" /></span>
+    </button>
+    <button
+      type="button"
+      class="okkly-number-input__step okkly-number-input__step--decrement"
+      aria-label="Decrease value"
+      [disabled]="disabled() || !canDecrement()"
+      tabindex="-1"
+      (click)="stepBy(-1)"
+    >
+      <span aria-hidden="true"><okkly-icon [icon]="decrementIcon()" /></span>
+    </button>
+  </div>
+</div>
+@if (helperText()) {
+  <span [id]="helperId()" class="okkly-number-input__helper">{{ helperText() }}</span>
+}

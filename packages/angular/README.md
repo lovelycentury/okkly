@@ -1145,6 +1145,21 @@ TextField, as `@okkly/react`'s `<TextArea>` does: `label`, `hideLabel`, `size`,
 `value` is two-way bindable. `maxLength` adds an "n / max" counter, linked to
 the textarea through `aria-describedby` along with the helper text.
 
+## NumberInput
+
+`OkklyNumberInput` (`okkly-number-input`) is a numeric field with +/- (or
+chevron) steppers, arrow-key stepping and clamping to `min`/`max`. Inputs follow
+MUI's TextField, as `@okkly/react`'s `<NumberInput>` does: `label`, `hideLabel`,
+`size`, `color`, `error`, `helperText`, `fullWidth`, `disabled`, `controls`,
+`min`, `max`, `step`, `required`.
+
+```html
+<okkly-number-input label="Quantity" [(value)]="quantity" min="1" max="99" />
+```
+
+`value` is a two-way `number | null` — `null` for an empty field. A typed value
+outside the range is clamped on blur.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
