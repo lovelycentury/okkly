@@ -251,3 +251,22 @@ export type {
   SegmentedToggleColor,
   SegmentedToggleItem,
 } from "./components/SegmentedToggle/SegmentedToggle";
+
+export {
+  OkklyOptionScope,
+  OkklyOptionRow,
+  OkklyOptionLabel,
+  OkklyOptionDescription,
+  OkklyOptionBody,
+  OkklyOptionCheck,
+  OkklyHighlightMatch,
+} from "./components/Option/Option";
+
+export { OkklySelect } from "./components/Select/Select";
+export type {
+  SelectSize,
+  SelectColor,
+  SelectOption,
+  SelectionChangeEvent,
+  SelectionChangeReason,
+} from "./components/Select/Select";

@@ -1212,6 +1212,74 @@ ToggleButtonGroup, as `@okkly/react`'s `<SegmentedToggle>` does: `items`,
 segment is a button with `aria-pressed`. An item's `icon` is raw SVG markup or a
 `TemplateRef`; give an icon-only item an `ariaLabel`.
 
+## Select
+
+`OkklySelect` (`okkly-select`) is a closed list of options in a field. Prefer
+it over a native `<select>` when you need multi-select, grouping or a loading
+state; reach for a future `Autocomplete` once the list gets long enough to
+search. Inputs follow MUI's Select API, as `@okkly/react`'s `<Select>` does.
+
+| Input                  | Type                                                                  | Default        |
+| ---------------------- | --------------------------------------------------------------------- | -------------- |
+| `options`              | `{ value: string; label: string; disabled?: boolean }[]`              | `[]`           |
+| `value`                | `string \| string[] \| null` (`model`, two-way)                       | `null`         |
+| `multiple`             | `boolean`                                                             | `false`        |
+| `open`                 | `boolean` (`model`, two-way)                                          | `false`        |
+| `label`                | `string`                                                              | —              |
+| `hideLabel`            | `boolean`                                                             | `false`        |
+| `placeholder`          | `string`                                                              | `"Select…"`    |
+| `size`                 | `small \| medium \| large`                                            | `medium`       |
+| `color`                | `primary \| secondary \| dante \| violet \| ember \| ice \| contrast` | `primary`      |
+| `error`                | `boolean`                                                             | `false`        |
+| `helperText`           | `string`                                                              | —              |
+| `fullWidth`            | `boolean`                                                             | `false`        |
+| `disabled`             | `boolean`                                                             | `false`        |
+| `required`             | `boolean`                                                             | `false`        |
+| `loading`              | `boolean`                                                             | `false`        |
+| `name`                 | `string`                                                              | —              |
+| `groupBy`              | `(option: SelectOption) => string`                                    | —              |
+| `limitTags`            | `number`                                                              | `2`            |
+| `disableCloseOnSelect` | `boolean`                                                             | `multiple`     |
+| `disableClearable`     | `boolean`                                                             | `false`        |
+| `noOptionsText`        | `string`                                                              | `"No options"` |
+| `loadingText`          | `string`                                                              | `"Loading…"`   |
+| `clearText`            | `string`                                                              | `"Clear"`      |
+| `popupWidth`           | `number \| string`                                                    | —              |
+| `id`                   | `string`                                                              | generated      |
+
+```ts
+import { Component } from "@angular/core";
+import { OkklySelect, type SelectOption } from "@okkly/angular";
+
+@Component({
+  selector: "app-root",
+  imports: [OkklySelect],
+  template: `<okkly-select label="Team" [options]="teams" [(value)]="team" />`,
+})
+export class AppComponent {
+  team: string | null = null;
+  teams: SelectOption[] = [
+    { value: "design", label: "Product design" },
+    { value: "engineering", label: "Engineering" },
+  ];
+}
+```
+
+`multiple` renders the current value as removable chips, collapsing past
+`limitTags` into a `+N`. `name` emits hidden `<input type="hidden">`s so the
+value reaches a plain `<form>` submit with no JavaScript. `(change)` reports
+the reason behind a `value` change (`selectOption` / `removeOption` /
+`clear`) alongside the two-way `[(value)]`.
+
+Deliberate gaps: no generic option type — `SelectOption` is fixed to
+`{ value: string; label: string; disabled?: boolean }`, so there is no
+`isOptionEqualToValue` either, since `===` is always correct for a string.
+No `renderValue`/`renderOption`/`renderInput`/`renderGroup`/`renderNoOptions`/
+`renderLoading` — a row is always the built-in label (plus a checkbox in
+`multiple` mode, plus a tick when selected), built from the same
+`OkklyOptionRow`/`OkklyOptionLabel`/`OkklyOptionCheck` primitives a future
+custom row would use.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as

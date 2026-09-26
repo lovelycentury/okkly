@@ -1,0 +1,5 @@
+{{ match().before }}
+@if (match().marked) {
+  <mark class="{{ markClass() }}">{{ match().marked }}</mark>
+}
+{{ match().after }}

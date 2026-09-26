@@ -43,6 +43,7 @@ import "@okkly/design-system/components/RadioGroup/RadioGroup.scss";
 import "@okkly/design-system/components/Rating/Rating.scss";
 import "@okkly/design-system/components/Ripple/Ripple.scss";
 import "@okkly/design-system/components/SegmentedToggle/SegmentedToggle.scss";
+import "@okkly/design-system/components/Select/Select.scss";
 import "@okkly/design-system/components/SeverityIcon/SeverityIcon.scss";
 import "@okkly/design-system/components/Slide/Slide.scss";
 import "@okkly/design-system/components/Skeleton/Skeleton.scss";

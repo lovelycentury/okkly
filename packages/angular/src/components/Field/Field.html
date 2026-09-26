@@ -8,7 +8,7 @@
   <label [id]="labelId()" [attr.for]="computedFor()" class="{{ block() }}__label{{ hideLabel() ? ' ' + block() + '__label--hidden' : '' }}">{{ label() }}@if (required()) {<span class="{{ block() }}__required" aria-hidden="true">*</span>}</label>
 }
 
-<div class="{{ block() }}__control">
+<div #control class="{{ block() }}__control" (click)="controlClick.emit($event)">
   @if (hasStartAdornment()) {
     <span class="{{ block() }}__adornment"><ng-content select="[okklyFieldStartAdornment]" /></span>
   }

@@ -6,6 +6,9 @@ import {
   booleanAttribute,
   computed,
   input,
+  output,
+  viewChild,
+  type ElementRef,
 } from "@angular/core";
 
 export type FieldSize = "small" | "medium" | "large";
@@ -38,9 +41,11 @@ export function getFieldIds(id: string, hasLabel: boolean, hasHelperText: boolea
  * rings, error colours and label spacing, not to become a public layout
  * primitive. Its styling counterpart is the `field.shell` SCSS mixin.
  *
- * Deliberate gap: no equivalent of React's `controlProps`/`ref` on the control
- * box — no current consumer needs to anchor a popup on it yet. Adornment
- * presence is an explicit `hasStartAdornment`/`hasEndAdornment` input rather
+ * `controlElement()` and `controlClick` are the counterpart of React's
+ * `controlProps={{ ref, onClick }}` — `OkklySelect`/`OkklyAutocomplete` read
+ * the former to anchor their popup and listen to the latter to open it from
+ * the control's own padding. Adornment presence is an explicit
+ * `hasStartAdornment`/`hasEndAdornment` input rather
  * than self-detected, because a wrapper (e.g. `OkklyTextField`) forwards
  * projected content through `ngProjectAs`, under which a `contentChild` query
  * here would never see the original marker directive.
@@ -144,6 +149,13 @@ export class OkklyField {
    * @default false
    */
   readonly hasEndAdornment = input(false, { transform: booleanAttribute });
+
+  /** Emitted when the control box (or its padding) is clicked. */
+  readonly controlClick = output<MouseEvent>();
+
+  private readonly controlRef = viewChild<ElementRef<HTMLDivElement>>("control");
+  /** The control box element, e.g. for anchoring a popup against it. */
+  readonly controlElement = computed(() => this.controlRef()?.nativeElement ?? null);
 
   protected readonly labelId = computed(() => (this.label() ? `${this.id()}-label` : undefined));
   protected readonly helperId = computed(() =>
