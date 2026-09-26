@@ -245,3 +245,9 @@ export type {
   SliderValueLabelDisplay,
   SliderTrack,
 } from "./components/Slider/Slider";
+
+export { OkklySegmentedToggle } from "./components/SegmentedToggle/SegmentedToggle";
+export type {
+  SegmentedToggleColor,
+  SegmentedToggleItem,
+} from "./components/SegmentedToggle/SegmentedToggle";

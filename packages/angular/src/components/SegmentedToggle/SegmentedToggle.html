@@ -1,0 +1,22 @@
+@for (item of items(); track item.value) {
+  <button
+    type="button"
+    class="okkly-segmented-toggle__segment"
+    [class.okkly-segmented-toggle__segment--active]="isActive(item.value)"
+    [disabled]="disabled() || !!item.disabled"
+    [attr.aria-pressed]="isActive(item.value)"
+    [attr.aria-label]="item.ariaLabel ?? null"
+    (click)="select(item.value)"
+  >
+    @if (item.icon) {
+      <span class="okkly-segmented-toggle__icon" aria-hidden="true">
+        @if (isTemplate(item.icon)) {
+          <ng-container [ngTemplateOutlet]="item.icon" />
+        } @else {
+          <okkly-icon [icon]="item.icon" fontSize="inherit" />
+        }
+      </span>
+    }
+    {{ item.label }}
+  </button>
+}

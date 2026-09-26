@@ -1195,6 +1195,23 @@ Inputs follow MUI's Slider, as `@okkly/react`'s `<Slider>` does: `min`, `max`,
 a drag ends or a key sets a value. Each thumb is a native `<input type="range">`,
 so arrow keys, Page Up/Down, Home and End work, with Shift for bigger steps.
 
+## SegmentedToggle
+
+`OkklySegmentedToggle` (`okkly-segmented-toggle`) is a row of connected segments
+for view modes, filters or short option sets. Inputs follow MUI's
+ToggleButtonGroup, as `@okkly/react`'s `<SegmentedToggle>` does: `items`,
+`value`, `exclusive`, `color`, `disabled`.
+
+```html
+<okkly-segmented-toggle [items]="periods" [(value)]="period" />
+
+<okkly-segmented-toggle [exclusive]="false" [items]="formatting" [(value)]="styles" />
+```
+
+`value` is a string when `exclusive`, an array of strings otherwise. Each
+segment is a button with `aria-pressed`. An item's `icon` is raw SVG markup or a
+`TemplateRef`; give an icon-only item an `ariaLabel`.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
