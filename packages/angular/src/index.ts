@@ -217,3 +217,6 @@ export {
 
 export { OkklyOnly } from "./directives/Only/Only";
 export type { OnlyBreakpoint, OnlyRange } from "./directives/Only/Only";
+
+export { OkklyTextArea } from "./components/TextArea/TextArea";
+export type { TextAreaSize, TextAreaColor, TextAreaResize } from "./components/TextArea/TextArea";

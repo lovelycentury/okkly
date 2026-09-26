@@ -1130,6 +1130,21 @@ names match `$breakpoints` in the design system.
 It is a structural directive, not a component: content outside the range is
 never created, which projected content could not promise.
 
+## TextArea
+
+`OkklyTextArea` (`okkly-text-area`) is a multi-line text field with an optional
+character counter and auto-growing height. Inputs follow MUI's multiline
+TextField, as `@okkly/react`'s `<TextArea>` does: `label`, `hideLabel`, `size`,
+`color`, `error`, `helperText`, `fullWidth`, `disabled`, `rows`, `maxRows`,
+`autosize`, `maxLength`, `resize`, `required`.
+
+```html
+<okkly-text-area label="Message" [(value)]="message" maxLength="280" autosize maxRows="8" />
+```
+
+`value` is two-way bindable. `maxLength` adds an "n / max" counter, linked to
+the textarea through `aria-describedby` along with the helper text.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
