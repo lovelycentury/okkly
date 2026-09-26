@@ -1,6 +1,6 @@
 {
   "name": "@okkly/svelte",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Okryshto design system — Svelte component library",
   "license": "MIT",
   "type": "module",

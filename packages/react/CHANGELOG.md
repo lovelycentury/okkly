@@ -1,5 +1,14 @@
 # @okkly/react
 
+## 0.4.1
+
+### Patch Changes
+
+- [#272](https://github.com/lovelycentury/okkly/pull/272) [`44f650b`](https://github.com/lovelycentury/okkly/commit/44f650b551077474f0ccecf94885ca0556aff31a) Thanks [@lovelycentury](https://github.com/lovelycentury)! - Fix the `ButtonGroup` menu being invisible when open: the group's `overflow: hidden` clipped the absolutely positioned dropdown. The end segments now round their own outer corners instead, so hover fills and focus rings still stay inside the pill.
+
+- Updated dependencies [[`44f650b`](https://github.com/lovelycentury/okkly/commit/44f650b551077474f0ccecf94885ca0556aff31a)]:
+  - @okkly/design-system@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes
