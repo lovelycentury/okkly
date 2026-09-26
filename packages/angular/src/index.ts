@@ -227,3 +227,11 @@ export type {
   NumberInputColor,
   NumberInputControls,
 } from "./components/NumberInput/NumberInput";
+
+export { OkklyRating, OkklyRatingIcon } from "./components/Rating/Rating";
+export type {
+  RatingSize,
+  RatingColor,
+  RatingIcon,
+  RatingPrecision,
+} from "./components/Rating/Rating";

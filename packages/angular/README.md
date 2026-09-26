@@ -1160,6 +1160,23 @@ MUI's TextField, as `@okkly/react`'s `<NumberInput>` does: `label`, `hideLabel`,
 `value` is a two-way `number | null` — `null` for an empty field. A typed value
 outside the range is clamped on blur.
 
+## Rating
+
+`OkklyRating` (`okkly-rating`) is a row of stars (or hearts) to show or pick a
+score. Inputs follow MUI's Rating, as `@okkly/react`'s `<Rating>` does: `value`,
+`max`, `precision`, `size`, `color`, `icon`, `readOnly`, `disabled`, `label`,
+`name`, `getLabelText`.
+
+```html
+<okkly-rating [(value)]="score" />
+
+<okkly-rating [value]="4.5" readOnly label="4.8 · 128 reviews" />
+```
+
+`value` is a two-way `number | null`; clicking the active glyph clears it. The
+arrow keys step by `precision`. A read-only rating is an image named "4 of 5".
+A custom glyph goes in an `<ng-template okklyRatingIcon>`.
+
 ## Workbench
 
 Storybook lives in this package. Stories sit next to their component as
