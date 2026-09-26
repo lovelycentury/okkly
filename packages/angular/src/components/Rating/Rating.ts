@@ -33,6 +33,11 @@ export class OkklyRatingIcon {
   readonly template = inject(TemplateRef);
 }
 
+const STAR_PATH =
+  "M12 2.5l2.93 5.94 6.56.95-4.75 4.63 1.12 6.54L12 17.77l-5.86 3.08 1.12-6.54-4.75-4.63 6.56-.95L12 2.5z";
+const HEART_PATH =
+  "M12 21s-6.5-4.35-9-8.35C1.5 10.5 2.5 6.5 6 5.5c2-.6 4 .5 6 2.5 2-2 4-3.1 6-2.5 3.5 1 4.5 5 3 7.15C18.5 16.65 12 21 12 21z";
+
 function defaultGetLabelText(value: number): string {
   return `${value} Star${value !== 1 ? "s" : ""}`;
 }
@@ -150,6 +155,8 @@ export class OkklyRating {
       return "empty";
     });
   });
+
+  protected readonly glyphPath = computed(() => (this.icon() === "heart" ? HEART_PATH : STAR_PATH));
 
   protected readonly modifiers = computed(() =>
     [

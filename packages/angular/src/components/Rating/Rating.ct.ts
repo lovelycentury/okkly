@@ -162,24 +162,32 @@ test("should emit whole stars at precision 1", async ({ mountTemplate, recordedE
   expect(await recordedEvents("value")).toEqual([4]);
 });
 
-test("should preview the hovered score and restore it on leave", async ({
-  mountTemplate,
-  page,
-}) => {
+/**
+ * A rating with a plain element under it to move the pointer onto: moving to
+ * fixed page coordinates is at the mercy of the viewport, and a move outside it
+ * fires no events at all, so the rating would never hear the pointer leave.
+ */
+const withSomewhereElse = (rating: string) =>
+  `<div>${rating}<p class="elsewhere" style="margin: 0; padding: 1rem">Elsewhere</p></div>`;
+
+test("should preview the hovered score and restore it on leave", async ({ mountTemplate }) => {
   // ARRANGE
-  const component = await mountTemplate(`<okkly-rating [value]="1" precision="1" />`);
+  const component = await mountTemplate(
+    withSomewhereElse(`<okkly-rating [value]="1" precision="1" />`),
+  );
+  const full = component.locator(".okkly-rating__icon--full");
 
   // ACT
   await component.getByRole("button", { name: "4 Stars" }).hover();
 
   // ASSERT
-  await expect(component.locator(".okkly-rating__icon--full")).toHaveCount(4);
+  await expect(full).toHaveCount(4);
 
   // ACT
-  await page.mouse.move(700, 500);
+  await component.locator(".elsewhere").hover();
 
   // ASSERT
-  await expect(component.locator(".okkly-rating__icon--full")).toHaveCount(1);
+  await expect(full).toHaveCount(1);
 });
 
 test("should clear the value when the active star is clicked again", async ({
@@ -216,11 +224,13 @@ test("should step with the arrow keys", async ({ mountTemplate, page, recordedEv
 
 test("should update without a binding", async ({ mountTemplate }) => {
   // ARRANGE
-  const component = await mountTemplate(`<okkly-rating [value]="2" precision="1" />`);
+  const component = await mountTemplate(
+    withSomewhereElse(`<okkly-rating [value]="2" precision="1" />`),
+  );
 
-  // ACT
+  // ACT — click, then leave, so what remains is the value and not the preview.
   await component.getByRole("button", { name: "4 Stars" }).click();
-  await component.page().mouse.move(700, 500);
+  await component.locator(".elsewhere").hover();
 
   // ASSERT
   await expect(component.locator(".okkly-rating__icon--full")).toHaveCount(4);
@@ -235,7 +245,7 @@ test("should render a custom glyph template", async ({ mountTemplate }) => {
   );
 
   // ASSERT — five glyphs, plus the fill layer of the half one.
-  await expect(component.locator(".glyph")).toHaveCount(6);
+  await expect(component.locator(".glyph:visible")).toHaveCount(6);
   await expect(component.locator("svg")).toHaveCount(0);
 });
 
