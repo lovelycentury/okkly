@@ -13,6 +13,7 @@ import {
   model,
   output,
   signal,
+  untracked,
   viewChild,
 } from "@angular/core";
 import { iconChevronDown, iconX } from "@okkly/icons";
@@ -344,18 +345,23 @@ export class OkklySelect {
   });
 
   constructor() {
-    // Highlight follows the current value each time the popup opens, then
-    // clears once it closes — mirrors `useSelect`'s isOpen/flatOptions effect.
+    // Safety net for `open` transitions this component didn't itself drive —
+    // an external `[(open)]` binding writes straight to the model, bypassing
+    // `setOpen()`'s own synchronous seeding below. Effects are scheduled, not
+    // synchronous with the write that triggers them, so a still-pending run
+    // here can land *after* a keydown handler has since moved
+    // `highlightedIndex` via arrow-key navigation; reading it untracked and
+    // bailing out when it's already a valid, enabled option keeps this from
+    // clobbering navigation `setOpen()` already seeded correctly.
     effect(() => {
       if (!this.open()) {
         this.highlightedIndex.set(-1);
         return;
       }
       const flat = this.flatOptions();
-      const firstSelected = flat.findIndex((option) => this.isSelected(option));
-      this.highlightedIndex.set(
-        firstSelected >= 0 ? firstSelected : findNextEnabledIndex(flat, -1, 1),
-      );
+      const current = untracked(() => this.highlightedIndex());
+      if (current >= 0 && current < flat.length && !flat[current]?.disabled) return;
+      this.highlightedIndex.set(this.computeOpenHighlight());
     });
 
     // Popper has no dismissal of its own; the whole field counts as "inside",
@@ -373,9 +379,21 @@ export class OkklySelect {
     });
   }
 
+  /** The highlight the popup should start with the instant it opens. */
+  private computeOpenHighlight(): number {
+    const flat = this.flatOptions();
+    const firstSelected = flat.findIndex((option) => this.isSelected(option));
+    return firstSelected >= 0 ? firstSelected : findNextEnabledIndex(flat, -1, 1);
+  }
+
   protected setOpen(open: boolean): void {
     if (this.disabled()) return;
     this.open.set(open);
+    // Seeded synchronously, in the same call that flips `open` — a keydown
+    // handler opening on one keypress and navigating on the very next relies
+    // on this value already being right, and the constructor effect above
+    // can't promise that (see its own comment).
+    this.highlightedIndex.set(open ? this.computeOpenHighlight() : -1);
   }
 
   /**
