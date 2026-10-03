@@ -28,7 +28,7 @@ const surface =
  * below.
  */
 const meta: Meta<AccordionArgs> = {
-  title: "Navigation/Accordion",
+  title: "Data/Accordion",
   component: OkklyAccordion,
   decorators: [
     moduleMetadata({

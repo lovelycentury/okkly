@@ -29,7 +29,7 @@ const surface = {
  * drive them from one piece of state, as in the FAQ story below.
  */
 const meta: Meta<AccordionArgs> = {
-  title: "Navigation/Accordion",
+  title: "Data/Accordion",
   component: Accordion as unknown as Meta<AccordionArgs>["component"],
   args: {
     defaultExpanded: false,

@@ -14,7 +14,7 @@ import { Accordion, AccordionDetails, AccordionSummary } from "./Accordion";
  * drive them from one piece of state, as in the FAQ story below.
  */
 const meta: Meta<typeof Accordion> = {
-  title: "Navigation/Accordion",
+  title: "Data/Accordion",
   component: Accordion,
   args: {
     defaultExpanded: false,
