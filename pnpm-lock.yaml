@@ -257,6 +257,9 @@ importers:
       '@okkly/design-system':
         specifier: workspace:*
         version: link:../design-system
+      '@okkly/react-hooks':
+        specifier: workspace:*
+        version: link:../react-hooks
     devDependencies:
       '@storybook/addon-essentials':
         specifier: ^8.4.7

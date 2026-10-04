@@ -25,6 +25,7 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./style.css": "./dist/okkly-prima-react.css",
     "./package.json": "./package.json"
   },
   "scripts": {
@@ -37,7 +38,8 @@
     "storybook:build": "storybook build"
   },
   "dependencies": {
-    "@okkly/design-system": "workspace:*"
+    "@okkly/design-system": "workspace:*",
+    "@okkly/react-hooks": "workspace:*"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^8.4.7",

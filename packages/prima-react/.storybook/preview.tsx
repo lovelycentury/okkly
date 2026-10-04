@@ -20,7 +20,7 @@ const preview: Preview = {
     docs: { theme: okklyTheme, codePanel: true },
     options: {
       storySort: {
-        order: ["Introduction", "Equalizers", "Effects", "*"],
+        order: ["Introduction", "Equalizers", "Effects", "Controls", "*"],
       },
     },
   },
