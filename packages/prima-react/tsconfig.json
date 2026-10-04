@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    // The package root, not `src`: this config also covers `.storybook`.
+    // tsconfig.build.json narrows it to `src`.
+    "rootDir": ".",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "env.d.ts", ".storybook/**/*.ts"]
+}

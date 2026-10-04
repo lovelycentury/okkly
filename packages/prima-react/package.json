@@ -1,0 +1,66 @@
+{
+  "name": "@okkly/prima-react",
+  "version": "0.0.0",
+  "description": "Okryshto design system — React music and audio components",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lovelycentury/okkly.git",
+    "directory": "packages/prima-react"
+  },
+  "homepage": "https://github.com/lovelycentury/okkly/tree/main/packages/prima-react#readme",
+  "bugs": "https://github.com/lovelycentury/okkly/issues",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "files": [
+    "dist"
+  ],
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "oxlint --config ../oxlint-config/index.json .",
+    "storybook": "storybook dev -p 6010 --no-open",
+    "storybook:build": "storybook build"
+  },
+  "dependencies": {
+    "@okkly/design-system": "workspace:*"
+  },
+  "devDependencies": {
+    "@storybook/addon-essentials": "^8.4.7",
+    "@storybook/react": "^8.4.7",
+    "@storybook/react-vite": "^8.4.7",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^25.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sass-embedded": "catalog:",
+    "storybook": "^8.4.7",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-dts": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
